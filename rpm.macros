@@ -1,5 +1,8 @@
 # PLD rpm macros
 
+# other macros
+%_enable_debug_packages 0
+
 %__id		@__ID@
 %__id_u		%{__id} -u 
 %__chown_Rhf           @__CHOWN_RHF@
@@ -12,9 +15,11 @@
 #-----------------------------------------------------------------
 # CFLAGS and LDFLAGS used to build
 
+%debuginfocflags	%{expand:%%define dic_%{_enable_debug_packages} %{_enable_debug_packages}}%{?dic_1: -ggdb}%{expand:%%undefine dic_%{_enable_debug_packages}}
+
 %debugcflags	-O0 -g -Wall
-%rpmcflags	%{?debug:%debugcflags}%{!?debug:%optflags}
-%rpmldflags	%{!?debug:-s}
+%rpmcflags	%{?debug:%debugcflags}%{!?debug:%optflags}%{?debuginfocflags}
+%rpmldflags	%{nil}
 
 # kernel compiler
 %kgcc		gcc
@@ -49,8 +54,8 @@
  CXXFLAGS="${CXXFLAGS:-%rpmcflags}" ; export CXXFLAGS ; \
  FFLAGS="${FFLAGS:-%rpmcflags}" ; export FFLAGS ; \
  CPPFLAGS="${CPPFLAGS:-}" ; export CPPFLAGS ; \
- %{?__cc:CC=%{__cc} ; export CC ; } \
- %{?__cxx:CXX=%{__cxx} ; export CXX ; } \
+ %{?__cc:CC="%{__cc}" ; export CC ; } \
+ %{?__cxx:CXX="%{__cxx}" ; export CXX ; } \
  %{?configuredir:%{configuredir}}%{!?configuredir:.}/configure \
 	--host=%{_target_platform} \
  	--prefix=%{_prefix} \
@@ -76,8 +81,8 @@
 	CXXFLAGS="${CXXFLAGS:-%rpmcflags}" \
 	FFLAGS="${FFLAGS:-%rpmcflags}" \
 	CPPFLAGS="${CPPFLAGS:-}" \
-	%{?__cc:CC=%{__cc}} \
-	%{?__cxx:CXX=%{__cxx}} \
+	%{?__cc:CC="%{__cc}"} \
+	%{?__cxx:CXX="%{__cxx}"} \
 	--build=%{_target_platform} \
  	--prefix=%{_prefix} \
 	--exec-prefix=%{_exec_prefix} \
@@ -94,6 +99,28 @@
 	--infodir=%{_infodir} \
 	--x-libraries=/usr/X11R6/%{_lib} \
 }
+
+# ------------------------------------------------------------------------
+# Overloading of some basic macros
+%prep \
+%%prep\
+LANG=C\
+export LANG\
+unset DISPLAY ||:\
+%{nil}
+
+%build %%build\
+LANG=C\
+export LANG\
+unset DISPLAY ||:\
+%{nil}
+
+%install %{?_enable_debug_packages:%{?buildsubdir:%{debug_package}}}\
+%%install\
+LANG=C\
+export LANG\
+unset DISPLAY ||:\
+%{nil}
 
 # ------------------------------------------------------------------------
 # Conditional build stuff.
@@ -222,8 +249,8 @@
 #
 #%no_install_post_compress_docs	1
 %__spec_install_post_compress_docs { \
-echo "Compress man and info pages."; \
 %{!?no_install_post_compress_docs: \
+	echo "Compress man and info pages."; \
 	%{?verbose:set -x;} \
 	for i in /usr/share/man /usr/X11R6/man /usr/share/info; do \
 		if [ -d "$RPM_BUILD_ROOT$i" ]; then \
@@ -417,3 +444,4 @@ fi; \
 %xmms_effect_plugindir        %(xmms-config --effect-plugin-dir)
 %xmms_general_plugindir       %(xmms-config --general-plugin-dir)
 
+%_target_base_arch	%(echo %{_target_cpu} | sed 's/i.86/i386/;s/athlon/i386/;s/pentium./i386/;s/amd64/x86_64/')
