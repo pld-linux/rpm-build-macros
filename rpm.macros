@@ -1,7 +1,8 @@
 # PLD rpm macros
 
 # other macros
-%_enable_debug_packages 1
+%epoch		0
+%_enable_debug_packages 0
 
 %__id		@__ID@
 %__id_u		%{__id} -u 
@@ -10,7 +11,7 @@
 
 %_fixowner       [ `%{__id_u}` = '0' ] && %{__chown_Rhf} root:@ROOT_GROUP@
 %_fixgroup       true
-%_fixperms             %{__chmod} -Rf @FIXPERMS@
+%_fixperms       %{__chmod} -Rf @FIXPERMS@
 %_topdir         %(echo $HOME)/rpm
 #-----------------------------------------------------------------
 # CFLAGS and LDFLAGS used to build
@@ -19,6 +20,7 @@
 
 %debugcflags	-O0 -g -Wall
 %rpmcflags	%{?debug:%debugcflags}%{!?debug:%optflags}%{?debuginfocflags}
+%rpmcxxflags	%{?debug:%debugcflags}%{!?debug:%optflags}%{?debuginfocflags}
 %rpmldflags	%{nil}
 
 # kernel compiler
@@ -174,11 +176,9 @@ unset DISPLAY ||:\
 # Location of pkgconfig files
 %_pkgconfigdir	/usr/%{_lib}/pkgconfig
 
-# Location of top applink dir
-%_applnkdir	/usr/X11R6/share/applnk
-
 # Location of desktop files
 %_desktopdir	/usr/share/applications
+%_applnkdir	ERROR:_applnkdir_is_obsolete_use_desktopdir_instead
 
 # Location of pixmaps for applnk/desktop files
 %_pixmapsdir	/usr/share/pixmaps
@@ -194,6 +194,9 @@ unset DISPLAY ||:\
 
 # Location of KDE documentation
 %_kdedocdir  %{_defaultdocdir}/kde/HTML
+
+# unsermake script
+%__unsermake /usr/share/unsermake/unsermake
 
 # Current date
 %date 		%(LC_ALL="C" date +"%a %b %d %Y")
@@ -211,26 +214,31 @@ unset DISPLAY ||:\
 %_rpmfilename		%%{NAME}-%%{VERSION}-%%{RELEASE}%{?debug:dbg}.%%{ARCH}.rpm
 
 # Requires name = version-release
-%requires_releq()  		%(LC_ALL="C" echo '%*' | xargs -r rpm -q --qf 'Requires: %%{name} = %%{epoch}:%%{version}-%%{release}\\n' | sed -e 's/ (none):/ /' -e 's/ 0:/ /' | grep -v "is not")
-%requires_releq_kernel_up()  	%(LC_ALL="C" rpm -qf --qf 'Prereq: kernel-up = %%{epoch}:%%{version}-%%{release}\\n' %{_kernelsrcdir}/include/linux/version.h | sed -e 's/ (none):/ /' -e 's/ 0:/ /' | grep -vE "(is not|no such)")
-%requires_releq_kernel_smp()  	%(LC_ALL="C" rpm -qf --qf 'Prereq: kernel-smp = %%{epoch}:%%{version}-%%{release}\\n' %{_kernelsrcdir}/include/linux/version.h | sed -e 's/ (none):/ /' -e 's/ 0:/ /' | grep -vE "(is not|no such)")
-%requires_eq_to() %(LC_ALL="C" rpm -q --qf 'Requires: %1 = %%{epoch}:%%{version}\\n' %2 | sed -e 's/ (none):/ /' -e 's/ 0:/ /' | grep -v "is not")
+%requires_releq()		%(LC_ALL="C" echo '%*' | xargs -r rpm -q --qf 'Requires: %%{name} = %%{epoch}:%%{version}-%%{release}\\n' | sed -e 's/ (none):/ /' | grep -v "is not")
+
+%releq_kernel_up()		%(LC_ALL="C" rpm -qf --qf 'kernel-up = %%{epoch}:%%{version}-%%{release}\\n' %{_kernelsrcdir}/include/linux/version.h | sed -e 's/ (none):/ /' | grep -vE "(is not|no such)")
+%releq_kernel_smp()  		%(LC_ALL="C" rpm -qf --qf 'kernel-smp = %%{epoch}:%%{version}-%%{release}\\n' %{_kernelsrcdir}/include/linux/version.h | sed -e 's/ (none):/ /' | grep -vE "(is not|no such)")
+%requires_releq_kernel_up()  	%(LC_ALL="C" rpm -qf --qf 'PreReq: kernel-up = %%{epoch}:%%{version}-%%{release}\\n' %{_kernelsrcdir}/include/linux/version.h | sed -e 's/ (none):/ /' | grep -vE "(is not|no such)")
+%requires_releq_kernel_smp()  	%(LC_ALL="C" rpm -qf --qf 'PreReq: kernel-smp = %%{epoch}:%%{version}-%%{release}\\n' %{_kernelsrcdir}/include/linux/version.h | sed -e 's/ (none):/ /' | grep -vE "(is not|no such)")
+
+%requires_eq_to() %(LC_ALL="C" rpm -q --qf 'Requires: %1 = %%{epoch}:%%{version}\\n' %2 | sed -e 's/ (none):/ /' | grep -v "is not")
 
 %apache_modules_api %(awk '/#define MODULE_MAGIC_NUMBER_MAJOR/ {print $3}' /usr/include/apache/ap_mmn.h 2>/dev/null || echo ERROR)
 
 # kernel version-release handling
-%__kernel_ver   %([ -f %{_kernelsrcdir}/include/linux/version.h ] && (grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | cut -d'"' -f2) || (awk '/^VERSION/ { ver = $0; gsub(/VERSION.*=/, NIL, ver); } /^PATCHLEVEL/ { plev = $0; gsub(/PATCHLEVEL.*=/, NIL, plev); } /^SUBLEVEL/ { slev = $0; gsub(/SUBLEVEL.*=/, NIL, slev); } END { printf("%d.%d.%d", ver, plev, slev); }' %{_kernelsrcdir}/Makefile 2> /dev/null))
+%__kernel_ver   %([ -f %{_kernelsrcdir}/include/linux/version.h ] && (grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | head -n 1 | cut -d'"' -f2) || (awk '/^VERSION/ { ver = $0; gsub(/VERSION.*=/, NIL, ver); } /^PATCHLEVEL/ { plev = $0; gsub(/PATCHLEVEL.*=/, NIL, plev); } /^SUBLEVEL/ { slev = $0; gsub(/SUBLEVEL.*=/, NIL, slev); } /^EXTRAVERSION/ { ever = $0; gsub(/EXTRAVERSION.*=/, NIL, ever); gsub(/ /, NIL, ever); } END { printf("%d.%d.%d%s", ver, plev, slev, ever); }' %{_kernelsrcdir}/Makefile 2> /dev/null))
 %__kernel_rel    %(LC_ALL="C" rpm -qf %{_kernelsrcdir}/include/linux/fs.h --queryformat "%{RELEASE}" | grep -v "is not")
-%_kernel_ver     %(echo %{__kernel_ver}%{!?_without_dist_kernel:-%{__kernel_rel}})
-%_kernel_ver_str %(echo %{_kernel_ver} | sed s/-/_/g)
+%__kernel_rpmvr  %(LC_ALL="C" rpm -qf %{_kernelsrcdir}/include/linux/fs.h --queryformat "%{VERSION}-%{RELEASE}" | grep -v "is not")
+%_kernel_ver     %{__kernel_ver}%{?with_dist_kernel:%(echo %{__kernel_ver} | grep -q -e - || echo -%{__kernel_rel})}
+%_kernel_ver_str %(echo %{!?_without_dist_kernel:%{__kernel_rpmvr}}%{?_without_dist_kernel:%{__kernel_ver}} | sed -e 's/-/_/g')
 
 # sgml macros
-%xmlcat_add()            /usr/bin/xmlcatalog --noout --add nextCatalog \"\" %1 /etc/xml/catalog
-%xmlcat_del()            /usr/bin/xmlcatalog --noout --del %1 /etc/xml/catalog
+%xmlcat_add()            /usr/bin/xmlcatalog --noout --add nextCatalog \"\" %1 /etc/xml/catalog ;
+%xmlcat_del()            /usr/bin/xmlcatalog --noout --del %1 /etc/xml/catalog ;
 %xmlcat_add_rewrite      /usr/bin/xmlcatalog --noout --add rewriteSystem
-%xmlcat_create()          /usr/bin/xmlcatalog --noout --create %1
-%sgmlcat_add()           /usr/bin/install-catalog --add %1 %2 > /dev/null
-%sgmlcat_del()           /usr/bin/install-catalog --remove %1 %2 > /dev/null
+%xmlcat_create()          /usr/bin/xmlcatalog --noout --create %1 ;
+%sgmlcat_add()           /usr/bin/install-catalog --add %1 %2 > /dev/null ;
+%sgmlcat_del()           /usr/bin/install-catalog --remove %1 %2 > /dev/null ;
 %docbook_sgmlcat_fix() { for l in \
 '' \
 '  -- default decl --' \
@@ -335,8 +343,8 @@ fi; } \
     if [ -d "$RPM_BUILD_ROOT" ]; then \
 echo "Compress kernel modules if any."; \
     if test -d $RPM_BUILD_ROOT/lib/modules ; then \
-       find $RPM_BUILD_ROOT/lib/modules -name \*o -type f -print | \
-       xargs -r %{__gzip} -9nf; \
+	find $RPM_BUILD_ROOT/lib/modules -name \*o -type f -print | \
+	xargs -r %{__gzip} -9nf; \
 	   find $RPM_BUILD_ROOT/lib/modules -name \*o -type l -printf "%p %l\n" | \
 	   while read a b; do ln -sf $b.gz $a.gz; rm -f $a; done; \
     fi; \
@@ -421,6 +429,7 @@ echo "Compress kernel modules if any."; \
 
 # depmod macro
 %depmod() { \
+umask 022; \
 if [ -e /boot/System.map-%1 ]; then \
         /sbin/depmod -a -F /boot/System.map-%1 %1; \
 else \
@@ -464,3 +473,32 @@ fi; \
 #
 %usertestrm	/usr/lib/rpm/user_group.sh user testrm
 %grouptestrm	/usr/lib/rpm/user_group.sh group testrm
+# user group membership management macros
+#
+# Usage:
+#	%addusertogroup myuser agroup
+#
+%addusertogroup	/usr/lib/rpm/user_group.sh user addtogroup
+
+# banner support (useful in {pre,post}{,un} and triggers)
+#
+# Usage:
+#	%banner name [-a] [-e] [-n] [-tn]
+# the banner text, the banner text
+# the banner text, and following line HAVE TO BE:
+# EOF
+# -a   - append to the banner
+# -e   - send to stderr instead of stdout
+# -n   - no show banner (overrides -t)
+# -t   - show only, if RPM_SCRIPTVERBOSITY >= n; default n=5
+%banner(a:e:n:t:)	\
+RPM_SCRIPTVERBOSITY=5 \
+[ -r /etc/sysconfig/rpm ] && . /etc/sysconfig/rpm \
+if [ -x /usr/bin/banner.sh ]; then \
+	CMD="/usr/bin/banner.sh %{-e:--stderr} %{!-n:\`[ $RPM_SCRIPTVERBOSITY -ge %{-t:%{-t*}}%{!-t:5} ] && echo '-s'\`} %{!-a:-m}%{-a:-M} %1" \
+else \
+	CMD="cat%{-e: >&2}" \
+fi \
+$CMD << EOF \
+%nil
+
