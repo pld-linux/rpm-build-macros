@@ -1,0 +1,13 @@
+- add conflicts on rpm < 4.4.1 because in rpm.macros currently in AC-branch
+  will expand in %install _enable_debug_packages, even if it's defined to 0.
+  i think it's bug by itself (no way to disable _enable_debug_packages by
+  redefining it to 0, other than %undefining it?)
+
+  rpm-4.4.1:
+  %install %{?_enable_debug_packages:%{?buildsubdir:%{debug_package}}}\
+
+  rpm-4.3-0.20040107.62:
+  %install \
+  %if 0%{?_enable_debug_packages}\
+  %{?buildsubdir:%{debug_package}}\
+  %endif\
