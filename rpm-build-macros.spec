@@ -13,6 +13,7 @@ Group:		Base
 Source0:	rpm.macros
 Provides:	rpmbuild(macros) = %{rpm_macros_rev}
 Requires:	rpm-build
+Conflicts:	rpm < 4.4.1
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
