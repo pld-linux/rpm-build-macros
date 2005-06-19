@@ -1,10 +1,12 @@
 # NOTE
 # - AC-branch is TAG. please move the tag if rebuild needed:
 #  $ cvs tag -F AC-branch rpm-macros.spec
+# TODO
+# - make rpm actually search for this rpm.macros file
 %define	rpm_macros_rev	1.223
 Summary:	PLD Linux RPM Macros
 Name:		rpm-macros
-Version:	0.1
+Version:	%{rpm_macros_rev}
 Release:	0.3
 License:	GPL
 Group:		Base
@@ -35,4 +37,4 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/rpm/rpm.macros
+%config %verify(not md5 mtime size) %{_sysconfdir}/rpm/rpm.macros
