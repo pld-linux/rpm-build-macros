@@ -1,3 +1,5 @@
+# NOTE
+# - AC-branch is TAG. please move the tag if rebuild needed.
 %define	rpm_macros_rev	1.223
 Summary:	PLD Linux RPM Macros
 Name:		rpm-macros
