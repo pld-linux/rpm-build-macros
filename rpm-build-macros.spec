@@ -7,7 +7,7 @@
 Summary:	PLD Linux RPM Macros
 Name:		rpm-macros
 Version:	%{rpm_macros_rev}
-Release:	0.3
+Release:	0.4
 License:	GPL
 Group:		Base
 Source0:	rpm.macros
@@ -31,11 +31,11 @@ install -d $RPM_BUILD_ROOT%{_sysconfdir}/rpm
 sed -e '
 # truncate until %%_topdir macro
 1,/^%%_topdir/d
-' %{SOURCE0} > $RPM_BUILD_ROOT%{_sysconfdir}/rpm/rpm.macros
+' %{SOURCE0} > $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.pld
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%config %verify(not md5 mtime size) %{_sysconfdir}/rpm/rpm.macros
+%config %verify(not md5 mtime size) %{_sysconfdir}/rpm/*
