@@ -5,11 +5,12 @@
 Summary:	PLD Linux RPM Macros
 Name:		rpm-macros
 Version:	0.1
-Release:	0.2
+Release:	0.3
 License:	GPL
 Group:		Base
 Source0:	rpm.macros
 Provides:	rpmbuild(macros) = %{rpm_macros_rev}
+Requires:	rpm-build
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
