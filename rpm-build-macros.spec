@@ -1,13 +1,8 @@
-# TODO
-# - contains unparsed macros:
-#  %__id        @__ID@
-#  %__chown_Rhf           @__CHOWN_RHF@
-#  %__chgrp_Rhf           @__CHGRP_RHF@
 %define	rpm_macros_rev	1.223
 Summary:	PLD Linux RPM Macros
 Name:		rpm-macros
 Version:	0.1
-Release:	0.1
+Release:	0.2
 License:	GPL
 Group:		Base
 Source0:	rpm.macros
@@ -26,7 +21,10 @@ Use this package to get newer rpm macros than rpm-build provides
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_sysconfdir}/rpm
-install %{SOURCE0} $RPM_BUILD_ROOT%{_sysconfdir}/rpm/rpm.macros
+sed -e '
+# truncate until %%_topdir macro
+1,/^%%_topdir/d
+' %{SOURCE0} > $RPM_BUILD_ROOT%{_sysconfdir}/rpm/rpm.macros
 
 %clean
 rm -rf $RPM_BUILD_ROOT
