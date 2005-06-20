@@ -5,14 +5,15 @@
 # - make rpm actually search for this rpm.macros file
 %define	rpm_macros_rev	1.223
 Summary:	PLD Linux RPM Macros
+Summary(pl):	Makra RPM dla Linuksa PLD
 Name:		rpm-macros
 Version:	%{rpm_macros_rev}
 Release:	0.4
 License:	GPL
 Group:		Base
 Source0:	rpm.macros
-Provides:	rpmbuild(macros) = %{rpm_macros_rev}
 Requires:	rpm-build
+Provides:	rpmbuild(macros) = %{rpm_macros_rev}
 Conflicts:	rpm < 4.4.1
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -22,6 +23,12 @@ This package contains rpm macros for PLD Linux.
 
 Use this package to get newer rpm macros than rpm-build provides
 (perhaps this package will be separated in the future).
+
+%description -l pl
+Ten pakiet zawiera makra rpm-a dla Linuksa PLD.
+
+Mo¿na u¿yæ tego pakietu aby uzyskaæ nowsze makra rpm-a ni¿ dostarcza
+rpm-build (byæ mo¿e ten pakiet zostanie w przysz³o¶ci wydzielony).
 
 %prep
 
