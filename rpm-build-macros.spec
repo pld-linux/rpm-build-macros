@@ -2,7 +2,8 @@
 # - AC-branch is TAG. please move the tag if rebuild needed:
 #  $ cvs tag -F AC-branch rpm-macros.spec
 # TODO
-# - make rpm actually search for this rpm.macros file
+# - move macros.pld to /usr/lib/rpm, but first need to change rpmmrc
+#   for it to search the macrofile from there.
 %define	rpm_macros_rev	1.223
 Summary:	PLD Linux RPM Macros
 Summary(pl):	Makra RPM dla Linuksa PLD
@@ -45,4 +46,4 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%config %verify(not md5 mtime size) %{_sysconfdir}/rpm/*
+%{_sysconfdir}/rpm/*
