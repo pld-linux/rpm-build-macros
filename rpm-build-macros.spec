@@ -4,12 +4,13 @@
 # TODO
 # - move macros.pld to /usr/lib/rpm, but first need to change rpmmrc
 #   for it to search the macrofile from there.
-%define	rpm_macros_rev	1.223
+# - commit debuginfo.patch to rpm.macros
+%define	rpm_macros_rev	1.224
 Summary:	PLD Linux RPM Macros
 Summary(pl):	Makra RPM dla Linuksa PLD
 Name:		rpm-macros
 Version:	%{rpm_macros_rev}
-Release:	0.5
+Release:	0.1
 License:	GPL
 Group:		Base
 Source0:	rpm.macros
