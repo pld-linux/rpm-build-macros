@@ -1,6 +1,7 @@
 # NOTE
 # - AC-branch is TAG. please move the tag if rebuild needed:
 #  $ cvs tag -F AC-branch rpm-macros.spec
+#  $ ./builder -r AC-branch -bb rpm-macros.spec
 # TODO
 # - move macros.pld to /usr/lib/rpm, but first need to change rpmmrc
 #   for it to search the macrofile from there.
