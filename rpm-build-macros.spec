@@ -1,5 +1,6 @@
 # NOTE
 # - AC-branch is TAG. please move the tag if rebuild needed:
+#  $ cvs up -A rpm-macros.spec
 #  $ cvs tag -F AC-branch rpm-macros.spec
 #  $ ./builder -r AC-branch -bb rpm-macros.spec
 # TODO
