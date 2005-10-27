@@ -9,7 +9,7 @@ cvs tag -F AC-branch rpm-macros.spec
 # - move macros.pld to /usr/lib/rpm, but first need to change rpmmrc
 #   for it to search the macrofile from there.
 # - commit debuginfo.patch to rpm.macros
-%define	rpm_macros_rev	1.247
+%define	rpm_macros_rev	1.248
 Summary:	PLD Linux RPM Macros
 Summary(pl):	Makra RPM dla Linuksa PLD
 Name:		rpm-macros
