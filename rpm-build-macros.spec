@@ -9,12 +9,12 @@ cvs tag -F AC-branch rpm-macros.spec
 # - move macros.pld to /usr/lib/rpm, but first need to change rpmmrc
 #   for it to search the macrofile from there.
 # - commit debuginfo.patch to rpm.macros
-%define	rpm_macros_rev	1.251
+%define	rpm_macros_rev	1.253
 Summary:	PLD Linux RPM Macros
 Summary(pl):	Makra RPM dla Linuksa PLD
 Name:		rpm-macros
 Version:	%{rpm_macros_rev}
-Release:	1
+Release:	1.2
 License:	GPL
 Group:		Base
 Source0:	rpm.macros
@@ -25,6 +25,8 @@ Provides:	rpm-build-macros
 Conflicts:	rpm < 4.4.1
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		_rpmlibdir /usr/lib/rpm
 
 %description
 This package contains rpm macros for PLD Linux.
@@ -39,21 +41,23 @@ Mo¿na u¿yæ tego pakietu aby uzyskaæ nowsze makra rpm-a ni¿ dostarcza
 rpm-build (byæ mo¿e ten pakiet zostanie w przysz³o¶ci wydzielony).
 
 %prep
-%setup -q -c -T
+%setup -qcT
 install %{SOURCE0} macros.in
 %patch0 -p1
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/rpm
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/rpm,%{_rpmlibdir}}
 sed -e '
 # truncate until %%_topdir macro
 1,/^%%_topdir/d
 ' macros.in > $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.pld
+cp macros.in $RPM_BUILD_ROOT%{_rpmlibdir}/macros.build
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%{_sysconfdir}/rpm/*
+#%{_sysconfdir}/rpm/*
+%{_rpmlibdir}/*
