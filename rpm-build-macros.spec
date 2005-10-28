@@ -1,6 +1,6 @@
-# NOTE
+# NOTE:
+# - AC-branch is TAG. please move the tag if rebuild needed:
 %if 0
-- AC-branch is TAG. please move the tag if rebuild needed:
 cvs up -A rpm-macros.spec
 cvs tag -F AC-branch rpm-macros.spec
 ./builder -r AC-branch -bb rpm-macros.spec
@@ -9,7 +9,7 @@ cvs tag -F AC-branch rpm-macros.spec
 # - move macros.pld to /usr/lib/rpm, but first need to change rpmmrc
 #   for it to search the macrofile from there.
 # - commit debuginfo.patch to rpm.macros
-%define	rpm_macros_rev	1.248
+%define	rpm_macros_rev	1.251
 Summary:	PLD Linux RPM Macros
 Summary(pl):	Makra RPM dla Linuksa PLD
 Name:		rpm-macros
@@ -21,6 +21,7 @@ Source0:	rpm.macros
 Patch0:		%{name}-debuginfo.patch
 Requires:	rpm-build
 Provides:	rpmbuild(macros) = %{rpm_macros_rev}
+Provides:	rpm-build-macros
 Conflicts:	rpm < 4.4.1
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
