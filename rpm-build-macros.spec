@@ -5,8 +5,10 @@ cvs up -A rpm-macros.spec
 cvs tag -F AC-branch rpm-macros.spec
 ./builder -r AC-branch -bb rpm-macros.spec
 %endif
+# TODO
+# - update -pl
 %define	rpm_macros_rev	1.254
-Summary:	PLD Linux RPM Macros
+Summary:	PLD Linux RPM build macros
 Summary(pl):	Makra RPM dla Linuksa PLD
 Name:		rpm-build-macros
 Version:	%{rpm_macros_rev}
