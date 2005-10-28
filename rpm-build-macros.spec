@@ -12,17 +12,15 @@ cvs tag -F AC-branch rpm-macros.spec
 %define	rpm_macros_rev	1.253
 Summary:	PLD Linux RPM Macros
 Summary(pl):	Makra RPM dla Linuksa PLD
-Name:		rpm-macros
+Name:		rpm-build-macros
 Version:	%{rpm_macros_rev}
-Release:	1.2
+Release:	1.3
 License:	GPL
 Group:		Base
 Source0:	rpm.macros
-Patch0:		%{name}-debuginfo.patch
 Requires:	rpm-build
 Provides:	rpmbuild(macros) = %{rpm_macros_rev}
-Provides:	rpm-build-macros
-Conflicts:	rpm < 4.4.1
+Obsoletes:	rpm-macros
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -41,23 +39,15 @@ Mo¿na u¿yæ tego pakietu aby uzyskaæ nowsze makra rpm-a ni¿ dostarcza
 rpm-build (byæ mo¿e ten pakiet zostanie w przysz³o¶ci wydzielony).
 
 %prep
-%setup -qcT
-install %{SOURCE0} macros.in
-%patch0 -p1
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir}/rpm,%{_rpmlibdir}}
-sed -e '
-# truncate until %%_topdir macro
-1,/^%%_topdir/d
-' macros.in > $RPM_BUILD_ROOT%{_sysconfdir}/rpm/macros.pld
-cp macros.in $RPM_BUILD_ROOT%{_rpmlibdir}/macros.build
+install -d $RPM_BUILD_ROOT%{_rpmlibdir}
+cp %{SOURCE0} $RPM_BUILD_ROOT%{_rpmlibdir}/macros.build
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-#%{_sysconfdir}/rpm/*
 %{_rpmlibdir}/*
