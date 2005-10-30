@@ -5,11 +5,9 @@ cvs up -A rpm-build-macros.spec
 cvs tag -F AC-branch rpm-build-macros.spec
 ./builder -r AC-branch -bb rpm-build-macros.spec
 %endif
-# TODO
-# - update -pl
 %define	rpm_macros_rev	1.254
 Summary:	PLD Linux RPM build macros
-Summary(pl):	Makra RPM dla Linuksa PLD
+Summary(pl):	Makra do budowania pakietów RPM dla Linuksa PLD
 Name:		rpm-build-macros
 Version:	%{rpm_macros_rev}
 Release:	1
@@ -28,7 +26,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 This package contains rpm build macros for PLD Linux.
 
 %description -l pl
-Ten pakiet zawiera makra rpm-a dla Linuksa PLD.
+Ten pakiet zawiera makra rpm-a do budowania pakietów dla Linuksa PLD.
 
 %prep
 
