@@ -1,9 +1,9 @@
 # NOTE:
 # - AC-branch is TAG. please move the tag if rebuild needed:
 %if 0
-cvs up -A rpm-macros.spec
-cvs tag -F AC-branch rpm-macros.spec
-./builder -r AC-branch -bb rpm-macros.spec
+cvs up -A rpm-build-macros.spec
+cvs tag -F AC-branch rpm-build-macros.spec
+./builder -r AC-branch -bb rpm-build-macros.spec
 %endif
 # TODO
 # - update -pl
