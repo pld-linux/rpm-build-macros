@@ -1,11 +1,4 @@
-# NOTE:
-# - AC-branch is TAG. please move the tag if rebuild needed:
-%if 0
-cvs up -A rpm-build-macros.spec
-cvs tag -F AC-branch rpm-build-macros.spec
-./builder -r AC-branch -bb rpm-build-macros.spec
-%endif
-%define	rpm_macros_rev	1.254
+%define	rpm_macros_rev	1.260
 Summary:	PLD Linux RPM build macros
 Summary(pl):	Makra do budowania pakietów RPM dla Linuksa PLD
 Name:		rpm-build-macros
