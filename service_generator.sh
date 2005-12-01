@@ -44,7 +44,7 @@ skip_auto_restart_body() {
 EOF
 }
 
-echo ""
+echo ''
 if [ "$check" = 1 ]; then
 	skip_auto_restart_body
 	echo 'if [ $(skip_auto_restart) = no ]; then'
@@ -67,3 +67,6 @@ rpm -E '%service monit restart "Monit Daemon"' | sh
 rpm -E '%service monit restart -q "Monit Daemon"' | sh
 rpm -E '%service monit reload "Monit Daemon"' | sh
 rpm -E '%service monit reload -q "Monit Daemon"' | sh
+rpm -E '%{service monit reload "Monit Daemon"} date' | sh
+rpm -E '%{service monit reload "Monit Daemon" -q} date' | sh
+
