@@ -1,0 +1,2 @@
+- add %ruby_ver_requires_eq and %ruby_ver_mod_requires_eq
+  (Requires: ruby-modules(ver) = major version of ruby)
