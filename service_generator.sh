@@ -37,7 +37,7 @@ skip_auto_restart_body() {
 	cat <<-EOF
 
 	skip_auto_restart() {
-		. /etc/sysconfig/rpm
+		[ -f /etc/sysconfig/rpm ] && . /etc/sysconfig/rpm
 		[ -f /etc/sysconfig/$service ] && . /etc/sysconfig/$service
 		echo \${RPM_SKIP_AUTO_RESTART:-no}
 	};
