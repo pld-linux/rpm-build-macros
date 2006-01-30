@@ -19,7 +19,7 @@ fi
 service_body() {
 	cat <<-EOF
 	if [ -f /var/lock/subsys/$service ]; then
-		/etc/rc.d/init.d/$service $action 1>&2
+		/etc/rc.d/init.d/$service $action 1>&2 || :;
 EOF
 	if [ "$quiet" != 1 ]; then
 		cat <<-EOF
