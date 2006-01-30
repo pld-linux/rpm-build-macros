@@ -24,7 +24,7 @@ EOF
 	if [ "$quiet" != 1 ]; then
 		cat <<-EOF
 		else
-			echo 'Run "service $service start" to start $desc.'
+			echo 'Run "/sbin/service $service start" to start $desc.'
 EOF
 	fi
 	cat <<-EOF
