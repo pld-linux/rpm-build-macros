@@ -19,12 +19,12 @@ fi
 service_body() {
 	cat <<-EOF
 	if [ -f /var/lock/subsys/$service ]; then
-		/etc/rc.d/init.d/$service $action 1>&2 || :;
+		/sbin/service $service $action 1>&2 || :;
 EOF
 	if [ "$quiet" != 1 ]; then
 		cat <<-EOF
 		else
-			echo 'Run "/etc/rc.d/init.d/$service start" to start $desc.'
+			echo 'Run "service $service start" to start $desc.'
 EOF
 	fi
 	cat <<-EOF
@@ -35,7 +35,6 @@ EOF
 # include check function
 skip_auto_restart_body() {
 	cat <<-EOF
-
 	skip_auto_restart() {
 		[ -f /etc/sysconfig/rpm ] && . /etc/sysconfig/rpm
 		[ -f /etc/sysconfig/$service ] && . /etc/sysconfig/$service
