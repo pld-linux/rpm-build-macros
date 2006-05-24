@@ -8,7 +8,6 @@ License:	GPL
 Group:		Base
 Source0:	rpm.macros
 Source1:	service_generator.sh
-Requires:	rpm-build
 Provides:	rpmbuild(macros) = %{rpm_macros_rev}
 Obsoletes:	rpm-macros
 BuildArch:	noarch
