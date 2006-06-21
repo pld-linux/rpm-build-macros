@@ -9,7 +9,7 @@ if [ -z "$desc" ]; then
 fi
 
 # action stop implies quiet mode and check disabling
-if [ "$action" == "stop" ]; then
+if [ "$action" = "stop" ]; then
 	quiet=1
 else
 	check=1
