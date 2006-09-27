@@ -1,13 +1,14 @@
+%define		rpm_macros_rev	1.320
 Summary:	PLD Linux RPM build macros
 Summary(pl):	Makra do budowania pakietów RPM dla Linuksa PLD
 Name:		rpm-build-macros
-%define		rpm_macros_rev	1.319
 Version:	%{rpm_macros_rev}
 Release:	1
 License:	GPL
 Group:		Base
 Source0:	rpm.macros
 Source1:	service_generator.sh
+Source2:	rpm-build.sh
 Provides:	rpmbuild(macros) = %{rpm_macros_rev}
 Obsoletes:	rpm-macros
 BuildArch:	noarch
@@ -32,9 +33,10 @@ fi
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_rpmlibdir}
+install -d $RPM_BUILD_ROOT{%{_rpmlibdir},/etc/shrc.d}
 cp %{SOURCE0} $RPM_BUILD_ROOT%{_rpmlibdir}/macros.build
 install %{SOURCE1} $RPM_BUILD_ROOT%{_rpmlibdir}/service_generator.sh
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/shrc.d/rpm-build.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -43,3 +45,4 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_rpmlibdir}/macros.build
 %attr(755,root,root) %{_rpmlibdir}/service_generator.sh
+%attr(755,root,root) /etc/shrc.d/rpm-build.sh
