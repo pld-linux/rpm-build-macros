@@ -3,7 +3,7 @@ Summary:	PLD Linux RPM build macros
 Summary(pl):	Makra do budowania pakietów RPM dla Linuksa PLD
 Name:		rpm-build-macros
 Version:	%{rpm_macros_rev}
-Release:	1
+Release:	2
 License:	GPL
 Group:		Base
 Source0:	rpm.macros
@@ -15,8 +15,8 @@ BuildArch:	noarch
 # for _x_libraries macro
 Conflicts:	rpm < 4.4.2-27.1
 # php-config --sysconfdir
-Conflicts:	php-devel < 4.2.0-3
-Conflicts:	php4-devel < 4.4.4-10
+Conflicts:	php-devel < 4:5.2.0-3
+Conflicts:	php4-devel < 3:4.4.4-10
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_rpmlibdir %{_prefix}/lib/rpm
