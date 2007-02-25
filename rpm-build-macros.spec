@@ -5,7 +5,7 @@ Name:		rpm-build-macros
 Version:	%{rpm_macros_rev}
 Release:	1
 License:	GPL
-Group:		Base
+Group:		Development/Building
 Source0:	rpm.macros
 Source1:	service_generator.sh
 Source2:	rpm-build.sh
