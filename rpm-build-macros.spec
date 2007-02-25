@@ -49,4 +49,4 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_rpmlibdir}/macros.build
 %attr(755,root,root) %{_rpmlibdir}/service_generator.sh
-%attr(755,root,root) /etc/shrc.d/rpm-build.sh
+/etc/shrc.d/rpm-build.sh
