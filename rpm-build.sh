@@ -20,9 +20,18 @@ alias $dist-provides="ipoldek-$dist what-provides"
 alias $dist-tag="./builder -cf -T $(echo $dist | tr '[a-z]' '[A-Z]')-branch -r HEAD"
 alias $dist-verify=dist-verify
 
+# undo spec utf8
+# note: it will do it blindly, so any lang other than -pl is most likely broken
+specutfundo() {
+	local spec="$1"
+	iconv -futf8 -tlatin2 "$spec" > m
+	sed -e 's/\.UTF-8//' m > "$spec"
+	rm -f m
+}
+
 dist-verify() {
-	poldek --sn $dist --sn $dist-ready --up
-	poldek --sn $dist --sn $dist-ready --noignore --verify=deps "$@"
+	poldek --sn $dist --sn $dist-ready --sn $dist-updates --up
+	poldek --sn $dist --sn $dist-ready --sn $dist-updates --noignore --verify=deps "$@"
 }
 
 # displays latest used tag for a specfile
@@ -141,4 +150,22 @@ cvslog() {
 	local d="${f%/*}"
 	[ "$d" = "$f" ] && d=.
 	(builtin cd $d && cvs log ${f##*/})
+}
+
+# does diff between FILE and FILE~
+# the diff can be applied with patch -p1
+d() {
+	local file="$1"
+	local dir
+	if [[ "$file" = /* ]]; then
+		# full path -- no idea where to strip
+		dir=.
+		diff=$file
+	else
+		# relative path -- keep one path component from current dir
+		dir=..
+		diff=${PWD##*/}/${file}
+	fi
+
+	(builtin cd "$dir"; dif $diff{~,})
 }
