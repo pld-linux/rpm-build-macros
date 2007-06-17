@@ -12,7 +12,7 @@ Source2:	rpm-build.sh
 Requires:	findutils >= 1:4.2.26
 Provides:	rpmbuild(macros) = %{rpm_macros_rev}
 Obsoletes:	rpm-macros
-Conflicts:	gettext < 0.11
+Conflicts:	gettext-devel < 0.11
 # for _x_libraries macro
 Conflicts:	rpm < 4.4.2-27.1
 # php-config --sysconfdir
