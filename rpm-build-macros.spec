@@ -13,12 +13,13 @@ Patch0:		rpm-build-kernel.patch
 Requires:	findutils >= 1:4.2.26
 Provides:	rpmbuild(macros) = %{rpm_macros_rev}
 Obsoletes:	rpm-macros
-BuildArch:	noarch
+Conflicts:	gettext-devel < 0.11
 # for _x_libraries macro
 Conflicts:	rpm < 4.4.2-27.1
 # php-config --sysconfdir
 Conflicts:	php-devel < 4:5.2.0-3
 Conflicts:	php4-devel < 3:4.4.4-10
+BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_rpmlibdir %{_prefix}/lib/rpm
