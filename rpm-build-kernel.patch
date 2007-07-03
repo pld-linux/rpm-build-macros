@@ -1,6 +1,6 @@
---- ./rpm.macros	2007-07-04 00:59:10.033559000 +0300
-+++ ./rpm.macros	2007-07-04 00:59:27.123949791 +0300
-@@ -288,8 +281,10 @@
+--- rpm-build-macros-1.387/rpm.macros~	2007-07-04 00:59:27.123949791 +0300
++++ rpm-build-macros-1.387/rpm.macros	2007-07-04 01:06:44.903953858 +0300
+@@ -281,8 +281,10 @@
  # Requires name = version-release
  %requires_releq()		%(echo '%*' | LC_ALL="C" xargs -r rpm -q --qf 'Requires: %%{name} = %%{epoch}:%%{version}-%%{release}\\n' | sed -e 's/ (none):/ /' | grep -v "is not")
  
@@ -13,7 +13,7 @@
  
  %requires_eq()		%(echo '%*' | LC_ALL="C" xargs -r rpm -q --qf 'Requires: %%{name} = %%{epoch}:%%{version}\\n' | sed -e 's/ (none):/ /' -e 's/ 0:/ /' | grep -v "is not")
  %requires_eq_to() %(LC_ALL="C" rpm -q --qf 'Requires: %1 = %%{epoch}:%%{version}\\n' %2 | sed -e 's/ (none):/ /' | grep -v "is not")
-@@ -1235,7 +1210,7 @@
+@@ -1208,7 +1210,7 @@
  	L="<"; [[ '%{*}' != *$L$L* ]] || PATCH_SH="set -x -e;$(cat)"	\
  	set -e -x														\
  																	\
@@ -22,7 +22,7 @@
  	[ -r "%{_kernelsrcdir}/config-$cfg" ] || exit 1					\
  																	\
  	rm -rf o														\
-@@ -1245,8 +1220,8 @@
+@@ -1218,8 +1220,8 @@
  	ln -sf %{_kernelsrcdir}/include/linux/autoconf-$cfg.h o/include/linux/autoconf.h \
  %ifarch ppc ppc64													\
  	install -d o/include/asm										\
@@ -33,7 +33,7 @@
  %else																\
  	ln -sf %{_kernelsrcdir}/include/asm-%{_target_base_arch} o/include/asm \
  %endif																\
-@@ -1306,8 +1281,8 @@
+@@ -1279,8 +1281,8 @@
  %define KernelD $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}			\
  %define ModprobeD $RPM_BUILD_ROOT%{_sysconfdir}/modprobe.d/%{_kernel_ver} \
  																	\
@@ -44,7 +44,7 @@
  																	\
  for MODULE in {%{-m*},}; do											\
  	[ -n "${MODULE}" ] || continue									\
-@@ -1318,11 +1293,19 @@
+@@ -1291,11 +1293,19 @@
  		%{?-s:echo "alias ${MNAME} ${MNAME}-%{-s*}"					\\\
  			>> %{ModprobeD}/%{-n*}.conf}							\
  	%else															\
@@ -65,3 +65,14 @@
  done																\
  %{nil}
  
+@@ -1326,6 +1336,10 @@
+ done																\
+ %{nil}
+ 
++# alias Th kernel macros to SMP kernel
++%releq_kernel %releq_kernel_smp
++%requires_releq_kernel %requires_releq_kernel_smp
++
+ # patchset macros
+ # Author: Elan Ruusamäe <glen@pld-linux.org>
+ #
