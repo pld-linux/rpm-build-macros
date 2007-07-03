@@ -30,7 +30,9 @@ This package contains rpm build macros for PLD Linux.
 Ten pakiet zawiera makra rpm-a do budowania pakietów dla Linuksa PLD.
 
 %prep
-rev=$(awk '/^#.*Revision:.*Date/{print $3}' %{SOURCE0})
+%setup -qcT
+cp %{SOURCE0} rpm.macros
+rev=$(awk '/^#.*Revision:.*Date/{print $3}' rpm.macros)
 if [ "$rev" != "%rpm_macros_rev" ]; then
 	: Update rpm_macros_rev define to $rev, and retry
 	exit 1
@@ -39,7 +41,7 @@ fi
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_rpmlibdir},/etc/shrc.d}
-cp %{SOURCE0} $RPM_BUILD_ROOT%{_rpmlibdir}/macros.build
+cp rpm.macros $RPM_BUILD_ROOT%{_rpmlibdir}/macros.build
 install %{SOURCE1} $RPM_BUILD_ROOT%{_rpmlibdir}/service_generator.sh
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/shrc.d/rpm-build.sh
 
