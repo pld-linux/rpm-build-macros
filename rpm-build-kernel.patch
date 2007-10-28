@@ -13,26 +13,18 @@
  
  %requires_eq()		%(echo '%*' | LC_ALL="C" xargs -r rpm -q --qf 'Requires: %%{name} = %%{epoch}:%%{version}\\n' | sed -e 's/ (none):/ /' -e 's/ 0:/ /' | grep -v "is not")
  %requires_eq_to() %(LC_ALL="C" rpm -q --qf 'Requires: %1 = %%{epoch}:%%{version}\\n' %2 | sed -e 's/ (none):/ /' | grep -v "is not")
-@@ -1208,7 +1210,7 @@
+@@ -1167,9 +1169,9 @@
+ compile() {															\
  	L="<"; [[ '%{*}' != *$L$L* ]] || PATCH_SH="set -x -e;$(cat)"	\
  	set -e -x														\
+-	local cfgs='%{?with_dist_kernel:dist}%{!?with_dist_kernel:nondist}'	\
++	local cfgs='%{?with_dist_kernel:%{?with_smp: smp}%{?with_up: up}}%{!?with_dist_kernel: nondist}' \
  																	\
--for cfg in %{?with_dist_kernel:dist}%{!?with_dist_kernel:nondist}; do \
-+for cfg in %{?with_dist_kernel:%{?with_smp:smp} %{?with_up:up}}%{!?with_dist_kernel:nondist}; do \
+-for cfg in $cfgs; do												\
++for cfg in ${cfgs:-dist}; do                                        \
  	[ -r "%{_kernelsrcdir}/config-$cfg" ] || exit 1					\
  																	\
  	rm -rf o														\
-@@ -1218,8 +1220,8 @@
- 	ln -sf %{_kernelsrcdir}/include/linux/autoconf-$cfg.h o/include/linux/autoconf.h \
- %ifarch ppc ppc64													\
- 	install -d o/include/asm										\
--	[ ! -d %{_kernelsrcdir}/include/asm-%{_target_base_arch} ] || ln -sf %{_kernelsrcdir}/include/asm-%{_target_base_arch}/* o/include/asm \
--	[ ! -d %{_kernelsrcdir}/include/asm-powerpc ] || ln -snf %{_kernelsrcdir}/include/asm-powerpc/* o/include/asm	\
-+	[ ! -d %{_kernelsrcdir}/include/asm-powerpc ] || ln -sf %{_kernelsrcdir}/include/asm-powerpc/* o/include/asm	\
-+	[ ! -d %{_kernelsrcdir}/include/asm-%{_target_base_arch} ] || ln -snf %{_kernelsrcdir}/include/asm-%{_target_base_arch}/* o/include/asm \
- %else																\
- 	ln -sf %{_kernelsrcdir}/include/asm-%{_target_base_arch} o/include/asm \
- %endif																\
 @@ -1279,8 +1281,8 @@
  %define KernelD $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}			\
  %define ModprobeD $RPM_BUILD_ROOT%{_sysconfdir}/modprobe.d/%{_kernel_ver} \
