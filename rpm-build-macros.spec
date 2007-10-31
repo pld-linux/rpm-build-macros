@@ -1,6 +1,6 @@
-%define		rpm_macros_rev 1.398
+%define		rpm_macros_rev 1.402
 Summary:	PLD Linux RPM build macros
-Summary(pl.UTF-8):	Makra do budowania pakietÃ³w RPM dla Linuksa PLD
+Summary(pl):	Makra do budowania pakietów RPM dla Linuksa PLD
 Name:		rpm-build-macros
 Version:	%{rpm_macros_rev}
 Release:	1
@@ -9,6 +9,7 @@ Group:		Development/Building
 Source0:	rpm.macros
 Source1:	service_generator.sh
 Source2:	rpm-build.sh
+Patch0:		rpm-build-kernel.patch
 Requires:	findutils >= 1:4.2.26
 Provides:	rpmbuild(macros) = %{rpm_macros_rev}
 Obsoletes:	rpm-macros
@@ -26,8 +27,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %description
 This package contains rpm build macros for PLD Linux.
 
-%description -l pl.UTF-8
-Ten pakiet zawiera makra rpm-a do budowania pakietÃ³w dla Linuksa PLD.
+%description -l pl
+Ten pakiet zawiera makra rpm-a do budowania pakietów dla Linuksa PLD.
 
 %prep
 %setup -qcT
@@ -37,6 +38,7 @@ if [ "$rev" != "%rpm_macros_rev" ]; then
 	: Update rpm_macros_rev define to $rev, and retry
 	exit 1
 fi
+%patch0 -p1
 
 %install
 rm -rf $RPM_BUILD_ROOT
