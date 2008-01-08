@@ -15,8 +15,11 @@ find $dir -type d -name lang | while read dir; do
 		pt-br)
 			lang=pt_BR
 		;;
+		sl-si)
+			lang=sl
+		;;
 		*-*)
-			: Need mapping for $lang!
+			echo >&2 "Need mapping for $lang!"
 			exit 1
 		;;
 		esac
