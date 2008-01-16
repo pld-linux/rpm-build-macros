@@ -1,0 +1,2 @@
+- 1.415: move whole %banner expansion to subshell, heredoc redirection works now too
+- NB: 1.414 is broken and any package built with it using %banner must be rebuilt
