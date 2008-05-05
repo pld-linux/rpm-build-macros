@@ -4,6 +4,7 @@ service="$1"
 action="$2"
 desc="$3"
 quiet=$quiet
+noop=$noop
 if [ -z "$desc" ]; then
 	desc="$1 service"
 fi
@@ -19,8 +20,14 @@ fi
 service_body() {
 	cat <<-EOF
 		if [ -f /var/lock/subsys/$service ]; then
-			/sbin/service $service $action 1>&2 || :;
 	EOF
+	if [ "$noop" = 1 ]; then
+		echo :
+	else
+		cat <<-EOF
+				/sbin/service $service $action 1>&2 || :;
+		EOF
+	fi
 
 	if [ "$quiet" != 1 ]; then
 		cat <<-EOF
@@ -69,4 +76,5 @@ rpm -E '%service monit reload "Monit Daemon"' | sh
 rpm -E '%service monit reload -q "Monit Daemon"' | sh
 rpm -E '%{service monit reload "Monit Daemon"} date' | sh
 rpm -E '%{service monit reload "Monit Daemon" -q} date' | sh
+rpm -E '%{service -n monit restart "Monit Daemon" } date' | sh
 
