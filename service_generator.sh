@@ -18,36 +18,37 @@ fi
 # common part
 service_body() {
 	cat <<-EOF
-	if [ -f /var/lock/subsys/$service ]; then
-		/sbin/service $service $action 1>&2 || :;
-EOF
+		if [ -f /var/lock/subsys/$service ]; then
+			/sbin/service $service $action 1>&2 || :;
+	EOF
+
 	if [ "$quiet" != 1 ]; then
 		cat <<-EOF
 		else
 			echo 'Run "/sbin/service $service start" to start $desc.'
-EOF
+		EOF
 	fi
 	cat <<-EOF
-	fi
-EOF
+		fi
+	EOF
 }
 
 # include check function
 skip_auto_restart_body() {
 	cat <<-EOF
-	skip_auto_restart() {
-		[ -f /etc/sysconfig/rpm ] && . /etc/sysconfig/rpm
-		[ -f /etc/sysconfig/$service ] && . /etc/sysconfig/$service
-		echo \${RPM_SKIP_AUTO_RESTART:-no}
-	};
-EOF
+		skip_auto_restart() {
+			[ -f /etc/sysconfig/rpm ] && . /etc/sysconfig/rpm
+			[ -f /etc/sysconfig/$service ] && . /etc/sysconfig/$service
+			echo \${RPM_SKIP_AUTO_RESTART:-no}
+		};
+	EOF
 }
 
 echo ''
 if [ "$check" = 1 ]; then
 	skip_auto_restart_body
 	echo 'if [ $(skip_auto_restart) = no ]; then'
-	service_body
+		service_body
 	echo 'fi'
 else
 	service_body
