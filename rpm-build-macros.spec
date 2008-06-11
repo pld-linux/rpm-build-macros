@@ -1,4 +1,4 @@
-%define		rpm_macros_rev	1.458
+%define		rpm_macros_rev	1.459
 %define		find_lang_rev	1.32
 Summary:	PLD Linux RPM build macros
 Summary(pl.UTF-8):	Makra do budowania pakietów RPM dla Linuksa PLD
@@ -13,7 +13,6 @@ Source2:	rpm-build.sh
 Source3:	rpm-find-lang
 Provides:	rpmbuild(find_lang) = %{find_lang_rev}
 Requires:	findutils >= 1:4.2.26
-Requires:	python
 Provides:	rpmbuild(macros) = %{rpm_macros_rev}
 Obsoletes:	rpm-macros
 Conflicts:	gettext-devel < 0.11
