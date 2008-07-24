@@ -1,4 +1,4 @@
-%define		rpm_macros_rev	1.469
+%define		rpm_macros_rev	1.470
 %define		find_lang_rev	1.32
 Summary:	PLD Linux RPM build macros
 Summary(pl.UTF-8):	Makra do budowania pakietów RPM dla Linuksa PLD
@@ -17,8 +17,8 @@ Provides:	rpmbuild(find_lang) = %{find_lang_rev}
 Provides:	rpmbuild(macros) = %{rpm_macros_rev}
 Obsoletes:	rpm-macros
 Conflicts:	gettext-devel < 0.11
-# tmpdir/_tmppath macros problems
-Conflicts:	rpm < 4.4.9-52
+# tmpdir/_tmppath macros problems; optcppflags missing
+Conflicts:	rpm < 4.4.9-72
 # php-config --sysconfdir
 Conflicts:	php-devel < 4:5.2.0-3
 Conflicts:	php4-devel < 3:4.4.4-10
