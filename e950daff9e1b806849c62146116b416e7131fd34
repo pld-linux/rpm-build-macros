@@ -1,0 +1,2 @@
+- r1.483 bugfix: getgid check was inversed
+  NB! all pkgs having %groupadd macro and built with x>=1.479 and x<1.483 should be rebuilt
