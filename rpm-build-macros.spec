@@ -17,6 +17,8 @@ Requires:	findutils >= 1:4.2.26
 Provides:	rpmbuild(find_lang) = %{find_lang_rev}
 Provides:	rpmbuild(macros) = %{rpm_macros_rev}
 Obsoletes:	rpm-macros
+# rm: option `--interactive' doesn't allow an argument
+Conflicts:	coreutils < 6.9
 Conflicts:	gettext-devel < 0.11
 # tmpdir/_tmppath macros problems; optcppflags missing
 Conflicts:	rpm < 4.4.9-72
