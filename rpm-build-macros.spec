@@ -1,11 +1,10 @@
-%define		no_install_post_check_so 1
 %define		rpm_macros_rev	1.487
 %define		find_lang_rev	1.32
 Summary:	PLD Linux RPM build macros
 Summary(pl.UTF-8):	Makra do budowania pakietów RPM dla Linuksa PLD
 Name:		rpm-build-macros
 Version:	%{rpm_macros_rev}
-Release:	2
+Release:	3
 License:	GPL
 Group:		Development/Building
 Source0:	rpm.macros
