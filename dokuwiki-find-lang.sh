@@ -18,6 +18,9 @@ find $dir -type d -name lang | while read dir; do
 		sl-si)
 			lang=sl
 		;;
+		id-ni)
+			lang=id_NI
+		;;
 		*-*)
 			echo >&2 "Need mapping for $lang!"
 			exit 1
