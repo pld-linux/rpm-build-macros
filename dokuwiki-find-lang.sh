@@ -1,8 +1,9 @@
 #!/bin/sh
+PROG=${0##*/}
 dir=$RPM_BUILD_ROOT/usr/share/dokuwiki
 langfile=$1
 
-> $langfile
+echo '%defattr(644,root,root,755)' > $langfile
 find $dir -type d -name lang | while read dir; do
 	echo "%dir ${dir#$RPM_BUILD_ROOT}" >> $langfile
 	for dir in $dir/*; do
@@ -29,3 +30,8 @@ find $dir -type d -name lang | while read dir; do
 		echo "%lang($lang) ${dir#$RPM_BUILD_ROOT}" >> $langfile
 	done
 done
+
+if [ "$(egrep -v '(^%defattr|^$)' $langfile | wc -l)" -le 0 ]; then
+	echo >&2 "$PROG: Error: international files not found!"
+	exit 1
+fi
