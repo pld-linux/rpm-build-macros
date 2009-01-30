@@ -26,6 +26,9 @@ while read dir; do
 		id-ni)
 			lang=id_NI
 		;;
+		ca-va)
+			lang=ca_VA
+		;;
 		*-*)
 			echo >&2 "ERROR: Need mapping for $lang!"
 			rc=1
