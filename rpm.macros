@@ -798,6 +798,12 @@ fi \
 %{__xorg_abi_requires_lt videodrv xorg_xserver_videodrv_abi} \
 %{nil}
 
+# TCL specific macro definitions.
+# TODO: when th tcl is fixed use tclsh to get version: %(echo 'puts $tcl_version' | tclsh)
+%tcl_version	%{expand:%%global tcl_version %(v=$(rpm -q --qf %{V} tcl | cut -d. -f1,2); echo ${v:-ERROR})}%tcl_version
+%tcl_sitearch	%{_libdir}/tcl%{tcl_version}
+%tcl_sitelib	%{_datadir}/tcl%{tcl_version}
+
 # Python specific macro definitions.
 # python main version
 %py_ver			%{expand:%%global py_ver %(%{__python} -c "import sys; print sys.version[:3]" 2>/dev/null || echo ERROR)}%py_ver
