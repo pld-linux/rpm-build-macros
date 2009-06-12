@@ -934,7 +934,8 @@ fi; \
 #
 # Requirements:
 # BuildRequires:	rpmbuild(macros) >= 1.515
-%addusertogroup(q)	quiet=%{-q:1} /usr/lib/rpm/user_group.sh user addtogroup %*
+%addusertogroup(q)	quiet=%{-q:1} /usr/lib/rpm/user_group.sh user addtogroup %*; \
+%{nil}
 
 # banner support (useful in {pre,post}{,un} and triggers)
 #
