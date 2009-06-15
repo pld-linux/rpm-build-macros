@@ -34,7 +34,7 @@ BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # redefine to bootstrap
-%define		_rpmhome %{_prefix}/lib/rpm
+%define		_usrlibrpm %{_prefix}/lib/rpm
 
 %description
 This package contains rpm build macros for PLD Linux.
@@ -64,20 +64,20 @@ cp %{SOURCE0} .
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_rpmhome},/etc/shrc.d}
-cp rpm.macros $RPM_BUILD_ROOT%{_rpmhome}/macros.build
-install %{SOURCE1} $RPM_BUILD_ROOT%{_rpmhome}/service_generator.sh
+install -d $RPM_BUILD_ROOT{%{_usrlibrpm},/etc/shrc.d}
+cp rpm.macros $RPM_BUILD_ROOT%{_usrlibrpm}/macros.build
+install %{SOURCE1} $RPM_BUILD_ROOT%{_usrlibrpm}/service_generator.sh
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/shrc.d/rpm-build.sh
-install %{SOURCE3} $RPM_BUILD_ROOT%{_rpmhome}/find-lang.sh
-install %{SOURCE4} $RPM_BUILD_ROOT%{_rpmhome}
+install %{SOURCE3} $RPM_BUILD_ROOT%{_usrlibrpm}/find-lang.sh
+install %{SOURCE4} $RPM_BUILD_ROOT%{_usrlibrpm}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%{_rpmhome}/macros.build
-%attr(755,root,root) %{_rpmhome}/service_generator.sh
-%attr(755,root,root) %{_rpmhome}/find-lang.sh
-%attr(755,root,root) %{_rpmhome}/dokuwiki-find-lang.sh
+%{_usrlibrpm}/macros.build
+%attr(755,root,root) %{_usrlibrpm}/service_generator.sh
+%attr(755,root,root) %{_usrlibrpm}/find-lang.sh
+%attr(755,root,root) %{_usrlibrpm}/dokuwiki-find-lang.sh
 /etc/shrc.d/rpm-build.sh
