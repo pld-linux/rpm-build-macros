@@ -1,4 +1,4 @@
-%define		rpm_macros_rev	1.519
+%define		rpm_macros_rev	1.520
 %define		find_lang_rev	1.32
 Summary:	PLD Linux RPM build macros
 Summary(pl.UTF-8):	Makra do budowania pakietów RPM dla Linuksa PLD
@@ -11,6 +11,7 @@ Source0:	rpm.macros
 Source1:	service_generator.sh
 Source2:	rpm-build.sh
 Source3:	rpm-find-lang
+Source4:	dokuwiki-find-lang.sh
 #Patch0:		%{name}-pydebuginfo.patch
 BuildRequires:	rpm >= 4.4.9-56
 Requires:	findutils >= 1:4.2.26
@@ -67,6 +68,7 @@ cp rpm.macros $RPM_BUILD_ROOT%{_rpmlibdir}/macros.build
 install %{SOURCE1} $RPM_BUILD_ROOT%{_rpmlibdir}/service_generator.sh
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/shrc.d/rpm-build.sh
 install %{SOURCE3} $RPM_BUILD_ROOT%{_rpmlibdir}/find-lang.sh
+install %{SOURCE4} $RPM_BUILD_ROOT%{_rpmlibdir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -76,4 +78,5 @@ rm -rf $RPM_BUILD_ROOT
 %{_rpmlibdir}/macros.build
 %attr(755,root,root) %{_rpmlibdir}/service_generator.sh
 %attr(755,root,root) %{_rpmlibdir}/find-lang.sh
+%attr(755,root,root) %{_rpmlibdir}/dokuwiki-find-lang.sh
 /etc/shrc.d/rpm-build.sh
