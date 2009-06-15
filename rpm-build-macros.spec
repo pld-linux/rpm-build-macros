@@ -33,7 +33,8 @@ Conflicts:	libtool < 2:2.2
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_rpmlibdir %{_prefix}/lib/rpm
+# redefine to bootstrap
+%define		_rpmhome %{_prefix}/lib/rpm
 
 %description
 This package contains rpm build macros for PLD Linux.
@@ -63,20 +64,20 @@ cp %{SOURCE0} .
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_rpmlibdir},/etc/shrc.d}
-cp rpm.macros $RPM_BUILD_ROOT%{_rpmlibdir}/macros.build
-install %{SOURCE1} $RPM_BUILD_ROOT%{_rpmlibdir}/service_generator.sh
+install -d $RPM_BUILD_ROOT{%{_rpmhome},/etc/shrc.d}
+cp rpm.macros $RPM_BUILD_ROOT%{_rpmhome}/macros.build
+install %{SOURCE1} $RPM_BUILD_ROOT%{_rpmhome}/service_generator.sh
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/shrc.d/rpm-build.sh
-install %{SOURCE3} $RPM_BUILD_ROOT%{_rpmlibdir}/find-lang.sh
-install %{SOURCE4} $RPM_BUILD_ROOT%{_rpmlibdir}
+install %{SOURCE3} $RPM_BUILD_ROOT%{_rpmhome}/find-lang.sh
+install %{SOURCE4} $RPM_BUILD_ROOT%{_rpmhome}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%{_rpmlibdir}/macros.build
-%attr(755,root,root) %{_rpmlibdir}/service_generator.sh
-%attr(755,root,root) %{_rpmlibdir}/find-lang.sh
-%attr(755,root,root) %{_rpmlibdir}/dokuwiki-find-lang.sh
+%{_rpmhome}/macros.build
+%attr(755,root,root) %{_rpmhome}/service_generator.sh
+%attr(755,root,root) %{_rpmhome}/find-lang.sh
+%attr(755,root,root) %{_rpmhome}/dokuwiki-find-lang.sh
 /etc/shrc.d/rpm-build.sh
