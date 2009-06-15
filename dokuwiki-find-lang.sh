@@ -1,5 +1,10 @@
 #!/bin/sh
 PROG=${0##*/}
+if [ $# = 2 ]; then
+	# for using same syntax as rpm own find-lang
+	RPM_BUILD_ROOT=$1
+	shift
+fi
 dir=$RPM_BUILD_ROOT/usr/share/dokuwiki
 langfile=$1
 tmp=$(mktemp) || exit 1
