@@ -1,5 +1,6 @@
 # $Revision$, $Date$
-# PLD Linux rpm macros
+# PLD Linux rpm macros.
+# <http://www.pld-linux.org/>
 
 %epoch		0
 %x8664		x86_64 amd64 ia32e
@@ -1684,4 +1685,4 @@ else: \
 }; __py_lint %* \
 %{nil}
 
-# vim:ts=4 sw=4 noet syn=spec
+# vim:ts=4 sw=4 noet ft=spec
