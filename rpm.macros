@@ -906,7 +906,7 @@ fi; \
 %xmms_effect_plugindir		%{expand:%%global xmms_effect_plugindir %(xmms-config --effect-plugin-dir 2>/dev/null || echo ERROR)}%xmms_effect_plugindir
 %xmms_general_plugindir		%{expand:%%global xmms_general_plugindir %(xmms-config --general-plugin-dir 2>/dev/null || echo ERROR)}%xmms_general_plugindir
 
-%_target_base_arch	%{expand:%%global _target_base_arch %(echo %{_target_cpu} | sed 's/i.86/i386/;s/athlon/i386/;s/pentium./i386/;s/amd64/x86_64/;s/ia32e/x86_64/')}%_target_base_arch
+%_target_base_arch	%{expand:%%global _target_base_arch %(echo %{_target_cpu} | sed 's/i.86/i386/;s/athlon/i386/;s/pentium./i386/;s/amd64/x86_64/;s/ia32e/x86_64/;s/sparcv./sparc/')}%_target_base_arch
 
 # user/group checking macros
 #
