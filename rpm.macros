@@ -1045,11 +1045,11 @@ fi;
 #
 # Add package's webserver config to webserver webapps dir.
 # Usage:
-#   %webapp_register WEBSERVER WEBAPP
+#   %webapp_register [-f] WEBSERVER WEBAPP
 #
-%webapp_register() \
+%webapp_register(f) \
 %{?debug:set -x; echo "webapp_register: %{name}-%{version}-%{release} 1:[$1]; 2:[$2]"} \
-if [ "$1" = "1" ] && [ "$2" = "1" ]; then\
+if [ -n "%{-f:1}" ] || [ "$1" = "1" ] && [ "$2" = "1" ]; then\
 	/usr/sbin/webapp register %1 %2\
 fi\
 # reload webserver if the config symlink is there and skip reload if webserver is upgraded\
