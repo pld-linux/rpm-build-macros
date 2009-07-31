@@ -1,4 +1,4 @@
-%define		rpm_macros_rev	1.520
+%define		rpm_macros_rev	1.522
 %define		find_lang_rev	1.32
 Summary:	PLD Linux RPM build macros
 Summary(pl.UTF-8):	Makra do budowania pakietów RPM dla Linuksa PLD
@@ -44,7 +44,15 @@ Ten pakiet zawiera makra rpm-a do budowania pakietów dla Linuksa PLD.
 
 %prep
 %setup -qcT
-rev=$(awk '/^#.*Revision:.*Date/{print $3}' %{SOURCE0})
+cp %{SOURCE0} .
+#%patch0 -p1
+
+%if "%{pld_release}" == "ac"
+%{__sed} -i -e '/libtoolize --copy --force --install/s/ --install//' rpm.macros
+%endif
+
+%build
+rev=$(awk '/^#.*Revision:.*Date/{print $3}' rpm.macros)
 if [ "$rev" != "%rpm_macros_rev" ]; then
 	: Update rpm_macros_rev define to $rev, and retry
 	exit 1
@@ -54,13 +62,6 @@ if [ "$rev" != "%find_lang_rev" ]; then
 	: Update find_lang_rev define to $rev, and retry
 	exit 1
 fi
-cp %{SOURCE0} .
-
-%if "%{pld_release}" == "ac"
-%{__sed} -i -e '/libtoolize --copy --force --install/s/ --install//' rpm.macros
-%endif
-
-#%patch0 -p1
 
 %install
 rm -rf $RPM_BUILD_ROOT
