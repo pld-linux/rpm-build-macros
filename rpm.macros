@@ -831,7 +831,7 @@ fi \
 
 # Python 3.x
 # python main version
-%__python3			python3.0
+%__python3			python3
 %py3_ver			%{expand:%%global py3_ver %(%{__python3} -c "import sys; print(sys.version[:3])" 2>/dev/null || echo ERROR)}%py3_ver
 
 # directories
