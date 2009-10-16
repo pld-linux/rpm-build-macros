@@ -322,6 +322,9 @@ CXXFLAGS="%{rpmcxxflags}" \
 # The directory holding Linux kernel sources
 %_kernelsrcdir	/usr/src/linux%{_alt_kernel}
 
+# SysV-style initscripts dir
+%_initddir		/etc/rc.d/init.d
+
 # If non-empty "debug" macro defined, add "dbg" suffix to release number
 %_rpmfilename		%%{NAME}-%%{VERSION}-%%{RELEASE}%{?debug:dbg}.%%{ARCH}.rpm
 
