@@ -22,13 +22,13 @@
 
 # add parallel build flags: -jN
 #
-# if you want to disable parallel build do (replace %% with %)
-# echo '%%_smp_mflags %%{nil}' >> ~/.rpmmacros
+# if you want to disable parallel build do:
+# echo '%_smp_mflags %{nil}' >> ~/.rpmmacros
 #
-%__make		make %{?_smp_mflags}
-%__scons	scons %{?_smp_mflags}
-%__waf		waf %{?_smp_mflags}
-%__cmake	cmake %{?_smp_mflags}
+%__make		/usr/bin/make %{?_smp_mflags}
+%__scons	/usr/bin/scons %{?_smp_mflags}
+%__waf		/usr/bin/waf %{?_smp_mflags}
+%__cmake	/usr/bin/cmake %{?_smp_mflags}
 
 %_smp_mflags %(_NCPUS=$(/usr/bin/getconf _NPROCESSORS_ONLN); \\\
 				[ "$_NCPUS" -gt 1 ] && echo "-j$(($_NCPUS * 2))")
