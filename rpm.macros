@@ -264,6 +264,44 @@ CXXFLAGS="%{rpmcxxflags}" \
 	%{?configure_cache:--cache-file=%{configure_cache_file}} \
 }
 
+# Simple macros to simplify adding bconded options to configure scripts.
+#   Each macro requires bcond name and accepts optional option name, if option
+# isn't specified bcond name is used as option name. Options returning
+# --with and --enable also allow third argument which will be added as value
+# ( --with-option=value or --enable-option=value ) in case or positive
+# condition, but won't be added otherwise ( nothing or just --disable-option ).
+
+# Requirements:
+# BuildRequires: rpmbuild(macros) >= 1.527
+
+# Usage example:
+# %{__enable bcond} - returns --enable-bcond iff build condition is set
+# %{__disable bcond option} - returns --enable-option iff bcond is not set
+# %{__enable_disable bcond option value} - returns --enable-option=value if
+#    bcond is set, returns --disable-option otherwise
+
+# expand bconds to --enable-something and --disable-something
+%__enable() %{expand:%%{?with_%{1}:--enable-%{?2}%{!?2:%{1}}%{?3:=%{3}}}}
+%__disable() %{expand:%%{!?with_%{1}:--disable-%{?2}%{!?2:%{1}}}}
+%__enable_disable() %{expand:%%{?with_%{1}:--enable-%{?2}%{!?2:%{1}}%{?3:=%{3}}}%%{!?with_%{1}:--disable-%{?2}%{!?2:%{1}}}}
+
+# same as above, but condition inverted
+%__enable_unless() %{expand:%%{!?with_%{1}:--enable-%{?2}%{!?2:%{1}}%{?3:=%{3}}}}
+%__disable_if() %{expand:%%{?with_%{1}:--disable-%{?2}%{!?2:%{1}}}}
+%__enable_disable_not() %{expand:%%{!?with_%{1}:--enable-%{?2}%{!?2:%{1}}%{?3:=%{3}}}%%{?with_%{1}:--disable-%{?2}%{!?2:%{1}}}}
+
+# expand bconds to --with-something and --without-something
+%__with() %{expand:%%{?with_%{1}:--with-%{?2}%{!?2:%{1}}%{?3:=%{3}}}}
+%__without() %{expand:%%{!?with_%{1}:--without-%{?2}%{!?2:%{1}}}}
+%__with_without() %{expand:%%{?with_%{1}:--with-%{?2}%{!?2:%{1}}%{?3:=%{3}}}%%{!?with_%{1}:--without-%{?2}%{!?2:%{1}}}}
+
+# same as above, but condition inverted
+%__with_unless() %{expand:%%{!?with_%{1}:--with-%{?2}%{!?2:%{1}}%{?3:=%{3}}}}
+%__without_if() %{expand:%%{?with_%{1}:--without-%{?2}%{!?2:%{1}}}}
+%__with_without_not() %{expand:%%{!?with_%{1}:--with-%{?2}%{!?2:%{1}}%{?3:=%{3}}}%%{?with_%{1}:--without-%{?2}%{!?2:%{1}}}}
+
+#-----------------------------------------------------------------
+
 # overload to insert debuginfo package
 %prep \
 %if 0%{?_enable_debug_packages}\
@@ -534,6 +572,8 @@ if [ -d "$RPM_BUILD_ROOT" ]; then \
 	fi; \
 fi; }; __spec_install_post_chrpath } } }
 
+# vim: "
+
 #-----------------------------------------------------------------
 # Find all shared object files with unresolved symbols. Warn
 # and terminate if any found (termination can be turned off by define).
@@ -771,6 +811,7 @@ fi \
 %xorg_xserver_font_abi		%{expand:%%global xorg_xserver_font_abi %(awk '/#define ABI_FONT_VERSION/ { split($0,A,/[(,)]/); printf("%d.%d",A[2], A[3]); }' /usr/include/xorg/xf86Module.h 2> /dev/null | echo ERROR)}%xorg_xserver_font_abi
 %xorg_xserver_videodrv_abi	%{expand:%%global xorg_xserver_videodrv_abi %(awk '/#define ABI_VIDEODRV_VERSION/ { split($0,A,/[(,)]/); printf("%d.%d",A[2], A[3]); }' /usr/include/xorg/xf86Module.h 2> /dev/null || echo ERROR)}%xorg_xserver_videodrv_abi
 %xorg_xserver_xinput_abi	%{expand:%%global xorg_xserver_xinput_abi %(awk '/#define ABI_XINPUT_VERSION/ { split($0,A,/[(,)]/); printf("%d.%d",A[2], A[3]); }' /usr/include/xorg/xf86Module.h 2> /dev/null || echo ERROR)}%xorg_xserver_xinput_abi
+# vim: '
 
 %requires_xorg_xserver_extension \
 %{__xorg_abi_requires_ge ansic xorg_xserver_ansic_abi} \
@@ -1007,6 +1048,7 @@ else \
 		%{expand:%{%{#}}} 1>&2 || exit $? \
 	[ ! -x /usr/sbin/nscd ] || /usr/sbin/nscd -i passwd || : \
 fi;
+# vim: "
 
 # Usage:
 #   %groupadd [-P package] [-g gid] group
