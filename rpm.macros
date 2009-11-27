@@ -28,6 +28,7 @@
 %__make		/usr/bin/make %{?_smp_mflags}
 %__scons	/usr/bin/scons %{?_smp_mflags}
 %__waf		/usr/bin/waf %{?_smp_mflags}
+%__cmake	/usr/bin/cmake
 
 %_smp_mflags %(_NCPUS=$(/usr/bin/getconf _NPROCESSORS_ONLN); \\\
 				[ "$_NCPUS" -gt 1 ] && echo "-j$(($_NCPUS * 2))")
@@ -198,7 +199,6 @@
 	%{dependencytracking} \
 }
 
-%__cmake	/usr/bin/cmake
 %cmake { \
 CC="%{__cc}" \
 CXX="%{__cxx}" \
