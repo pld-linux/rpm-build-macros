@@ -361,10 +361,12 @@ CXXFLAGS="%{rpmcxxflags}" \
 # If non-empty "debug" macro defined, add "dbg" suffix to release number
 %_rpmfilename		%%{NAME}-%%{VERSION}-%%{RELEASE}%{?debug:dbg}.%%{ARCH}.rpm
 
+# -n drm to generate kernel%{_alt_kernel}-drm dependency
+%releq_kernel(n:)		%{expand:%%global releq_kernel %(R=$(LC_ALL=C rpm -q --qf '%{N}%{?-n:-%{-n*}} = %|E?{%{E}:}|%{V}-%{R}' -f %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | grep -v 'is not' | sed -e 's:-headers::;s:-config::'); echo ${R:-ERROR})}%releq_kernel
+%releq_kernel_up(n:)	%{expand:%%global releq_kernel_up %(R=$(LC_ALL=C rpm -q --qf '%{N}%{?-n:-%{-n*}}-up = %|E?{%{E}:}|%{V}-%{R}' -f %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | grep -v 'is not' | sed -e 's:-headers::;s:-config::'); echo ${R:-ERROR})}%releq_kernel_up
+%releq_kernel_smp(n:)	%{expand:%%global releq_kernel_smp %(R=$(LC_ALL=C rpm -q --qf '%{N}%{?-n:-%{-n*}}-smp = %|E?{%{E}:}|%{V}-%{R}' -f %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | grep -v 'is not' | sed -e 's:-headers::;s:-config::'); echo ${R:-ERROR})}%releq_kernel_smp
 
-%releq_kernel			%{expand:%%global releq_kernel %(R=$(LC_ALL=C rpm -q --qf '%{N} = %|E?{%{E}:}|%{V}-%{R}' -f %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | grep -v 'is not' | sed -e 's:-headers::;s:-config::'); echo ${R:-ERROR})}%releq_kernel
-%releq_kernel_up		%{expand:%%global releq_kernel_up %(R=$(LC_ALL=C rpm -q --qf '%{N}-up = %|E?{%{E}:}|%{V}-%{R}' -f %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | grep -v 'is not' | sed -e 's:-headers::;s:-config::'); echo ${R:-ERROR})}%releq_kernel_up
-%releq_kernel_smp()		%{expand:%%global releq_kernel_smp %(R=$(LC_ALL=C rpm -q --qf '%{N}-smp = %|E?{%{E}:}|%{V}-%{R}' -f %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | grep -v 'is not' | sed -e 's:-headers::;s:-config::'); echo ${R:-ERROR})}%releq_kernel_smp
+# -s post to generate Requires(post) dependency
 %requires_releq_kernel(s:)		Requires%{-s:(%{-s*})}: %releq_kernel
 %requires_releq_kernel_up(s:)	Requires%{-s:(%{-s*})}: %releq_kernel_up
 %requires_releq_kernel_smp(s:)	Requires%{-s:(%{-s*})}: %releq_kernel_smp
