@@ -1728,4 +1728,18 @@ else: \
 }; __py_lint %* \
 %{nil}
 
+# Undos files
+#
+# Author: Paweł Zuzelski <pawelz@pld-linux.org>
+#
+# Usage:
+#   %undos list_of_files
+#
+# Requirements:
+# BuildRequires:	sed >= 4.0
+# BuildRequires:	rpmbuild(macros) >= 1.533
+
+%undos \
+%{__sed} -i -e 's,\\r$,,'
+
 # vim:ts=4 sw=4 noet ft=spec
