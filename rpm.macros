@@ -51,8 +51,25 @@
 %__intltoolize		intltoolize --copy --force
 %__libtoolize		libtoolize --copy --force --install
 
-#	Path to top of build area.
-%_topdir		%{expand:%%global _topdir %(test -d ../SPECS -a -d ../SOURCES && (cd ..; pwd) || echo $HOME/rpm)}%_topdir
+# topdir is where builder script lives, fallback to old style if builder script was not found and
+# SPECS/SOURCES dirs exist (XXX: should be reverse?)
+%_topdir    %{expand:%%global _topdir %(d=;\
+    d=${d:-$([ -d ../SPECS -a -d ../SOURCES ] && (cd .. && pwd))};\
+    d=${d:-$([ -x ../builder ] && (cd ..; pwd))};\
+    d=${d:-$([ -x builder ] && pwd)};\
+    echo ${d:-$HOME/rpm};\
+)}%_topdir
+
+# if %{_topdir}/builder exists, it's new style structure
+%_specdir       %{expand:%%global _specdir %([ -x %{_topdir}/builder ] && echo %{_topdir}/%{name} || echo %{_topdir}/SPECS)}%_specdir
+%_sourcedir		%{expand:%%global _sourcedir %([ -x %{_topdir}/builder ] && echo %{_specdir} || echo %{_topdir}/SOURCES)}%_sourcedir
+
+# BUILD/RPMS/SRPMS are one same level by default as packages dir, if these exist
+# if they don't exist assume we are having custom topdir (which is not named as
+# "packages", i.e ~/rpm/kde/{kdelibs,BUILD/RPMS/SRPMS})
+%_builddir		%{expand:%%global _builddir %([ -d %{_topdir}/../BUILD ] && (cd %{_topdir}/../BUILD; pwd) || echo %{_topdir}/BUILD)}%_builddir
+%_rpmdir		%{expand:%%global _rpmdir %([ -d %{_topdir}/../RPMS ] && (cd %{_topdir}/../RPMS; pwd) || echo %{_topdir}/RPMS)}%_rpmdir
+%_srcrpmdir		%{expand:%%global _srcrpmdir %([ -d %{_topdir}/../SRPMS ] && (cd %{_topdir}/../SRPMS; pwd) || echo %{_topdir}/SRPMS)}%_srcrpmdir
 
 #	The number of cvs changelog entries kept when building package.
 %_buildchangelogtruncate 20
