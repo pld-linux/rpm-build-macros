@@ -58,8 +58,8 @@
 # SPECS/SOURCES dirs exist (XXX: should be reverse?)
 %_topdir    %{expand:%%global _topdir %(d=;\
     d=${d:-$([ -d ../SPECS -a -d ../SOURCES ] && (cd .. && pwd))};\
-    d=${d:-$([ -x ../builder ] && (cd ..; pwd))};\
-    d=${d:-$([ -x builder ] && pwd)};\
+    d=${d:-$([ -x ../builder -a ! -d ../builder ] && (cd ..; pwd))};\
+    d=${d:-$([ -x builder -a ! -d builder ] && pwd)};\
     echo ${d:-$HOME/rpm};\
 )}%_topdir
 
