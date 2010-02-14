@@ -56,12 +56,8 @@
 
 # topdir is where builder script lives, fallback to old style if builder script was not found and
 # SPECS/SOURCES dirs exist (XXX: should be reverse?)
-%_topdir    %{expand:%%global _topdir %(d=;\
-    d=${d:-$([ -d ../SPECS -a -d ../SOURCES ] && (cd .. && pwd))};\
-    d=${d:-$([ -x ../builder -a ! -d ../builder ] && (cd ..; pwd))};\
-    d=${d:-$([ -x builder -a ! -d builder ] && pwd)};\
-    echo ${d:-$HOME/rpm};\
-)}%_topdir
+# XXX: fixed location for now: ~/rpm/packages
+%_topdir    %{expand:%%global _topdir %(echo $HOME/rpm/packages)}%_topdir
 
 # if %{_topdir}/builder exists, it's new style structure
 %_specdir       %{expand:%%global _specdir %([ -x %{_topdir}/builder ] && echo %{_topdir}/%{name} || echo %{_topdir}/SPECS)}%_specdir
