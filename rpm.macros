@@ -2,7 +2,7 @@
 # PLD Linux rpm macros.
 # <http://www.pld-linux.org/>
 
-# can be used by builder script to to check for version
+# can be used by builder script to check for version
 %rpm_build_macros	%(R="$Revision$"; RR="${R##: }"; echo ${RR%%?})
 
 %epoch		0
