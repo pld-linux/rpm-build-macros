@@ -1276,6 +1276,10 @@ cat %{_mavendepmapfragdir}/* >> %{_mavendepmapdir}/maven2-depmap.xml\
 fi\
 echo -e "</dependencies>\\n" >> %{_mavendepmapdir}/maven2-depmap.xml
 
+# JAVA macros specific for PLD
+
+# Directory for tomcat context configuration files
+%_tomcatconfdir	%{_sharedstatedir}/tomcat/conf/Catalina/localhost
 
 # PEAR install macros
 # Author: Elan Ruusamäe <glen@pld-linux.org>
