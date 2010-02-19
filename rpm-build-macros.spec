@@ -1,4 +1,4 @@
-%define		rpm_macros_rev	1.540
+%define		rpm_macros_rev	1.541
 %define		find_lang_rev	1.32
 Summary:	PLD Linux RPM build macros
 Summary(pl.UTF-8):	Makra do budowania pakietów RPM dla Linuksa PLD
@@ -67,11 +67,11 @@ fi
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_usrlibrpm},/etc/shrc.d}
-cp rpm.macros $RPM_BUILD_ROOT%{_usrlibrpm}/macros.build
-install %{SOURCE1} $RPM_BUILD_ROOT%{_usrlibrpm}/service_generator.sh
-install %{SOURCE2} $RPM_BUILD_ROOT/etc/shrc.d/rpm-build.sh
-install %{SOURCE3} $RPM_BUILD_ROOT%{_usrlibrpm}/find-lang.sh
-install %{SOURCE4} $RPM_BUILD_ROOT%{_usrlibrpm}
+cp -a rpm.macros $RPM_BUILD_ROOT%{_usrlibrpm}/macros.build
+install -p %{SOURCE1} $RPM_BUILD_ROOT%{_usrlibrpm}/service_generator.sh
+install -p %{SOURCE2} $RPM_BUILD_ROOT/etc/shrc.d/rpm-build.sh
+install -p %{SOURCE3} $RPM_BUILD_ROOT%{_usrlibrpm}/find-lang.sh
+install -p %{SOURCE4} $RPM_BUILD_ROOT%{_usrlibrpm}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
