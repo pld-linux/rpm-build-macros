@@ -31,6 +31,7 @@ Conflicts:	php4-devel < 3:4.4.4-10
 Conflicts:	libtool < 2:2.2
 %endif
 BuildArch:	noarch
+BuildRequires:	BROKEN-DONT-REALLY-WORK-WITH-BUILDER-SCRIPT
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # redefine to bootstrap
