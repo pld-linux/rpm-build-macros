@@ -59,22 +59,22 @@
 %_topdir    %{expand:%%global _topdir %(
 	if [ -d SPECS -a -d SOURCES ]; then
 		# old style rpmdir: in topdir
-		readlink -m .
+		pwd
 	elif [ -d ../SPECS -a -d ../SOURCES ]; then
 		# old style rpmdir: in subdir
-		readlink -m ..
+		cd ..; pwd
 	elif [ -d $HOME/rpm/SPECS -a -d $HOME/rpm/SOURCES ]; then \
 		# if old style rpm dir exist, go with it
 		echo $HOME/rpm; \
 	elif [ -x ../builder -a ! -d ../builder ]; then
 		# relative new style rpmdir: in package dir
-		readlink -m ..
+		cd ..; pwd
 	elif [ -x builder -a ! -d builder ]; then
 		# relative new style rpmdir: in packages
-		readlink -m .
+		pwd
 	elif [ -x packages/builder -a ! -d packages/builder ]; then
 		# relative new style rpmdir: packages dir in current dir
-		readlink -m packages
+		cd packages; pwd
 	else
 		# fallback to new style rpmdir
 		echo $HOME/rpm/packages
@@ -88,9 +88,10 @@
 # BUILD/RPMS/SRPMS are one same level by default as packages dir, if these exist
 # if they don't exist assume we are having custom topdir (which is not named as
 # "packages", i.e ~/rpm/kde/{kdelibs,BUILD/RPMS/SRPMS})
-%_builddir		%{expand:%%global _builddir %(if [ -d %{_topdir}/BUILD ]; then echo %{_topdir}/BUILD; else readlink -m %{_topdir}/../BUILD; fi)}%_builddir
-%_rpmdir		%{expand:%%global _rpmdir %(if [ -d %{_topdir}/RPMS ]; then echo %{_topdir}/RPMS; else readlink -m %{_topdir}/../RPMS; fi)}%_rpmdir
-%_srcrpmdir		%{expand:%%global _srcrpmdir %(if [ -d %{_topdir}/SRPMS ]; then echo %{_topdir}/SRPMS; else readlink -m %{_topdir}/../SRPMS; fi)}%_srcrpmdir
+# NOTE: readlink fails if some parent dir is not readable (/home/services/builder for example can't read /home/services), therfore the extra echo
+%_builddir		%{expand:%%global _builddir %(if [ -d %{_topdir}/BUILD ]; then echo %{_topdir}/BUILD; else readlink -m %{_topdir}/../BUILD || echo %{_topdir}/../BUILD; fi)}%_builddir
+%_rpmdir		%{expand:%%global _rpmdir %(if [ -d %{_topdir}/RPMS ]; then echo %{_topdir}/RPMS; else readlink -m %{_topdir}/../RPMS || echo readlink -m %{_topdir}/../RPMS; fi)}%_rpmdir
+%_srcrpmdir		%{expand:%%global _srcrpmdir %(if [ -d %{_topdir}/SRPMS ]; then echo %{_topdir}/SRPMS; else readlink -m %{_topdir}/../SRPMS || echo readlink -m %{_topdir}/../SRPMS; fi)}%_srcrpmdir
 
 #	The number of cvs changelog entries kept when building package.
 %_buildchangelogtruncate 20
