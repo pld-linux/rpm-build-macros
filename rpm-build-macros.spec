@@ -1,4 +1,4 @@
-%define		rpm_macros_rev	1.541
+%define		rpm_macros_rev	1.544
 %define		find_lang_rev	1.32
 Summary:	PLD Linux RPM build macros
 Summary(pl.UTF-8):	Makra do budowania pakietów RPM dla Linuksa PLD
@@ -31,7 +31,6 @@ Conflicts:	php4-devel < 3:4.4.4-10
 Conflicts:	libtool < 2:2.2
 %endif
 BuildArch:	noarch
-BuildRequires:	BROKEN-DONT-REALLY-WORK-WITH-BUILDER-SCRIPT
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # redefine to bootstrap
