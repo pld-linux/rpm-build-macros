@@ -1303,6 +1303,20 @@ echo -e "</dependencies>\\n" >> %{_mavendepmapdir}/maven2-depmap.xml
 # Directory for tomcat context configuration files
 %_tomcatconfdir	%{_sharedstatedir}/tomcat/conf/Catalina/localhost
 
+# Tomcat cache path
+%_tomcatcachedir %{_sharedstatedir}/tomcat/work/Catalina/localhost
+
+# Clear tomcat cache
+# Author: Paweł Zuzelski <pawelz@pld-linux.org>
+#
+# Usage:
+# %%tomcat_clear_cache appname
+#
+# Call this script in %postun tomcat. It will remove compiled jsps related to
+# given app.
+#
+%tomcat_clear_cache() %{!?1:ERROR}%{?2:ERROR} %{__rm} -rf %{_tomcatcachedir}/%1
+
 # PEAR install macros
 # Author: Elan Ruusamäe <glen@pld-linux.org>
 #
