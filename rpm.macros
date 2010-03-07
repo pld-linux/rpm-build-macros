@@ -1517,10 +1517,14 @@ for cfg in ${cfgs:-dist}; do                                        \
 	[ -r "%{_kernelsrcdir}/config-$cfg" ] || exit 1					\
 																	\
 	rm -rf o														\
-	install -d o/include/linux o/arch/powerpc/lib					\
+	install -d o/include/linux o/include/generated o/arch/powerpc/lib	\
 	ln -sf %{_kernelsrcdir}/config-$cfg o/.config					\
 	ln -sf %{_kernelsrcdir}/Module.symvers-$cfg o/Module.symvers	\
-	ln -sf %{_kernelsrcdir}/include/linux/autoconf-$cfg.h o/include/linux/autoconf.h \
+	if [ -f %{_kernelsrcdir}/include/generated/autoconf-$cfg.h ]; then	\
+		ln -sf %{_kernelsrcdir}/include/generated/autoconf-$cfg.h o/include/generated/autoconf.h \
+	else															\
+		ln -sf %{_kernelsrcdir}/include/linux/autoconf-$cfg.h o/include/linux/autoconf.h \
+	fi																\
 																	\
 	set +x															\
 	[ -z "$PATCH_SH" ] || echo "$PATCH_SH" | %__spec_build_shell	\
