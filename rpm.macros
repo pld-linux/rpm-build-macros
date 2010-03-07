@@ -1522,6 +1522,7 @@ for cfg in ${cfgs:-dist}; do                                        \
 	ln -sf %{_kernelsrcdir}/Module.symvers-$cfg o/Module.symvers	\
 	if [ -f %{_kernelsrcdir}/include/generated/autoconf-$cfg.h ]; then	\
 		ln -sf %{_kernelsrcdir}/include/generated/autoconf-$cfg.h o/include/generated/autoconf.h \
+		ln -s ../generated/autoconf.h o/include/linux/autoconf.h \
 	else															\
 		ln -sf %{_kernelsrcdir}/include/linux/autoconf-$cfg.h o/include/linux/autoconf.h \
 	fi																\
