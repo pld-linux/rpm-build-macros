@@ -421,7 +421,7 @@ CXXFLAGS="%{rpmcxxflags}" \
 
 # kernel version-release handling
 %__kernel_ver	 %{expand:%%global __kernel_ver %( \\
-	Z=$(awk -F'"' '/UTS_RELEASE/{print $2}' %{_kernelsrcdir}/include/linux/{version,utsrelease}.h 2>/dev/null); \\
+	Z=$(awk -F'"' '/UTS_RELEASE/{print $2}' %{_kernelsrcdir}/include/linux/{version,utsrelease}.h 2>/dev/null || awk -F'"' '/UTS_RELEASE/{print $2}' %{_kernelsrcdir}/include/{linux/version,generated/utsrelease}.h 2>/dev/null); \\
 	Z=${Z:-$(awk -F' = ' '/^VERSION/{v=$2} /^PATCHLEVEL/{p=$2} /^SUBLEVEL/{s=$2} /^EXTRAVERSION/{e=$2} END {printf("%d.%d.%d%s", v, p, s, e)}' %{_kernelsrcdir}/Makefile 2>/dev/null)}; \\
 	echo ${Z:-ERROR}; \\
 )}%__kernel_ver
