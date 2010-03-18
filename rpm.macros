@@ -1804,4 +1804,37 @@ else: \
 %undos \
 %{__sed} -i -e 's,\\r$,,'
 
+# Hook to register nagios object based plugins in Nagios NRPE daemon config.
+#
+# Author: Elan Ruusamäe <glen@pld-linux.org>
+#
+# Usage:
+#  -a NAME  -- add command named NAME
+#  -d NAME  -- remove command named NAME
+#  -f FILE  -- specify plugin configuration FILE to extract command definition from
+#
+# Sample:
+# %triggerin -- nagios-nrpe
+# %nagios_nrpe -a %{plugin} -f %{_sysconfdir}/%{plugin}.cfg
+#
+# %triggerun -- nagios-nrpe
+# %nagios_nrpe -d %{plugin} -f %{_sysconfdir}/%{plugin}.cfg
+#
+# Requirements:
+# BuildRequires:	sed >= 4.0
+# BuildRequires:	rpmbuild(macros) >= 1.551
+%nagios_nrpe(a:d:c:f:) {\
+	%{-a:# on -a and config exists \
+	if [ "%{-a*}" -a -f /etc/nagios/nrpe.cfg ]; then \
+		if ! grep -q '^command\[%{-a*}\]' /etc/nagios/nrpe.cfg; then \
+				sed -ne 's/^[ \t]*command_line[ \t]\+\(.\+\)/command[%{-a*}]=\1/p' %{-f*} >> /etc/nagios/nrpe.cfg; \
+		fi; \
+	fi;} \
+	%{-d:# on package remove, -d and config exists \
+	if [ "$1" = "0" -a "%{-d*}" -a -f /etc/nagios/nrpe.cfg ]; then \
+		sed -i -e '/^[ \t]*command\[%{-d*}\]/d' /etc/nagios/nrpe.cfg; \
+	fi;} \
+}%{nil}
+
+
 # vim:ts=4 sw=4 noet ft=spec
