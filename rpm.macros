@@ -1822,19 +1822,22 @@ else: \
 #
 # Requirements:
 # BuildRequires:	sed >= 4.0
-# BuildRequires:	rpmbuild(macros) >= 1.551
+# BuildRequires:	rpmbuild(macros) >= 1.552
 %nagios_nrpe(a:d:c:f:) {\
+	m=$(md5sum < /etc/nagios/nrpe.cfg); \
 	%{-a:# on -a and config exists \
-	if [ "%{-a*}" -a -f /etc/nagios/nrpe.cfg ]; then \
-		if ! grep -q '^command\[%{-a*}\]' /etc/nagios/nrpe.cfg; then \
-				sed -ne 's/^[ \t]*command_line[ \t]\+\(.\+\)/command[%{-a*}]=\1/p' %{-f*} >> /etc/nagios/nrpe.cfg; \
+	if [ -f /etc/nagios/nrpe.cfg ]; then \
+		if ! %{__grep} -q '^command\[%{-a*}\]' /etc/nagios/nrpe.cfg; then \
+				%{__sed} -ne 's/^[ \t]*command_line[ \t]\+\(.\+\)/command[%{-a*}]=\1/p' %{-f*} >> /etc/nagios/nrpe.cfg; \
 		fi; \
 	fi;} \
 	%{-d:# on package remove, -d and config exists \
-	if [ "$1" = "0" -a "%{-d*}" -a -f /etc/nagios/nrpe.cfg ]; then \
-		sed -i -e '/^[ \t]*command\[%{-d*}\]/d' /etc/nagios/nrpe.cfg; \
+	if [ "$1" = "0" -a -f /etc/nagios/nrpe.cfg ]; then \
+		%{__sed} -i -e '/^[ \t]*command\[%{-d*}\]/d' /etc/nagios/nrpe.cfg; \
 	fi;} \
+	if [ "$m" != "$(md5sum < /etc/nagios/nrpe.cfg)" ]; then \
+		%service -q nrpe restart; \
+	fi; \
 }%{nil}
-
 
 # vim:ts=4 sw=4 noet ft=spec
