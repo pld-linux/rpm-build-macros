@@ -1799,10 +1799,10 @@ else: \
 #
 # Requirements:
 # BuildRequires:	sed >= 4.0
-# BuildRequires:	rpmbuild(macros) >= 1.533
+# BuildRequires:	rpmbuild(macros) >= 1.553
 
-%undos \
-%{__sed} -i -e 's,\\r$,,'
+# NB: make sure this command stays on one line
+%undos		%{__sed} -i -e 's,\\r$,,'
 
 # Hook to register nagios object based plugins in Nagios NRPE daemon config.
 #
