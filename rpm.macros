@@ -1840,4 +1840,23 @@ else: \
 	fi; \
 }%{nil}
 
+# Import or update Cacti template.
+#
+# Author: Elan Ruusamäe <glen@pld-linux.org>
+#
+# Usage:
+# %cacti_import_template XMLFILE
+#  XMLFILE -- XML template to import
+#
+# Sample:
+# %post
+# %cacti_import_template %{resourcedir}/cacti_host_template_varnish.xml
+#
+# Requires:	cacti >= 0.8.7e-8
+# BuildRequires:	rpmbuild(macros) >= 1.554
+
+%cacti_import_template() {\
+/usr/share/cacti/cli/import_template.php --filename=%1 || :; \
+}%{nil}
+
 # vim:ts=4 sw=4 noet ft=spec
