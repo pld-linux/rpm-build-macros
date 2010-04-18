@@ -1205,13 +1205,25 @@ fi \
 # Directory where arch-specific (JNI) version-independent jars are installed.
 %_jnidir		%{_libdir}/java
 
-%java_home		%{expand:%%global java_home %([ -f %{_javadir}-utils/java-functions ] || { echo ERROR; exit 0; }; unset JAVA_HOME; . %{_javadir}-utils/java-functions; set_jvm; echo ${JAVA_HOME:-ERROR})}%java_home
+
+# JDK selection. Set this to name of the JDK implementation to use
+# insead of the system default
+#%use_jdk		icedtea6
+
+# expands to the value with right jdk for BuildRequires header
+# 'jdk' if %%use_jdk is not defined,  jdk(%%use_jdk) otherwise
+# The requirement will not replace current 'default' JDK
+%required_jdk	jdk%{?use_jdk:(%{use_jdk})}
+
+%buildrequires_jdk BuildRequires: %required_jdk
+
+%java_home		%{expand:%%global java_home %([ -f %{_javadir}-utils/java-functions ] || { echo ERROR; exit 0; }; %{!?use_jdk:unset JAVA_HOME; . %{_javadir}-utils/java-functions; set_jvm}%{?use_jdk:JAVA_HOME=%{_jvmdir}/%{use_jdk}}; echo ${JAVA_HOME:-ERROR})}%java_home
 
 %_javasrcdir	%{_usrsrc}/java
 
 %ant			JAVA_HOME=%{java_home} CLASSPATH=$CLASSPATH ant
 %jar			%{java_home}/bin/jar
-%java			%{expand:%%global java %([ -f %{_javadir}-utils/java-functions ] || { echo ERROR; exit 0; }; unset JAVACMD; . %{_javadir}-utils/java-functions; set_javacmd; echo $JAVACMD)}%java
+%java			%{expand:%%global java %([ -f %{_javadir}-utils/java-functions ] || { echo ERROR; exit 0; }; %{!?use_jdk:unset JAVACMD; . %{_javadir}-utils/java-functions; set_javacmd}%{?use_jdk:JAVACMD=%{java_home}/bin/java}; echo $JAVACMD)}%java
 %javac			%{java_home}/bin/javac
 %javadoc		%{java_home}/bin/javadoc
 
