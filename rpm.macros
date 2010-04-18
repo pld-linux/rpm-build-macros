@@ -400,6 +400,15 @@ CXXFLAGS="%{rpmcxxflags}" \
 # If non-empty "debug" macro defined, add "dbg" suffix to release number
 %_rpmfilename		%%{NAME}-%%{VERSION}-%%{RELEASE}%{?debug:dbg}.%%{ARCH}.rpm
 
+# Bootstrap release macros.
+# Usage:
+#	%bcond_with	bootstrap
+#	Release:	%{bootstrap_release 1}
+#
+# Package will have release 1 if built normally,
+# and release 0.zzz.bootstrap if built with bootstrap
+%bootstrap_release() %{!?with_bootstrap:%{1}%{?2:.%{2}}}%{?with_bootstrap:%{!?2:%(expr %{1} - 1)}%{?2:%{1}.%(expr %{2} - 1)}.zzz.bootstrap}
+
 # -n drm to generate kernel%{_alt_kernel}-drm dependency
 %releq_kernel(n:)		%{expand:%%global releq_kernel %(R=$(LC_ALL=C rpm -q --qf '%{N}%{?-n:-%{-n*}} = %|E?{%{E}:}|%{V}-%{R}' -f %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | grep -v 'is not' | sed -e 's:-headers::;s:-config::'); echo ${R:-ERROR})}%releq_kernel
 %releq_kernel_up(n:)	%{expand:%%global releq_kernel_up %(R=$(LC_ALL=C rpm -q --qf '%{N}%{?-n:-%{-n*}}-up = %|E?{%{E}:}|%{V}-%{R}' -f %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | grep -v 'is not' | sed -e 's:-headers::;s:-config::'); echo ${R:-ERROR})}%releq_kernel_up
