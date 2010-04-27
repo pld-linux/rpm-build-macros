@@ -350,7 +350,7 @@ CXXFLAGS="%{rpmcxxflags}" \
 %{nil}
 
 # Location of autoconf macros
-%_aclocaldir	%{expand:%%global _aclocaldir %(aclocal --print-ac-dir || echo ERROR)}%_aclocaldir
+%_aclocaldir	%{expand:%%global _aclocaldir %(aclocal --print-ac-dir 2>/dev/null || echo ERROR)}%_aclocaldir
 
 # Location of omf files
 %_omf_dest_dir	%{expand:%%global _omf_dest_dir %(scrollkeeper-config --omfdir || echo ERROR)}%_omf_dest_dir
