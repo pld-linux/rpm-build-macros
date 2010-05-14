@@ -1849,7 +1849,8 @@ else: \
 # %nagios_nrpe -d %{plugin} -f %{_sysconfdir}/%{plugin}.cfg
 #
 # Requirements:
-# BuildRequires:	sed >= 4.0
+# Requires:			grep
+# Requires:			sed >= 4.0
 # BuildRequires:	rpmbuild(macros) >= 1.552
 %nagios_nrpe(a:d:c:f:) {\
 	m=$(md5sum < /etc/nagios/nrpe.cfg); \
