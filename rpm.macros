@@ -1356,6 +1356,7 @@ echo -e "</dependencies>\\n" >> %{_mavendepmapdir}/maven2-depmap.xml
 # -z     - unpack pear package and let pear use package.xml (not tarball) for install. for PEAR bootstrapping
 # -D     - pass -D to %setup (so the build dir is not removed)
 # -c     - register channel from local channel.xml file
+# -d     - pass -d arg to pearcmd
 #
 # unpack PEAR package to %%{_builddir}/FMT. package is extracted with already
 # destination hierarchy. you should copy the tree to buildroot after
@@ -1388,7 +1389,7 @@ fi \
 # command invoking pear cli
 %__pear /usr/bin/pear
 
-%pear_install(a:n:zD) \
+%pear_install(a:d:n:zD) \
 %__pear \\\
 	-c %{builddir}/pearrc \\\
 	-d doc_dir=/docs \\\
@@ -1397,6 +1398,7 @@ fi \
 	-d bin_dir=%{_bindir} \\\
 	-d data_dir=%{php_pear_dir}/data \\\
 	-d test_dir=%{php_pear_dir}/tests \\\
+	%{-d:%(echo "%{-d*}" | awk 'BEGIN{RS=","}{printf("-d %%s \\\\\\n\\t", $1)}')} \\\
 	install \\\
 	--packagingroot=%{builddir} \\\
 	--offline \\\
@@ -1410,7 +1412,7 @@ fi \
 # using this macro will append optional-packages.txt to the nocompressdoc list
 # as it's displayed to user after package install. and adding additional gzip
 # dep is just waste ;)
-%pear_package_setup(a:n:zDc:) \
+%pear_package_setup(a:d:n:zDc:) \
 %define srcdir %{-n*}%{!-n:%{_pearname}-%{version}} \
 %define builddir %{_builddir}/%{srcdir} \
 %setup -q -c -T %{-D:-D} -n %{srcdir} \
