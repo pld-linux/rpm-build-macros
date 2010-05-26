@@ -1823,16 +1823,30 @@ else: \
 # Undos files
 #
 # Author: Paweł Zuzelski <pawelz@pld-linux.org>
+# Author: Elan Ruusamäe <glen@pld-linux.org>
 #
 # Usage:
 #   %undos list_of_files
+#   %undos -f EXT[,EXT]
+#   %undos -i -f EXT[,EXT]
+#
+#  -f EXT[,EXT] - find(1) files by extensions
+#  -i - case insensitive file search
+#
+# Example:
+#   Un-DOS all *.js, *.css files
+#   %undos -f js,css
+#   Un-DOS all *.js, *.JS files
+#   %undos -f js -i
+#   undos all Makefiles
+#   %{__find} -name Makefile | xargs %undos
 #
 # Requirements:
 # BuildRequires:	sed >= 4.0
 # BuildRequires:	rpmbuild(macros) >= 1.553
 
-# NB: make sure this command stays on one line
-%undos		%{__sed} -i -e 's,\\r$,,'
+# NB: make sure this macro stays on one line
+%undos(f:i)	%{-f:%{__find} -regextype posix-extended -%{-i:i}regex '^.+\\.(%(echo %{-f*} | tr ',' '|'))$' -print0 | xargs -0} %{__sed} -i -e 's,\\r$,,'
 
 # Hook to register nagios object based plugins in Nagios NRPE daemon config.
 #
