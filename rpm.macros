@@ -7,6 +7,7 @@
 
 %epoch		0
 %x8664		x86_64 amd64 ia32e
+%arm		armv3l armv4b armv4l armv5teb armv5tel
 
 # kernel compiler
 %kgcc		%{__cc}
