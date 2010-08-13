@@ -246,6 +246,8 @@ CFLAGS="%{rpmcflags}" \
 CXXFLAGS="%{rpmcxxflags}" \
 LDFLAGS="%{rpmldflags}" \
 %{__cmake} \
+-DCMAKE_INSTALL_PREFIX=%{_prefix} \
+-DCMAKE_BUILD_TYPE=%{!?debug:Release}%{?debug:Debug} \
 }
 
 %scons { \
