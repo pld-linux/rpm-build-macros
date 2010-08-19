@@ -1389,8 +1389,9 @@ else \
 fi \
 %{nil}
 
-# command invoking pear cli
-%__pear /usr/bin/pear
+# Command invoking PEAR CLI
+# Same as /usr/bin/pear, except we force GMT timezone
+%__pear	%__php -doutput_buffering=1 -dopen_basedir="" -dmemory_limit=-1 -ddate.timezone=GMT %{php_pear_dir}/pearcmd.php
 
 %pear_install(a:d:n:zD) \
 %__pear \\\
