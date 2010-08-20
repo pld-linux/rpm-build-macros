@@ -1445,6 +1445,21 @@ if [ -f _noautoreq ]; then \
 fi \
 %{nil}
 
+# Print optional package info for pear packages
+# Author: Elan Ruusamäe <glen@pld-linux.org>
+# Usage:
+#   %post -p <lua>
+#	%%pear_package_print_optionalpackages
+#
+# Requirements:
+# BuildRequires:	rpmbuild(macros) >= 1.571
+%pear_package_print_optionalpackages \
+f = io.open("%{_docdir}/%{name}-%{version}/optional-packages.txt", "r") \
+if f then \
+	for l in f:lines() do print(l); end \
+end \
+%{nil}
+
 
 # Register OpenLDAP schema.
 # Author: Elan Ruusamäe <glen@pld-linux.org>
