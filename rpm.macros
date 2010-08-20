@@ -1420,11 +1420,12 @@ fi \
 %define srcdir %{-n*}%{!-n:%{_pearname}-%{version}} \
 %define builddir %{_builddir}/%{srcdir} \
 %setup -q -c -T %{-D:-D} -n %{srcdir} \
-%{-z:tar zxf %{S:0}; %{-a:tar zxf %{S:%{-a*}}}} \
+%{-z:%{__tar} zxf %{S:0}; %{-a:%{__tar} zxf %{S:%{-a*}}}} \
 %{-z:_P=package2.xml; [ -f $_P ] || _P=package.xml; _N=%{srcdir}; mv $_P $_N; cd $_N} \
 %{-c:%{__pear} -c pearrc config-set php_dir %{builddir}/%{php_pear_dir}; %__pear -c %{builddir}/pearrc channel-add %{-c*}} \
 %pear_install \
 %{-z:cd ..} \
+%{__tar} --wildcards -zvxf %{S:0} package*.xml \
 cat %{-z:$_N/}.install.log | %__pear_install_log \
 \
 # undos sources \
