@@ -1427,9 +1427,7 @@ fi \
 %{-z:cd ..} \
 %{__tar} --wildcards -zvxf %{S:0} package*.xml \
 cat %{-z:$_N/}.install.log | %__pear_install_log \
-\
-# undos sources \
-find -type f -print0 | xargs -0 sed -i -e 's,\\r$,,' \
+%undos -f php,html,js \
 %{!?_noautocompressdoc:%global _noautocompressdoc %{nil}}%{expand:%%global _noautocompressdoc %{_noautocompressdoc} optional-packages.txt} \
 %{!?_noautoprov:%global _noautoprov %{nil}}%{expand:%%global _noautoprov %{_noautoprov} 'pear(tests/.*)'} \
 %{nil}
