@@ -246,8 +246,11 @@ CFLAGS="%{rpmcflags}" \
 CXXFLAGS="%{rpmcxxflags}" \
 LDFLAGS="%{rpmldflags}" \
 %{__cmake} \
--DCMAKE_INSTALL_PREFIX=%{_prefix} \
--DCMAKE_BUILD_TYPE=%{!?debug:Release}%{?debug:Debug} \
+	-DCMAKE_INSTALL_PREFIX=%{_prefix} \
+	-DCMAKE_BUILD_TYPE=%{!?debug:Release}%{?debug:Debug} \
+%if "%{_lib}" == "lib64" \
+	-DLIB_SUFFIX=64 \
+%endif
 }
 
 %scons { \
