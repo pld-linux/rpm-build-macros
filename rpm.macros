@@ -239,19 +239,19 @@
 	%{dependencytracking} \
 }
 
-%cmake { \
-CC="%{__cc}" \
-CXX="%{__cxx}" \
-CFLAGS="%{rpmcflags}" \
-CXXFLAGS="%{rpmcxxflags}" \
-LDFLAGS="%{rpmldflags}" \
-%{__cmake} \
-	-DCMAKE_INSTALL_PREFIX=%{_prefix} \
-	-DCMAKE_BUILD_TYPE=%{!?debug:Release}%{?debug:Debug} \
+%cmake \
+CC="%{__cc}" \\\
+CXX="%{__cxx}" \\\
+CFLAGS="%{rpmcflags}" \\\
+CXXFLAGS="%{rpmcxxflags}" \\\
+LDFLAGS="%{rpmldflags}" \\\
+%{__cmake} \\\
+	-DCMAKE_INSTALL_PREFIX=%{_prefix} \\\
+	-DCMAKE_BUILD_TYPE=%{!?debug:Release}%{?debug:Debug} \\\
 %if "%{_lib}" == "lib64" \
-	-DLIB_SUFFIX=64 \
+	-DLIB_SUFFIX=64 \\\
 %endif \
-}
+%{nil}
 
 %scons { \
 %{__scons} \
