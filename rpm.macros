@@ -816,7 +816,9 @@ fi; \
 %php_debug				%{expand:%%global php_debug %(awk '/#define ZEND_DEBUG/{print $3}' %{php_includedir}/main/php_config.h 2>/dev/null || echo ERROR)}%php_debug
 %zend_module_api		%{expand:%%global zend_module_api %(awk '/#define ZEND_MODULE_API_NO/{print $3}' %{php_includedir}/Zend/zend_modules.h 2>/dev/null || echo ERROR)}%zend_module_api
 %zend_extension_api		%{expand:%%global zend_extension_api %(awk '/#define ZEND_EXTENSION_API_NO/{print $3}' %{php_includedir}/Zend/zend_extensions.h 2>/dev/null || echo ERROR)}%zend_extension_api
-%zend_zts				%{expand:%%global zend_zts %(Z=$(grep -sc '^#define ZTS 1' %{php_includedir}/main/php_config.h); echo ${Z:-ERROR})}%zend_zts
+%_zend_zts				%{expand:%%global _zend_zts %(Z=$(grep -sc '^#define ZTS 1' %{php_includedir}/main/php_config.h); echo ${Z:-ERROR})}%_zend_zts
+# "_ts" if ZTS enabled, empty otherwise
+%zend_zts				%{expand:%%global _zend_zts_%{?_zend_zts} 1}%{?_zend_zts_1:_ts}
 
 # helper macro
 %__php_api_requires(v:) Requires: php%{-v*}(%{expand:%1}) = %{expand:%{%{!?2:%{1}}%{?2}}}
