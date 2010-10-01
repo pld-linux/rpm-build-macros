@@ -1360,7 +1360,7 @@ echo -e "</dependencies>\\n" >> %{_mavendepmapdir}/maven2-depmap.xml
 #	%%pear_package_setup ...
 #
 # -a #   - also unpack SOURCE#. for PEAR bootstrapping
-# -n FMT - create builddir with FMT, instead of default %%{_pearname}-%%{version}
+# -n FMT - create builddir with FMT, instead of default %%{pearname}-%%{version}
 # -z     - unpack pear package and let pear use package.xml (not tarball) for install. for PEAR bootstrapping
 # -D     - pass -D to %setup (so the build dir is not removed)
 # -c     - register channel from local channel.xml file
@@ -1422,7 +1422,7 @@ fi \
 # as it's displayed to user after package install. and adding additional gzip
 # dep is just waste ;)
 %pear_package_setup(a:d:n:zDc:) \
-%define srcdir %{-n*}%{!-n:%{_pearname}-%{version}} \
+%define srcdir %{-n*}%{!-n:%{?_pearname}%{!?_pearname:%{pearname}}-%{version}} \
 %define builddir %{_builddir}/%{srcdir} \
 %setup -q -c -T %{-D:-D} -n %{srcdir} \
 %{-z:%{__tar} zxf %{S:0}; %{-a:%{__tar} zxf %{S:%{-a*}}}} \
