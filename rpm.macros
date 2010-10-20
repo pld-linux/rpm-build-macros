@@ -650,6 +650,12 @@ fi; }; __spec_install_post_chrpath } } }
 # and terminate if any found (termination can be turned off by define).
 #%no_install_post_check_so 1
 #%skip_post_check_so libwithunresolvedok.so.*
+#
+# NOTE: define skip_post_check_so only if such library really requires
+#       unresolved symbols and always leave a comment why it is required:
+#	# executable provides symbols foo, bar for those libraries:
+#	%define skip_post_check_so libwithoutfoo.so.* libwithoutbar.so.*
+#
 %__spec_install_post_check_so { \
  __spec_install_post_check_so() { \
     fail=0; \
