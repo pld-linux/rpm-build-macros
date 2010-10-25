@@ -1,4 +1,6 @@
 # $Revision$, $Date$
+# vim:ts=4 sw=4 noet ft=spec
+#
 # PLD Linux rpm macros.
 # <http://www.pld-linux.org/>
 
@@ -1981,4 +1983,4 @@ else: \
 		[ -f /etc/rc.d/init.d/%1 -o -f /etc/init/%1.conf ] && { echo -n "Re-"; /sbin/service %1 start; }; \
 	fi
 
-# vim:ts=4 sw=4 noet ft=spec
+# EOF
