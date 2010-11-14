@@ -767,6 +767,16 @@ fi; \
 %{nil}
 
 #-----------------------------------------------------------------
+# Compile GSettings schemas
+# requires: glib2 >= 1:2.26.0
+#
+%glib_compile_schemas() {{ \
+	umask 022; \
+	/usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas; \
+};} \
+%{nil}
+
+#-----------------------------------------------------------------
 # post %install sequence:
 # - autodeps exceptions
 # - compress all man and info pages,
