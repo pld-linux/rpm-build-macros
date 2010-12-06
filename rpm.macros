@@ -1471,7 +1471,7 @@ cat %{-z:$_N/}.install.log | %__pear_install_log \
 %pear_package_install() \
 cp -a ./%{php_pear_dir}/{.registry,*} $RPM_BUILD_ROOT%{php_pear_dir} \
 # tests should not be packaged \
-%{__rm} -r $RPM_BUILD_ROOT%{php_pear_dir}/tests \
+%{__rm} -rf $RPM_BUILD_ROOT%{php_pear_dir}/tests \
 # cleanup backups \
 find $RPM_BUILD_ROOT%{php_pear_dir} '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v \
 # help the developer out a little: \
