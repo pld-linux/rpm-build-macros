@@ -1073,7 +1073,7 @@ fi; \
 # banner support (useful in {pre,post}{,un} and triggers)
 #
 # Usage:
-#	%banner name [-a] [-e] [-n] [-tn] <<EOF
+#	%banner name [-a] [-e] [-n] [-tn] [-o] <<EOF
 # the banner text, the banner text
 # the banner text, and following line
 #EOF
@@ -1084,12 +1084,16 @@ fi; \
 # -e   - send to stderr instead of stdout
 # -n   - no show banner (overrides -t)
 # -t   - show only, if RPM_SCRIPTVERBOSITY >= n; default n=5
+# -o   - show only once, i.e when package is installed for the first time
 #
 # Tests:
 # (rpm -E '%banner -e banner <<EOF'; echo -e 'hi\nEOF') > m; sh -x m
+# (rpm -E '%banner -o -e banner <<EOF'; echo -e 'hi\nEOF') > m; sh -x m
+# (rpm -E '%banner -o -e banner <<EOF'; echo -e 'hi\nEOF') > m; sh -x m 1
 # rpm -E 'date | %banner -e banner' > m; sh -x m
+# rpm -E 'date | %banner -o -e banner' > m; sh -x m
 #
-%banner(aent:) ( \
+%banner(aenot:) %{-o:([ "$1" != 1 ] ||} ( \
 RPM_SCRIPTVERBOSITY=5 \
 [ -r /etc/sysconfig/rpm ] && . /etc/sysconfig/rpm \
 if [ -x /usr/bin/banner.sh ]; then \
@@ -1097,7 +1101,7 @@ if [ -x /usr/bin/banner.sh ]; then \
 else \
 	CMD="cat%{-e: >&2}" \
 fi \
-eval $CMD %{?2:%2}%{?3: %3}) \
+eval $CMD %{?2:%2}%{?3: %3})%{-o:)} \
 %{nil}
 
 # useradd/groupadd macros
