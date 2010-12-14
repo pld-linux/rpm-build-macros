@@ -209,8 +209,8 @@ s:%lang(C) ::' >> $MO_NAME
 		cat __qm.files
 	fi
 ) | sed '
-'"$ALL_NAME$MO"'s:\(.*/share/locale/\)\([^/@]\+\)\(@quot\|@boldquot\)\?\(@[^/]*\)\?\(/.*\.qm$\):%lang(\2\4) \1\2\3\4\5:
-'"$NO_ALL_NAME$MO"'s:\(.*/share/locale/\)\([^/@]\+\)\(@quot\|@boldquot\)\?\(@[^/]*\)\?\(/.*/'"$NAME"'\.qm$\):%lang(\2\4) \1\2\3\4\5:
+'"$ALL_NAME$QM"'s:\(.*/share/locale/\)\([^/@]\+\)\(@quot\|@boldquot\)\?\(@[^/]*\)\?\(/.*\.qm$\):%lang(\2\4) \1\2\3\4\5:
+'"$NO_ALL_NAME$QM"'s:\(.*/share/locale/\)\([^/@]\+\)\(@quot\|@boldquot\)\?\(@[^/]*\)\?\(/.*/'"$NAME"'\.qm$\):%lang(\2\4) \1\2\3\4\5:
 /^[^%]/d
 s:%lang(C) ::' >> $MO_NAME
 
