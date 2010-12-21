@@ -744,11 +744,13 @@ fi; \
 
 #-----------------------------------------------------------------
 # Update icon cache
-# requires: gtk+
+# BuildRequires:  rpmbuild(macros) >= 1.596
+# Requires:  hicolor-icon-theme
 #
 %update_icon_cache() {{ \
+	%{!?1:%{error:%{0}: Required icon dir missing}exit 1} \
 	umask 022; \
-	/usr/bin/gtk-update-icon-cache -qf %{_datadir}/icons/%1; \
+	[ -x /usr/bin/gtk-update-icon-cache ] && /usr/bin/gtk-update-icon-cache -qf %{_datadir}/icons/%1 || :; \
 };} \
 %{nil}
 
