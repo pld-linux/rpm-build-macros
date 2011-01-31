@@ -1867,7 +1867,7 @@ find "$@" -type f -name '*.py' | python -c ' \
 import sys \
 import compiler \
 \
-err = 0\
+found = err = 0\
 for f in sys.stdin: \
 	fd = open(f.strip()) \
 	c = fd.read() \
@@ -1878,7 +1878,10 @@ for f in sys.stdin: \
 		print "py_lint: %s: %s" % (f.strip(), e) \
 		err = err + 1\
 \
-if err: \
+if not found:\
+	print >> sys.stderr, "\\npy_lint: ERROR: No files processed.\\n" \
+	sys.exit(1) \
+elif err: \
 	print >> sys.stderr, "\\npy_lint: ERROR: Syntax errors in %d files.\\n" % err \
 	sys.exit(1) \
 else: \
