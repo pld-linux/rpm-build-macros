@@ -1859,7 +1859,7 @@ io.open("/etc/shells", "w"):write(s)\
 #
 # Requirements:
 # BuildRequires:	python
-# BuildRequires:	rpmbuild(macros) >= 1.469
+# BuildRequires:	rpmbuild(macros) >= 1.602
 
 %py_lint() \
 __py_lint() { \
