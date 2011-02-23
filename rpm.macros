@@ -1867,13 +1867,14 @@ import compiler \
 \
 found = err = 0\
 for f in sys.stdin: \
-	fd = open(f.strip()) \
+	fd = open(f.rstrip()) \
 	c = fd.read() \
 	fd.close() \
+	found = found + 1 \
 	try: \
 		compiler.parse(c) \
 	except SyntaxError, e: \
-		print "py_lint: %s: %s" % (f.strip(), e) \
+		print "py_lint: %s: %s" % (f.rstrip(), e) \
 		err = err + 1\
 \
 if not found:\
@@ -1883,7 +1884,7 @@ elif err: \
 	print >> sys.stderr, "\\npy_lint: ERROR: Syntax errors in %d files.\\n" % err \
 	sys.exit(1) \
 else: \
-	print >> sys.stderr,  "py_lint: Found no syntax errors." \
+	print >> sys.stderr,  "py_lint: %d files scanned, found no syntax errors." % found \
 ' \
 }; __py_lint %* \
 %{nil}
