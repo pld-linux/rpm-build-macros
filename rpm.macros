@@ -2011,6 +2011,10 @@ else: \
 		[ -f /etc/rc.d/init.d/%1 -o -f /etc/init/%1.conf ] && { echo -n "Re-"; /sbin/service %1 start; }; \
 	fi
 
+# Haskell Macros
+# BuildRequires:  rpmbuild(macros) >= 1.608
+%ghcdir		ghc-%(/usr/bin/ghc --numeric-version 2>/dev/null || echo ERROR)
+
 # update /usr/lib*/ghc-*/package.conf.d/package.cache
 # Requires: ghc
 # BuildRequires:  rpmbuild(macros) >= 1.607
@@ -2020,6 +2024,5 @@ else: \
 	/usr/bin/ghc-pkg recache; \
 };} \
 %{nil}
-
 
 # EOF
