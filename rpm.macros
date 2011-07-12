@@ -558,20 +558,20 @@ if [ -d "$RPM_BUILD_ROOT" ]; then \
 		archiveslist=`echo "$filetypes" | awk -F: '/current ar archive/ {print $1}'`; \
 		if [ -n "$elfexelist" ]; then \
 			printf "Stripping %d ELF executables..." $(echo "$elfexelist" | wc -l); \
-			chmod u+w $elfexelist; \
-			%{__strip} --remove-section=.note --remove-section=.comment $elfexelist; \
+			echo "$elfexelist" | xargs -r -d'\n' chmod u+w; \
+			echo "$elfexelist" | xargs -r -d'\n' %{__strip} --remove-section=.note --remove-section=.comment; \
 			echo "DONE"; \
 		fi; \
 		if [ -n "$elfsharedlist" ]; then \
 			printf "Stripping %d ELF shared libraries..." $(echo "$elfsharedlist" | wc -l); \
-			chmod u+w $elfsharedlist; \
-			%{__strip} --strip-unneeded --remove-section=.note --remove-section=.comment $elfsharedlist; \
+			echo "$elfsharedlist" | xargs -r -d'\n' chmod u+w; \
+			echo "$elfsharedlist" | xargs -r -d'\n' %{__strip} --strip-unneeded --remove-section=.note --remove-section=.comment; \
 			echo "DONE"; \
 		fi; \
 		if [ -n "$archiveslist" ]; then \
 			printf "Stripping %d ar archives..." $(echo "$archiveslist" | wc -l); \
-			chmod u+w $archiveslist; \
-			%{__strip} --strip-debug --remove-section=.note --remove-section=.comment $archiveslist; \
+			echo "$archiveslist" | xargs -r -d'\n' chmod u+w; \
+			echo "$archiveslist" | xargs -r -d'\n' %{__strip} --strip-debug --remove-section=.note --remove-section=.comment; \
 			echo "DONE"; \
 		fi; \
 	fi; \
