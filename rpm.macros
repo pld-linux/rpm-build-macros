@@ -1013,12 +1013,6 @@ for d in %{py_sitescriptdir} %{py_sitedir} %*; do \
 done \
 %{nil}
 
-%py3_postclean() \
-for d in %{py3_sitescriptdir} %{py3_sitedir} %*; do \
- [ ! -d "$RPM_BUILD_ROOT$d" ] || find "$RPM_BUILD_ROOT$d" -name '*.py' -print0 | xargs -0r -l512 rm;\
-done \
-%{nil}
-
 # depmod macro
 %depmod() { \
 umask 022; \
