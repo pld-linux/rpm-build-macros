@@ -1,4 +1,4 @@
-%define		rpm_macros_rev	1.612
+%define		rpm_macros_rev	1.613
 %define		find_lang_rev	1.34
 Summary:	PLD Linux RPM build macros
 Summary(pl.UTF-8):	Makra do budowania pakietów RPM dla Linuksa PLD
@@ -26,6 +26,8 @@ Conflicts:	rpm < 4.4.9-72
 # php-config --sysconfdir
 Conflicts:	php-devel < 4:5.2.0-3
 Conflicts:	php4-devel < 3:4.4.4-10
+# sysconfig module with proper 'purelib' path
+Conflicts:	python3 < 1:3.2.1-3
 %if "%{pld_release}" != "ac"
 # libtool --install
 Conflicts:	libtool < 2:2.2
