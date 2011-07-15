@@ -974,11 +974,11 @@ fi \
 
 # directories
 %py3_prefix		%{expand:%%global py3_prefix %(%{__python3} -c "import sys; print(sys.prefix)" 2>/dev/null || echo ERROR)}%py3_prefix
-%py3_libdir		%{py3_prefix}/%{_lib}/python%{py3_ver}
+%py3_libdir		%{expand:%%global py3_libdir %(%{__python3} -c "import sysconfig; print(sysconfig.get_path('platstdlib'))" 2>/dev/null || echo ERROR)}%py3_libdir
+%py3_incdir		%{expand:%%global py3_incdir %(%{__python3} -c "import sysconfig; print(sysconfig.get_path('include'))" 2>/dev/null || echo ERROR)}%py3_incdir
+%py3_sitedir		%{expand:%%global py3_sitedir %(%{__python3} -c "import sysconfig; print(sysconfig.get_path('platlib'))" 2>/dev/null || echo ERROR)}%py3_sitedir
+%py3_sitescriptdir		%{expand:%%global py3_sitescriptdir %(%{__python3} -c "import sysconfig; print(sysconfig.get_path('purelib'))" 2>/dev/null || echo ERROR)}%py3_sitescriptdir
 %py3_scriptdir	%{py3_prefix}/share/python%{py3_ver}
-%py3_incdir		/usr/include/python%{py3_ver}
-%py3_sitedir		%{py3_libdir}/site-packages
-%py3_sitescriptdir %{py3_scriptdir}/site-packages
 %py3_dyndir		%{py3_libdir}/lib-dynload
 
 # pure python modules compilation
