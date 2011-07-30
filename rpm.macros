@@ -511,9 +511,19 @@ CXXFLAGS="%{rpmcxxflags}" \
 			find "$RPM_BUILD_ROOT$i" -name '*.gz' -print | xargs -r %{__gzip} -dnf; \
 			find $RPM_BUILD_ROOT$i -type l | while read a; do \
 				m=$(readlink "$a"); \
+				if [[ "$m" = */* ]]; then \
+					# handle links to different man section \
+					l=$(readlink -f "$a"); \
+					# full/relative paths that resolve symlink \
+					l=${l#$RPM_BUILD_ROOT/usr/share/man/}; \
+					l=${l#$RPM_BUILD_ROOT/usr/X11R6/man/}; \
+					# full paths that do not resolve symlink \
+					l=${l#/usr/share/man/}; \
+					l=${l#/usr/X11R6/man/}; \
+				else \
+					l=$m; \
+				fi; \
 				rm -f $a; \
-				l=${m#/usr/share/man/}; \
-				l=${l#/usr/X11R6/man/}; \
 				echo ".so $l" > $a; \
 				echo >&2 "Converted ${a#$RPM_BUILD_ROOT} from symlink to man link: $l"; \
 			done; \
