@@ -503,16 +503,19 @@ CXXFLAGS="%{rpmcxxflags}" \
 #%no_install_post_compress_docs	1
 %__spec_install_post_compress_docs { \
 %{!?no_install_post_compress_docs:__spec_install_post_compress_docs() { \
+	%{!?debug:set +x}; \
 	for i in /usr/share/man /usr/X11R6/man; do \
 		if [ -d "$RPM_BUILD_ROOT$i" ]; then \
 			echo "Compress man pages: $i"; \
 			find "$RPM_BUILD_ROOT$i" -name '*.bz2' -print | xargs -r %{__bzip2} -df; \
 			find "$RPM_BUILD_ROOT$i" -name '*.gz' -print | xargs -r %{__gzip} -dnf; \
 			find $RPM_BUILD_ROOT$i -type l | while read a; do \
-				m=$(readlink $a); \
+				m=$(readlink "$a"); \
 				rm -f $a; \
-				echo .so ${m##*/} > $a; \
-				echo >&2 "Converted ${a#$RPM_BUILD_ROOT} from symlink to man link: ${m##*/}"; \
+				l=${m#/usr/share/man/}; \
+				l=${l#/usr/X11R6/man/}; \
+				echo ".so $l" > $a; \
+				echo >&2 "Converted ${a#$RPM_BUILD_ROOT} from symlink to man link: $l"; \
 			done; \
 			find "$RPM_BUILD_ROOT$i" -type f -size +%{_min_compress_bytes}c -print | xargs -r %{__gzip} -9nf; \
 		fi; \
