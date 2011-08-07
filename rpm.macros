@@ -552,6 +552,7 @@ CXXFLAGS="%{rpmcxxflags}" \
 #
 %__spec_install_post_strip {%{!?debug: \
 %{!?no_install_post_strip:__spec_install_post_strip() { \
+%{!?debug:set +x}; \
 if [ -d "$RPM_BUILD_ROOT" ]; then \
 	if [ -d $RPM_BUILD_ROOT/lib/modules ]; then \
 		modulelist=$(find $RPM_BUILD_ROOT/lib/modules -name '*o' -type f -print); \
@@ -622,6 +623,7 @@ fi; }; __spec_install_post_strip } } }
 #
 %__spec_install_post_chrpath {%{!?debug: \
 %{!?no_install_post_chrpath: __spec_install_post_chrpath() { \
+%{!?debug:set +x}; \
 if [ -d "$RPM_BUILD_ROOT" ]; then \
 	files=`find $RPM_BUILD_ROOT -type f ! -regex ".*ld-[0-9.]*so.*" ! -regex ".*/usr/lib[0-9]*/debug/.*" ! -regex ".*/lib/modules/.*" ! -regex ".*%{_docdir}/.*" ! -regex ".*%{_includedir}/.*" %{?_noautochrpath:! -regex "%{_noautochrpath}"}`; \
 	if [ -n "$files" ]; then \
@@ -674,6 +676,7 @@ fi; }; __spec_install_post_chrpath } } }
 #
 %__spec_install_post_check_so { \
 __spec_install_post_check_so() { \
+%{!?debug:set +x}; \
 	fail=0; \
 	printf "Searching for shared objects with unresolved symbols..."; \
 	for f in $(find $RPM_BUILD_ROOT -type f -name '*.so.*' -print); do \
@@ -691,6 +694,7 @@ __spec_install_post_check_so() { \
 #%no_install_post_compress_modules	1
 %__spec_install_post_compress_modules { \
 %{!?no_install_post_compress_modules: __spec_install_post_compress_modules() { \
+%{!?debug:set +x}; \
 	if [ -d $RPM_BUILD_ROOT/lib/modules ]; then \
 		q=$(find $RPM_BUILD_ROOT/lib/modules -name '*o' -type f -print); \
 		if [ "$q" ]; then \
@@ -1003,6 +1007,7 @@ fi \
 # Hardlink binary identical .pyc and .pyo files
 %__spec_install_post_py_hardlink {\
 %{!?no_install_post_py_hardlink: __spec_install_post_py_hardlink() { \
+%{!?debug:set +x}; \
 local a b c=0 t=0; \
 if [ -d "$RPM_BUILD_ROOT" ]; then \
 	find "$RPM_BUILD_ROOT" -name '*.pyc' > __rpm_pyc; \
@@ -1689,6 +1694,7 @@ compile %{*}\
 %define ModprobeD $RPM_BUILD_ROOT%{_sysconfdir}/modprobe.d/%{_kernel_ver} \
 																	\
 __install_kernel_modules() {										\
+%{!?debug:set +x}; \
 local cfgs='%{?with_dist_kernel:%{?with_smp: smp}%{?with_up: up}}%{!?with_dist_kernel: nondist}' \
 																	\
 for MODULE in {%{-m*},}; do											\
@@ -1869,6 +1875,7 @@ io.open("/etc/shells", "w"):write(s)\
 
 %py_lint() \
 __py_lint() { \
+%{!?debug:set +x}; \
 find "$@" -type f -name '*.py' | python -c ' \
 import sys \
 import compiler \
