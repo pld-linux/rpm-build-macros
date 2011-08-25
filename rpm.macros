@@ -1657,7 +1657,7 @@ for cfg in ${cfgs:-dist}; do                                        \
 																	\
 	%{__make} -C %{_kernelsrcdir} modules							\\\
 		${1+"$@"}													\\\
-		M=$PWD %{MakeOpts}											\
+		M=$PWD CONSTIFY_PLUGIN="" %{MakeOpts}						\
 																	\
 	for MODULE in {%{-m*},}; do										\
 		[ -z "${MODULE}" ] || mv ${MODULE}{,-$cfg}.ko				\
