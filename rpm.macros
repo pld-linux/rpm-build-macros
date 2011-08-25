@@ -1651,7 +1651,7 @@ for cfg in ${cfgs:-dist}; do                                        \
 	%endif															\
 																	\
 	%{!?-c:%{__make} -C %{_kernelsrcdir} clean						\\\
-		RCS_FIND_IGNORE="-name '*.ko' -o"							\\\
+		RCS_FIND_IGNORE="-name '*.[ks]o' -o"							\\\
 		${1+"$@"}													\\\
 		M=$PWD %{MakeOpts}}											\
 																	\
