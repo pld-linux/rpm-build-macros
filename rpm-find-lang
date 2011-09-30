@@ -228,8 +228,10 @@ fi
 		cat __find.dirs
 	fi
 ) | sed '
+'"$NO_ALL_NAME$GNOME"'s:\(.*/share/help/\)\([^/]\+\)\(/'"$NAME"'\)$:%lang(\2) \1\2\3:
 '"$NO_ALL_NAME$GNOME"'s:\(.*/gnome/help/'"$NAME"'$\):%dir \1:
 '"$NO_ALL_NAME$GNOME"'s:\(.*/gnome/help/'"$NAME"'/\)\([^/]\+\)$:%lang(\2) \1\2:
+'"$ALL_NAME$GNOME"'s:\(.*/share/help/\)\([^/]\+\)\(/[^/]\+\)$:%lang(\2) \1\2\3:
 '"$ALL_NAME$GNOME"'s:\(.*/gnome/help/[^/]\+$\):%dir \1:
 '"$ALL_NAME$GNOME"'s:\(.*/gnome/help/[^/]\+/\)\([^/]\+\)$:%lang(\2) \1\2:
 /^[^%]/d
