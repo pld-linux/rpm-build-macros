@@ -2065,7 +2065,7 @@ else: \
 # %systemd_postun %{name}
 #
 # Requirements:
-# BuildRequires: rpmbuild(macros) >= ...
+# BuildRequires: rpmbuild(macros) >= 1.620
 # Requires:	 rc-scripts >= ...
 
 %systemd_enable() {
