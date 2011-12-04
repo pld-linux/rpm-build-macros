@@ -2090,4 +2090,6 @@ else: \
 		/bin/systemctl try-restart %1 >/dev/null 2>&1 || : \
 	fi
 
+%systemdunitdir /lib/systemd/system
+
 # EOF
