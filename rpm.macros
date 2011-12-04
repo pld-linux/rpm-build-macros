@@ -2063,7 +2063,7 @@ else: \
 # %systemd_reload
 #
 # Requirements:
-# BuildRequires: rpmbuild(macros) >= 1.626
+# BuildRequires: rpmbuild(macros) >= 1.627
 # Requires:	 systemd-units >= 37-0.10
 
 %systemd_reload /bin/systemd_booted && SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog /bin/systemctl --quiet daemon-reload || :
@@ -2074,7 +2074,7 @@ else: \
 	if [ $1 -eq 1 ]; then \
 		/bin/systemctl --quiet enable %{*} || : \
 	fi \
-	if [ $1 -gt 1 ]; then \
+	if [ $1 -gt 1 ] && [ -z "$NORESTART" ]; then \
 		/bin/systemctl --quiet try-restart %{*} || : \
 	fi \
 
