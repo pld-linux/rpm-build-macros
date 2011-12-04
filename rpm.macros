@@ -2045,56 +2045,45 @@ else: \
 # Author: Bartlomiej Zimon <uzi18@o2.pl>
 #
 # Usage:
-# %systemd_post
-# %systemd_enable service_name.service
-# %systemd_preun  service_name.service
-# %systemd_postun service_name.service
+# %systemd_reload
+# %systemd_post service_name1.service service_name2.service
+# %systemd_preun  service_name1.service service_name2.service
 #
 # Sample:
 # %post systemd
-# %systemd_post
+# %systemd_reload
 # or if service must be enabled by default:
 # %post systemd
-# %systemd_post
-# %systemd_enable %{name}
+# %systemd_post %{name}.service
 #
 # %preun systemd
-# %systemd_preun %{name}
+# %systemd_preun %{name}.service
 #
 # %postun systemd
-# %systemd_postun %{name}
+# %systemd_reload
 #
 # Requirements:
-# BuildRequires: rpmbuild(macros) >= 1.625
+# BuildRequires: rpmbuild(macros) >= 1.626
 # Requires:	 systemd-units >= 37-0.10
 
-%systemd_enable() \
-	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog; \
-	if [ $1 -eq 1 ]; then  \
-		/bin/systemctl --quiet enable %1 || : \
-	fi
+%systemd_reload /bin/systemd_booted && SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog /bin/systemctl --quiet daemon-reload || :
 
 %systemd_post() \
-	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog; \
-	if [ $1 -eq 1 ] && /bin/systemd_booted; then \
-		/bin/systemctl --quiet daemon-reload || : \
-	fi
+	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+	/bin/systemd_booted && /bin/systemctl --quiet daemon-reload || : \
+	if [ $1 -eq 1 ]; then \
+		/bin/systemctl --quiet enable %{*} || : \
+	fi \
+	if [ $1 -gt 1 ]; then \
+		/bin/systemctl --quiet try-restart %{*} || : \
+	fi \
 
 %systemd_preun() \
-	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog; \
 	if [ $1 -eq 0 ]; then \
-		/bin/systemctl --no-reload --quiet disable %1 || : \
+		export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog; \
+		/bin/systemctl --no-reaload --quiet disable %{*} || : \
 		if /bin/systemd_booted; then \
-			/bin/systemctl --quiet stop %1 || : \
-		fi \
-	fi
-
-%systemd_postun() \
-	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog; \
-	if /bin/systemd_booted; then \
-		/bin/systemctl --quiet daemon-reload || : \
-		if [ $1 -ge 1 ]; then \
-			/bin/systemctl --quiet try-restart %1 || : \
+			/bin/systemctl --quiet stop %{*} || : \
 		fi \
 	fi
 
