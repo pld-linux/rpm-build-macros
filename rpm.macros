@@ -560,7 +560,7 @@ if [ -d "$RPM_BUILD_ROOT" ]; then \
 			modulecount=$(echo "$modulelist" | wc -l); \
 			printf "Stripping %d kernel modules..." $modulecount; \
 			echo "$modulelist" | xargs -l512 chmod u+w; \
-			echo "$modulelist" | xargs -l512 %{__strip} --strip-unneeded --remove-section=.comment --remove-section=.note.GNU-stack; \
+			echo "$modulelist" | xargs -l512 %{__strip} -g --remove-section=.comment --remove-section=.note.GNU-stack; \
 			echo "DONE"; \
 		fi; \
 	fi; \
