@@ -2052,10 +2052,10 @@ else: \
 #
 # Sample:
 # %post systemd
-# %systemd_post %{name}
+# %systemd_post
 # or if service must be enabled by default:
 # %post systemd
-# %systemd_post %{name}
+# %systemd_post
 # %systemd_enable %{name}
 #
 # %preun systemd
@@ -2065,33 +2065,29 @@ else: \
 # %systemd_postun %{name}
 #
 # Requirements:
-# BuildRequires: rpmbuild(macros) >= 1.620
+# BuildRequires: rpmbuild(macros) >= 1.622
 # Requires:	 rc-scripts >= ...
 
-%systemd_enable() {
-if [ $1 -eq 1 ] ; then 
-    /bin/systemctl enable %1 >/dev/null 2>&1 || : \
-fi \
-}
+%systemd_enable() \
+	if [ $1 -eq 1 ]; then  \
+		/bin/systemctl enable %1 >/dev/null 2>&1 || : \
+	fi
 
-%systemd_post() {
-if [ $1 -eq 1 ] ; then 
-    /bin/systemctl daemon-reload >/dev/null 2>&1 || : \
-fi \
-}
+%systemd_post() \
+	if [ $1 -eq 1 ]; then \
+		/bin/systemctl daemon-reload >/dev/null 2>&1 || : \
+	fi
 
-%systemd_preun() {
-if [ $1 -eq 0 ] ; then \
-    /bin/systemctl --no-reload disable %1 > /dev/null 2>&1 || : \
-    /bin/systemctl stop %1 > /dev/null 2>&1 || : \
-fi \
-}
-                    
-%systemd_postun() {
+%systemd_preun() \
+	if [ $1 -eq 0 ]; then \
+		/bin/systemctl --no-reload disable %1 > /dev/null 2>&1 || : \
+		/bin/systemctl stop %1 > /dev/null 2>&1 || : \
+	fi
+
+%systemd_postun() \
     /bin/systemctl daemon-reload >/dev/null 2>&1 || : \
-    if [ $1 -ge 1 ] ; then \
-    /bin/systemctl try-restart %1 >/dev/null 2>&1 || : \
-fi \
-}
+    if [ $1 -ge 1 ]; then \
+		/bin/systemctl try-restart %1 >/dev/null 2>&1 || : \
+	fi
 
 # EOF
