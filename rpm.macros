@@ -2065,29 +2065,37 @@ else: \
 # %systemd_postun %{name}
 #
 # Requirements:
-# BuildRequires: rpmbuild(macros) >= 1.622
-# Requires:	 rc-scripts >= ...
+# BuildRequires: rpmbuild(macros) >= 1.625
+# Requires:	 systemd-units >= 37-0.10
 
 %systemd_enable() \
+	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog; \
 	if [ $1 -eq 1 ]; then  \
-		/bin/systemctl enable %1 >/dev/null 2>&1 || : \
+		/bin/systemctl --quiet enable %1 || : \
 	fi
 
 %systemd_post() \
-	if [ $1 -eq 1 ]; then \
-		/bin/systemctl daemon-reload >/dev/null 2>&1 || : \
+	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog; \
+	if [ $1 -eq 1 ] && /bin/systemd_booted; then \
+		/bin/systemctl --quiet daemon-reload || : \
 	fi
 
 %systemd_preun() \
+	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog; \
 	if [ $1 -eq 0 ]; then \
-		/bin/systemctl --no-reload disable %1 > /dev/null 2>&1 || : \
-		/bin/systemctl stop %1 > /dev/null 2>&1 || : \
+		/bin/systemctl --no-reload --quiet disable %1 || : \
+		if /bin/systemd_booted; then \
+			/bin/systemctl --quiet stop %1 || : \
+		fi \
 	fi
 
 %systemd_postun() \
-    /bin/systemctl daemon-reload >/dev/null 2>&1 || : \
-    if [ $1 -ge 1 ]; then \
-		/bin/systemctl try-restart %1 >/dev/null 2>&1 || : \
+	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog; \
+	if /bin/systemd_booted; then \
+		/bin/systemctl --quiet daemon-reload || : \
+		if [ $1 -ge 1 ]; then \
+			/bin/systemctl --quiet try-restart %1 || : \
+		fi \
 	fi
 
 %systemdunitdir /lib/systemd/system
