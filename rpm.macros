@@ -2082,7 +2082,7 @@ else: \
 %systemd_preun() \
 	if [ $1 -eq 0 ]; then \
 		export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog; \
-		/bin/systemctl --no-reaload --quiet disable %{*} || : \
+		/bin/systemctl --no-reload --quiet disable %{*} || : \
 		if /bin/systemd_booted; then \
 			/bin/systemctl --quiet stop %{*} || : \
 		fi \
