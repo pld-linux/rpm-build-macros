@@ -1984,10 +1984,10 @@ else: \
 # %cacti_import_template %{resourcedir}/cacti_host_template_varnish.xml
 #
 # Requires:	cacti >= 0.8.7e-8
-# BuildRequires:	rpmbuild(macros) >= 1.554
+# BuildRequires:	rpmbuild(macros) >= 1.630
 
 %cacti_import_template() {\
-/usr/share/cacti/cli/import_template.php --filename=%1 || :; \
+/usr/share/cacti/cli/import_template.php --filename=%1 --with-template-rras || :; \
 }%{nil}
 
 # pre/post script for -upstart subpackages
