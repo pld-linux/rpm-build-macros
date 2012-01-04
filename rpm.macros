@@ -1244,8 +1244,7 @@ fi \
 # Requires:	rc-scripts
 # -n option:
 # BuildRequires:	rpmbuild(macros) >= 1.450
-%service(qn) {{%(export noop=%{-n:1} quiet=%{-q:1}; /usr/lib/rpm/service_generator.sh %{*}) };}
-
+%service(qn) {{%(export noop=%{-n:1} quiet=%{-q:1} RPM_BUILD_ROOT=%{buildroot}; /usr/lib/rpm/service_generator.sh %{*}) };}
 
 # Java macros. based on jpackage macros.java
 #

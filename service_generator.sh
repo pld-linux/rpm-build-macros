@@ -56,6 +56,13 @@ if [ "$check" = 1 ]; then
 	skip_auto_restart_body
 	echo 'if [ $(skip_auto_restart) = no ]; then'
 		service_body
+	echo 'else'
+		# service restart was disabled, tell them to restart it
+	cat <<-EOF
+		if [ -f /var/lock/subsys/$service ]; then
+			echo 'Run "/sbin/service $service restart" to restart $desc.'
+		fi
+	EOF
 	echo 'fi'
 else
 	service_body
