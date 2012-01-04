@@ -1753,6 +1753,9 @@ __install_kernel_modules											\
 ) \
 %{nil}
 
+# return EXPANDED source url N from current spec
+%sourceurl(n:) %(test "$IN_RPM" = 1 && exit 1; export IN_RPM=1; rpmbuild --nodigest --nosignature --nobuild -D "prep %%dump" %{_specdir}/%{name}.spec 2>&1 | awk '$2 ~ /^SOURCEURL%{-n*}/ {print $3}')
+
 # browser plugins v2
 # Author: Elan Ruusamäe <glen@pld-linux.org>
 #
