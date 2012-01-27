@@ -2051,33 +2051,49 @@ fi; \
 %{nil}
 
 
-# pre/post script for -systemd subpackages
+# pre/post script for packages supporting systemd units
 #
 # Author: Bartlomiej Zimon <uzi18@o2.pl>
 #
 # Usage:
 # %systemd_reload
 # %systemd_post service_name1.service service_name2.service
-# %systemd_preun  service_name1.service service_name2.service
+# %systemd_preun service_name1.service service_name2.service
+# %systend_trigger service_name1.service service_name2.service
 #
 # Sample:
-# %post systemd
-# %systemd_reload
-# or if service must be enabled by default:
-# %post systemd
+# %post
 # %systemd_post %{name}.service
 #
-# %preun systemd
+# %preun
 # %systemd_preun %{name}.service
 #
-# %postun systemd
+# %postun
 # %systemd_reload
+#
+# %triggerpostun -- %{name} < first-version-with-systemd-units
+# %systemd_trigger %{name}.service
 #
 # Requirements:
 # BuildRequires: rpmbuild(macros) >= 1.627
 # Requires:	 systemd-units >= 37-0.10
 
 %systemd_reload /bin/systemd_booted && SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog /bin/systemctl --quiet daemon-reload || :
+
+%systemd_trigger() \
+want_enable_service() { \
+	[ -f /etc/sysconfig/rpm ] && . /etc/sysconfig/rpm \
+	[ ${RPM_ENABLE_SYSTEMD_SERVICE:-yes} = no ] && return 1 \
+	/sbin/chkconfig --list ${1%.service} 2>/dev/null | grep -qsv "[0-6]:on" && return 1 \
+	return 0 \
+}\
+	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+	for s in %{*}; do \
+		if want_enable_service $s; then \
+			/bin/systemctl --quiet enable $s || : \
+		fi \
+	done \
+%{nil}
 
 %systemd_post() \
 	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
