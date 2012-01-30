@@ -687,6 +687,30 @@ __spec_install_post_check_so() { \
 }; __spec_install_post_check_so }}
 
 #-----------------------------------------------------------------
+# Verify that for each directory under /var/run package contains
+# tmpfiles.d configuration. Warn and terminate build if config is
+# missing.
+#
+#%no_install_post_check_tmpfiles 1
+#
+%__spec_install_post_check_tmpfiles { \
+__spec_install_post_check_tmpfiles() { \
+%{!?debug:set +x;} \
+	fail=0; \
+	echo "Checking /var/run <-> tmpfiles.d completeness..."; \
+	for d in $RPM_BUILD_ROOT/var/run/*; do \
+		[ -d "$d" ] || continue; \
+		d=${d##$RPM_BUILD_ROOT}; \
+		if ! LC_ALL=C grep -qs "$d" $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/*.conf $RPM_BUILD_ROOT/etc/tmpfiles.d/*.conf; then\
+		    echo "No tmpfiles configuration for '$d'";\
+			fail=1 ; \
+		fi \
+	done ; \
+	echo " DONE"; \
+	%{!?no_install_post_check_tmpfiles:return $fail;} \
+}; __spec_install_post_check_tmpfiles }}
+
+#-----------------------------------------------------------------
 # Find and gzip all kernel modules
 #
 # Requires: find
