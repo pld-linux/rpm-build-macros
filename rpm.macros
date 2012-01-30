@@ -701,7 +701,7 @@ __spec_install_post_check_tmpfiles() { \
 	for d in $RPM_BUILD_ROOT/var/run/*; do \
 		[ -d "$d" ] || continue; \
 		d=${d##$RPM_BUILD_ROOT}; \
-		if ! LC_ALL=C grep -qs "$d" $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/*.conf $RPM_BUILD_ROOT/etc/tmpfiles.d/*.conf; then\
+		if ! grep -qs "$d" $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/*.conf $RPM_BUILD_ROOT/etc/tmpfiles.d/*.conf; then\
 		    echo "No tmpfiles configuration for '$d'";\
 			fail=1 ; \
 		fi \
