@@ -19,7 +19,7 @@ fi
 # common part
 service_body() {
 	cat <<-EOF
-		if ! /bin/systemd_booted; then
+		if [ ! -x /bin/systemd_booted ] || ! /bin/systemd_booted; then
 			if [ -f /var/lock/subsys/$service ]; then
 	EOF
 	if [ "$noop" = 1 ]; then
@@ -61,7 +61,7 @@ if [ "$check" = 1 ]; then
 	echo 'else'
 		# service restart was disabled, tell them to restart it
 	cat <<-EOF
-		if ! /bin/systemd_booted; then
+		if [ ! -x /bin/systemd_booted ] || ! /bin/systemd_booted; then
 			if [ -f /var/lock/subsys/$service ]; then
 				echo 'Run "/sbin/service $service restart" to restart $desc.'
 			fi
