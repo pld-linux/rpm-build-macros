@@ -19,7 +19,8 @@ fi
 # common part
 service_body() {
 	cat <<-EOF
-		if [ -f /var/lock/subsys/$service ]; then
+		if ! /bin/systemd_booted; then
+			if [ -f /var/lock/subsys/$service ]; then
 	EOF
 	if [ "$noop" = 1 ]; then
 		echo :
@@ -31,11 +32,12 @@ service_body() {
 
 	if [ "$quiet" != 1 ]; then
 		cat <<-EOF
-		else
-			echo 'Run "/sbin/service $service start" to start $desc.'
+			else
+				echo 'Run "/sbin/service $service start" to start $desc.'
 		EOF
 	fi
 	cat <<-EOF
+			fi
 		fi
 	EOF
 }
@@ -59,8 +61,10 @@ if [ "$check" = 1 ]; then
 	echo 'else'
 		# service restart was disabled, tell them to restart it
 	cat <<-EOF
-		if [ -f /var/lock/subsys/$service ]; then
-			echo 'Run "/sbin/service $service restart" to restart $desc.'
+		if ! /bin/systemd_booted; then
+			if [ -f /var/lock/subsys/$service ]; then
+				echo 'Run "/sbin/service $service restart" to restart $desc.'
+			fi
 		fi
 	EOF
 	echo 'fi'
