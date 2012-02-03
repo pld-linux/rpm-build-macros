@@ -37,7 +37,7 @@
 %__cmake	/usr/bin/cmake
 
 %_smp_mflags %(_NCPUS=$(/usr/bin/getconf _NPROCESSORS_ONLN); \\\
-				[ "$_NCPUS" -gt 1 ] && echo "-j$(($_NCPUS * 2))")
+				[ "$_NCPUS" -gt 2 ] && echo "-j$(($_NCPUS / 2))")
 
 %__gettextize { \
 	if grep -qs 'AM_GNU_GETTEXT.*external' configure.{ac,in} ; then \
