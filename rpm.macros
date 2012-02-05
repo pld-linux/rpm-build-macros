@@ -2141,5 +2141,6 @@ want_enable_service() { \
 %{nil}
 
 %systemdunitdir /lib/systemd/system
+%systemdtmpfilesdir /usr/lib/tmpfiles.d
 
 # EOF
