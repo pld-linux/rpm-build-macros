@@ -1646,6 +1646,42 @@ compile() {															\
 	local L="<" PATCH_SH;											\
 	[[ '%{*}' != *$L$L* ]] || PATCH_SH="set -x -e;$(cat)"			\
 	set -e -x														\
+																	\
+	[ -r "%{_kernelsrcdir}/.config" ] || exit 1						\
+	rm -rf o														\
+	install -d o/include/linux o/include/generated o/arch/powerpc/lib	\
+	ln -sf %{_kernelsrcdir}/.config o/.config						\
+	ln -sf %{_kernelsrcdir}/Module.symvers o/Module.symvers			\
+	if [ -f %{_kernelsrcdir}/include/generated/autoconf.h ]; then	\
+		ln -sf %{_kernelsrcdir}/include/generated/autoconf.h o/include/generated/autoconf.h \
+		ln -s ../generated/autoconf.h o/include/linux/autoconf.h 	\
+	else															\
+		ln -sf %{_kernelsrcdir}/include/linux/autoconf.h o/include/linux/autoconf.h \
+	fi																\
+																	\
+	set +x															\
+	[ -z "$PATCH_SH" ] || echo "$PATCH_SH" | %__spec_build_shell	\
+	set -x															\
+																	\
+	install -d o/include/config										\
+	touch o/include/config/MARKER									\
+	ln -sf %{_kernelsrcdir}/include/config/auto.conf o/include/config/auto.conf	\
+	ln -sf %{_kernelsrcdir}/scripts o/scripts						\
+																	\
+	%{!?-c:%{__make} -C %{_kernelsrcdir} clean						\\\
+		RCS_FIND_IGNORE="-name '*.[ks]o' -o"						\\\
+		${1+"$@"}													\\\
+		M=$PWD %{MakeOpts}}											\
+																	\
+	%{__make} -C %{_kernelsrcdir} modules							\\\
+		${1+"$@"}													\\\
+		M=$PWD CONSTIFY_PLUGIN="" %{MakeOpts}						\
+%{?-C:cd -}															\
+}																	\
+compile_old() {														\
+	local L="<" PATCH_SH;											\
+	[[ '%{*}' != *$L$L* ]] || PATCH_SH="set -x -e;$(cat)"			\
+	set -e -x														\
 	local cfgs='%{?with_dist_kernel:%{?with_smp: smp}%{?with_up: up}}%{!?with_dist_kernel: nondist}' \
 																	\
 for cfg in ${cfgs:-dist}; do                                        \
@@ -1692,7 +1728,11 @@ for cfg in ${cfgs:-dist}; do                                        \
 done																\
 %{?-C:cd -}															\
 }																	\
-compile %{*}\
+if [ -r "%{_kernelsrcdir}/.config" ]; then	\
+	compile %{*}							\
+else										\
+	compile_old %{*}						\
+fi											\
 %{nil}
 
 
@@ -1722,6 +1762,17 @@ compile %{*}\
 																	\
 __install_kernel_modules() {										\
 %{!?debug:set +x;} \
+																	\
+for MODULE in {%{-m*},}; do											\
+	[ -n "${MODULE}" ] || continue									\
+	MNAME=${MODULE##*/}											\
+	install -D ${MODULE}.ko %{KernelD}/%{-d*}/${MNAME}%{-s:-%{-s*}}.ko	\
+	%{?-s:install -d %{ModprobeD}							\
+		echo "alias ${MNAME} ${MNAME}-%{-s*}" >> %{ModprobeD}/%{-n*}.conf}	\
+done																\
+}																	\
+__install_kernel_modules_old() {									\
+%{!?debug:set +x;} \
 local cfgs='%{?with_dist_kernel:%{?with_smp: smp}%{?with_up: up}}%{!?with_dist_kernel: nondist}' \
 																	\
 for MODULE in {%{-m*},}; do											\
@@ -1737,7 +1788,11 @@ for MODULE in {%{-m*},}; do											\
 	done															\
 done																\
 }																	\
-__install_kernel_modules											\
+if [ -r "%{_kernelsrcdir}/.config" ]; then	\
+	__install_kernel_modules				\
+else										\
+	__install_kernel_modules_old			\
+fi											\
 %{nil}
 
 # patchset macros
