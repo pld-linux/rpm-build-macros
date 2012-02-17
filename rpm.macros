@@ -2142,11 +2142,10 @@ fi; \
 # %systemd_service_start service_name1.service service_name2.service
 # %systemd_service_stop service_name1.service service_name2.service
 # %systemd_service_restart service_name1.service service_name2.service
-# %systemd_trigger service_name1.service service_name2.service
 #
 # %systemd_post service_name1.service service_name2.service
 # %systemd_preun service_name1.service service_name2.service
-# %systend_trigger service_name1.service service_name2.service
+# %systemd_trigger service_name1.service service_name2.service
 #
 # Sample:
 # %post
@@ -2162,8 +2161,8 @@ fi; \
 # %systemd_trigger %{name}.service
 #
 # Requirements:
-# BuildRequires: rpmbuild(macros) >= 1.643
-# Requires:	 systemd-units >= 38-1
+# BuildRequires:	rpmbuild(macros) >= 1.644
+# Requires:	systemd-units >= 38
 
 %systemd_reload /bin/systemd_booted && SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog /bin/systemctl --quiet daemon-reload || :
 
