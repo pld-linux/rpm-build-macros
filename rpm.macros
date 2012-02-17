@@ -2137,11 +2137,13 @@ fi; \
 #
 # Usage:
 # %systemd_reload
+# %systemd_service <unit command> service_name1.service service_name2.service
 # %systemd_service_enable service_name1.service service_name2.service
 # %systemd_service_disable service_name1.service service_name2.service
 # %systemd_service_start service_name1.service service_name2.service
 # %systemd_service_stop service_name1.service service_name2.service
 # %systemd_service_restart service_name1.service service_name2.service
+# %systemd_service_reload service_name1.service service_name2.service
 #
 # %systemd_post service_name1.service service_name2.service
 # %systemd_preun service_name1.service service_name2.service
@@ -2161,7 +2163,7 @@ fi; \
 # %systemd_trigger %{name}.service
 #
 # Requirements:
-# BuildRequires:	rpmbuild(macros) >= 1.644
+# BuildRequires:	rpmbuild(macros) >= 1.647
 # Requires:	systemd-units >= 38
 
 %systemd_reload /bin/systemd_booted && SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog /bin/systemctl --quiet daemon-reload || :
@@ -2177,6 +2179,11 @@ fi; \
 	/bin/systemctl --quiet disable %{*} || : \
 %{nil}
 
+%systemd_service() \
+	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+	/bin/systemd_booted && /bin/systemctl --quiet %{*} || : \
+%{nil}
+
 %systemd_service_start() \
 	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
 	/bin/systemd_booted && /bin/systemctl --quiet start %{*} || : \
@@ -2190,6 +2197,11 @@ fi; \
 %systemd_service_restart() \
 	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
 	/bin/systemd_booted && /bin/systemctl --quiet try-restart %{*} || : \
+%{nil}
+
+%systemd_service_reload() \
+	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+	/bin/systemd_booted && /bin/systemctl --quiet reload %{*} || : \
 %{nil}
 
 %systemd_trigger() \
