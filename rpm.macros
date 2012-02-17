@@ -2137,7 +2137,7 @@ fi; \
 #
 # Usage:
 # %systemd_reload
-# %systemd_service_enable <-f> service_name1.service service_name2.service
+# %systemd_service_enable service_name1.service service_name2.service
 # %systemd_service_disable service_name1.service service_name2.service
 # %systemd_service_start service_name1.service service_name2.service
 # %systemd_service_stop service_name1.service service_name2.service
