@@ -91,3 +91,43 @@
  
  %systemdunitdir /lib/systemd/system
  %systemdtmpfilesdir /usr/lib/tmpfiles.d
+--- ./service_generator.sh	1 Feb 2012 17:46:43 -0000	1.13
++++ ./service_generator.sh	4 Jan 2012 05:09:03 -0000	1.11
+@@ -19,8 +19,7 @@
+ # common part
+ service_body() {
+ 	cat <<-EOF
+-		if [ ! -x /bin/systemd_booted ] || ! /bin/systemd_booted; then
+-			if [ -f /var/lock/subsys/$service ]; then
++		if [ -f /var/lock/subsys/$service ]; then
+ 	EOF
+ 	if [ "$noop" = 1 ]; then
+ 		echo :
+@@ -32,12 +31,11 @@
+ 
+ 	if [ "$quiet" != 1 ]; then
+ 		cat <<-EOF
+-			else
+-				echo 'Run "/sbin/service $service start" to start $desc.'
++		else
++			echo 'Run "/sbin/service $service start" to start $desc.'
+ 		EOF
+ 	fi
+ 	cat <<-EOF
+-			fi
+ 		fi
+ 	EOF
+ }
+@@ -61,10 +59,8 @@
+ 	echo 'else'
+ 		# service restart was disabled, tell them to restart it
+ 	cat <<-EOF
+-		if [ ! -x /bin/systemd_booted ] || ! /bin/systemd_booted; then
+-			if [ -f /var/lock/subsys/$service ]; then
+-				echo 'Run "/sbin/service $service restart" to restart $desc.'
+-			fi
++		if [ -f /var/lock/subsys/$service ]; then
++			echo 'Run "/sbin/service $service restart" to restart $desc.'
+ 		fi
+ 	EOF
+ 	echo 'fi'

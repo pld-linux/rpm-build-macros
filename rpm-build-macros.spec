@@ -47,8 +47,8 @@ Ten pakiet zawiera makra rpm-a do budowania pakietów dla Linuksa PLD.
 
 %prep
 %setup -qcT
-cp %{SOURCE0} .
-#%patch0 -p1
+cp -p %{SOURCE0} .
+cp -p %{SOURCE1} .
 
 %if "%{pld_release}" == "ac"
 %{__sed} -i -e '/libtoolize --copy --force --install/s/ --install//' rpm.macros
@@ -71,7 +71,7 @@ fi
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_usrlibrpm},/etc/shrc.d}
 cp -a rpm.macros $RPM_BUILD_ROOT%{_usrlibrpm}/macros.build
-install -p %{SOURCE1} $RPM_BUILD_ROOT%{_usrlibrpm}/service_generator.sh
+install -p service_generator.sh $RPM_BUILD_ROOT%{_usrlibrpm}
 install -p %{SOURCE2} $RPM_BUILD_ROOT/etc/shrc.d/rpm-build.sh
 install -p %{SOURCE3} $RPM_BUILD_ROOT%{_usrlibrpm}/find-lang.sh
 install -p %{SOURCE4} $RPM_BUILD_ROOT%{_usrlibrpm}
