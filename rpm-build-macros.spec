@@ -12,7 +12,8 @@ Source1:	service_generator.sh
 Source2:	rpm-build.sh
 Source3:	rpm-find-lang
 Source4:	dokuwiki-find-lang.sh
-#Patch0:		%{name}-pydebuginfo.patch
+Patch0:		disable-systemd.patch
+#Patchx: %{name}-pydebuginfo.patch
 BuildRequires:	rpm >= 4.4.9-56
 Requires:	findutils >= 1:4.2.26
 Provides:	rpmbuild(find_lang) = %{find_lang_rev}
@@ -51,6 +52,7 @@ cp %{SOURCE0} .
 
 %if "%{pld_release}" == "ac"
 %{__sed} -i -e '/libtoolize --copy --force --install/s/ --install//' rpm.macros
+%patch0 -p1
 %endif
 
 %build
