@@ -1,0 +1,133 @@
+--- rpm-build-macros-1.647/rpm.macros~	2012-03-13 18:09:42.876512532 +0200
++++ rpm-build-macros-1.647/rpm.macros	2012-03-13 18:10:01.389010815 +0200
+@@ -2166,79 +2166,17 @@
+ # BuildRequires:	rpmbuild(macros) >= 1.647
+ # Requires:	systemd-units >= 38
+ 
+-%systemd_reload /bin/systemd_booted && SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog /bin/systemctl --quiet daemon-reload || :
+-
+-%systemd_service_enable() \
+-	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+-	/bin/systemctl --quiet enable %{*} || : \
+-	/bin/systemd_booted && echo 'Run "/bin/systemctl start %{*}" to start %{*}.' || : \
+-%{nil}
+-
+-%systemd_service_disable() \
+-	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+-	/bin/systemctl --quiet disable %{*} || : \
+-%{nil}
+-
+-%systemd_service() \
+-	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+-	/bin/systemd_booted && /bin/systemctl --quiet %{*} || : \
+-%{nil}
+-
+-%systemd_service_start() \
+-	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+-	/bin/systemd_booted && /bin/systemctl --quiet start %{*} || : \
+-%{nil}
+-
+-%systemd_service_stop() \
+-	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+-	/bin/systemd_booted && /bin/systemctl --quiet stop %{*} || : \
+-%{nil}
+-
+-%systemd_service_restart() \
+-	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+-	/bin/systemd_booted && /bin/systemctl --quiet try-restart %{*} || : \
+-%{nil}
+-
+-%systemd_service_reload() \
+-	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+-	/bin/systemd_booted && /bin/systemctl --quiet reload %{*} || : \
+-%{nil}
+-
+-%systemd_trigger() \
+-want_enable_service() { \
+-	[ -f /etc/sysconfig/rpm ] && . /etc/sysconfig/rpm \
+-	[ ${RPM_ENABLE_SYSTEMD_SERVICE:-yes} = no ] && return 1 \
+-	/sbin/chkconfig --list ${1%.service} 2>/dev/null | grep -qsv "[0-6]:on" && return 1 \
+-	return 0 \
+-}\
+-	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+-	for s in %{*}; do \
+-		if want_enable_service $s; then \
+-			/bin/systemctl --quiet enable $s || : \
+-		fi \
+-	done \
+-%{nil}
+-
+-%systemd_post() \
+-	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+-	/bin/systemd_booted && /bin/systemctl --quiet daemon-reload || : \
+-	if [ $1 -eq 1 ]; then \
+-		/bin/systemctl --quiet enable %{*} || : \
+-		/bin/systemd_booted && echo 'Run "/bin/systemctl start %{*}" to start %{*}.' || : \
+-	elif [ -z "$NORESTART" ]; then \
+-		/bin/systemd_booted && /bin/systemctl --quiet try-restart %{*} || : \
+-	else \
+-		/bin/systemd_booted && echo 'Run "/bin/systemctl restart %{*}" to restart %{*}.' || : \
+-	fi \
+-%{nil}
+-
+-%systemd_preun() \
+-	if [ $1 -eq 0 ]; then \
+-		export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+-		/bin/systemd_booted && /bin/systemctl --quiet stop %{*} || : \
+-		/bin/systemctl --quiet disable %{*} || : \
+-	fi \
+-%{nil}
++%systemd_reload %{nil}
++%systemd_service_enable() %{nil}
++%systemd_service_disable() %{nil}
++%systemd_service() %{nil}
++%systemd_service_start() %{nil}
++%systemd_service_stop() %{nil}
++%systemd_service_restart() %{nil}
++%systemd_service_reload() %{nil}
++%systemd_trigger() %{nil}
++%systemd_post() %{nil}
++%systemd_preun() %{nil}
+ 
+ %systemdunitdir /lib/systemd/system
+ %systemdtmpfilesdir /usr/lib/tmpfiles.d
+--- ./service_generator.sh	1 Feb 2012 17:46:43 -0000	1.13
++++ ./service_generator.sh	4 Jan 2012 05:09:03 -0000	1.11
+@@ -19,8 +19,7 @@
+ # common part
+ service_body() {
+ 	cat <<-EOF
+-		if [ ! -x /bin/systemd_booted ] || ! /bin/systemd_booted; then
+-			if [ -f /var/lock/subsys/$service ]; then
++		if [ -f /var/lock/subsys/$service ]; then
+ 	EOF
+ 	if [ "$noop" = 1 ]; then
+ 		echo :
+@@ -32,12 +31,11 @@
+ 
+ 	if [ "$quiet" != 1 ]; then
+ 		cat <<-EOF
+-			else
+-				echo 'Run "/sbin/service $service start" to start $desc.'
++		else
++			echo 'Run "/sbin/service $service start" to start $desc.'
+ 		EOF
+ 	fi
+ 	cat <<-EOF
+-			fi
+ 		fi
+ 	EOF
+ }
+@@ -61,10 +59,8 @@
+ 	echo 'else'
+ 		# service restart was disabled, tell them to restart it
+ 	cat <<-EOF
+-		if [ ! -x /bin/systemd_booted ] || ! /bin/systemd_booted; then
+-			if [ -f /var/lock/subsys/$service ]; then
+-				echo 'Run "/sbin/service $service restart" to restart $desc.'
+-			fi
++		if [ -f /var/lock/subsys/$service ]; then
++			echo 'Run "/sbin/service $service restart" to restart $desc.'
+ 		fi
+ 	EOF
+ 	echo 'fi'
