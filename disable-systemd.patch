@@ -1,0 +1,117 @@
+--- rpm-build-macros-1.647/rpm.macros~	2012-03-13 18:04:59.299040446 +0200
++++ rpm-build-macros-1.647/rpm.macros	2012-03-13 18:07:15.119860476 +0200
+@@ -2165,103 +2165,18 @@
+ # Requirements:
+ # BuildRequires:	rpmbuild(macros) >= 1.647
+ # Requires:	systemd-units >= 38
+-%systemd_reload \
+-%if 0%{?_with_systemd:1}%{!?_without_systemd:1} \
+-/bin/systemd_booted && SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog /bin/systemctl --quiet daemon-reload || : \
+-%endif \
+-%{nil}
+ 
+-%systemd_service_enable() \
+-%if 0%{?_with_systemd:1}%{!?_without_systemd:1} \
+-	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+-	/bin/systemctl --quiet enable %{*} || : \
+-	/bin/systemd_booted && echo 'Run "/bin/systemctl start %{*}" to start %{*}.' || : \
+-%endif \
+-%{nil}
+-
+-%systemd_service_disable() \
+-%if 0%{?_with_systemd:1}%{!?_without_systemd:1} \
+-	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+-	/bin/systemctl --quiet disable %{*} || : \
+-%endif \
+-%{nil}
+-
+-%systemd_service() \
+-%if 0%{?_with_systemd:1}%{!?_without_systemd:1} \
+-	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+-	/bin/systemd_booted && /bin/systemctl --quiet %{*} || : \
+-%endif \
+-%{nil}
+-
+-%systemd_service_start() \
+-%if 0%{?_with_systemd:1}%{!?_without_systemd:1} \
+-	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+-	/bin/systemd_booted && /bin/systemctl --quiet start %{*} || : \
+-%endif \
+-%{nil}
+-
+-%systemd_service_stop() \
+-%if 0%{?_with_systemd:1}%{!?_without_systemd:1} \
+-	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+-	/bin/systemd_booted && /bin/systemctl --quiet stop %{*} || : \
+-%endif \
+-%{nil}
+-
+-%systemd_service_restart() \
+-%if 0%{?_with_systemd:1}%{!?_without_systemd:1} \
+-	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+-	/bin/systemd_booted && /bin/systemctl --quiet try-restart %{*} || : \
+-%endif \
+-%{nil}
+-
+-%systemd_service_reload() \
+-%if 0%{?_with_systemd:1}%{!?_without_systemd:1} \
+-	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+-	/bin/systemd_booted && /bin/systemctl --quiet reload %{*} || : \
+-%endif \
+-%{nil}
+-
+-%systemd_trigger() \
+-%if 0%{?_with_systemd:1}%{!?_without_systemd:1} \
+-want_enable_service() { \
+-	[ -f /etc/sysconfig/rpm ] && . /etc/sysconfig/rpm \
+-	[ ${RPM_ENABLE_SYSTEMD_SERVICE:-yes} = no ] && return 1 \
+-	/sbin/chkconfig --list ${1%.service} 2>/dev/null | grep -qsv "[0-6]:on" && return 1 \
+-	return 0 \
+-}\
+-	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+-	for s in %{*}; do \
+-		if want_enable_service $s; then \
+-			/bin/systemctl --quiet enable $s || : \
+-		fi \
+-	done \
+-%endif \
+-%{nil}
+-
+-%systemd_post() \
+-%if 0%{?_with_systemd:1}%{!?_without_systemd:1} \
+-	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+-	/bin/systemd_booted && /bin/systemctl --quiet daemon-reload || : \
+-	if [ $1 -eq 1 ]; then \
+-		/bin/systemctl --quiet enable %{*} || : \
+-		/bin/systemd_booted && echo 'Run "/bin/systemctl start %{*}" to start %{*}.' || : \
+-	elif [ -z "$NORESTART" ]; then \
+-		/bin/systemd_booted && /bin/systemctl --quiet try-restart %{*} || : \
+-	else \
+-		/bin/systemd_booted && echo 'Run "/bin/systemctl restart %{*}" to restart %{*}.' || : \
+-	fi \
+-%endif \
+-%{nil}
+-
+-%systemd_preun() \
+-%if 0%{?_with_systemd:1}%{!?_without_systemd:1} \
+-	if [ $1 -eq 0 ]; then \
+-		export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
+-		/bin/systemd_booted && /bin/systemctl --quiet stop %{*} || : \
+-		/bin/systemctl --quiet disable %{*} || : \
+-	fi \
+-%endif \
+-%{nil}
++%systemd_reload %{nil}
++%systemd_service_enable() %{nil}
++%systemd_service_disable() %{nil}
++%systemd_service() %{nil}
++%systemd_service_start() %{nil}
++%systemd_service_stop() %{nil}
++%systemd_service_restart() %{nil}
++%systemd_service_reload() %{nil}
++%systemd_trigger() %{nil}
++%systemd_post() %{nil}
++%systemd_preun() %{nil}
+ 
+ %systemdunitdir /lib/systemd/system
+ %systemdtmpfilesdir /usr/lib/tmpfiles.d
