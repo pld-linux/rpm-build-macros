@@ -521,7 +521,9 @@ CXXFLAGS="%{rpmcxxflags}" \
 					l=${l#/usr/share/man/}; \
 					l=${l#/usr/X11R6/man/}; \
 				else \
-					l=$m; \
+					l=${a#$RPM_BUILD_ROOT$i/}; \
+					l=${l%/*}; \
+					l="$l/$m"; \
 				fi; \
 				rm -f $a; \
 				echo ".so $l" > $a; \
