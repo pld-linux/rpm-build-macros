@@ -1651,7 +1651,7 @@ compile() {															\
 																	\
 	[ -r "%{_kernelsrcdir}/.config" ] || exit 1						\
 	rm -rf o														\
-	install -d o/include/linux o/include/generated o/arch/powerpc/lib	\
+	install -d o/include/linux o/include/generated o/arch/x86/include o/arch/powerpc/lib	\
 	ln -sf %{_kernelsrcdir}/.config o/.config						\
 	ln -sf %{_kernelsrcdir}/Module.symvers o/Module.symvers			\
 	if [ -f %{_kernelsrcdir}/include/generated/autoconf.h ]; then	\
@@ -1659,6 +1659,9 @@ compile() {															\
 		ln -s ../generated/autoconf.h o/include/linux/autoconf.h 	\
 	else															\
 		ln -sf %{_kernelsrcdir}/include/linux/autoconf.h o/include/linux/autoconf.h \
+	fi																\
+	if [ -d %{_kernelsrcdir}/arch/x86/include/generated ]; then		\
+		ln -s %{_kernelsrcdir}/arch/x86/include/generated o/arch/x86/include	\
 	fi																\
 																	\
 	set +x															\
