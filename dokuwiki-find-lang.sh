@@ -37,6 +37,9 @@ while read dir; do
 		de-informal)
 			lang=de
 		;;
+		zh-cn)
+			lang=zh_CN
+		;;
 		*-*)
 			echo >&2 "ERROR: Need mapping for $lang!"
 			rc=1
