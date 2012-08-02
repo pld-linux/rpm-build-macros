@@ -15,6 +15,7 @@ Source4:	dokuwiki-find-lang.sh
 Patch0:		disable-systemd.patch
 #Patchx: %{name}-pydebuginfo.patch
 BuildRequires:	rpm >= 4.4.9-56
+BuildRequires:	sed >= 4.0
 Requires:	findutils >= 1:4.2.26
 Provides:	rpmbuild(find_lang) = %{find_lang_rev}
 Provides:	rpmbuild(macros) = %{rpm_macros_rev}
@@ -56,12 +57,14 @@ cp -p %{SOURCE1} .
 %endif
 
 %build
-rev=$(awk '/^#.*Revision:.*Date/{print $3}' rpm.macros)
+%{__sed} -i -e 's,\$Revision\$,%{rpm_macros_rev},' rpm.macros
+
+rev=$(awk '/^%%rpm_build_macros/{print $2}' rpm.macros)
 if [ "$rev" != "%rpm_macros_rev" ]; then
 	: Update rpm_macros_rev define to $rev, and retry
 	exit 1
 fi
-rev=$(awk '/^#.*Id:.*/{print $4}' %{SOURCE3})
+rev=$(awk -F= '/^VERSION/{print $2}' %{SOURCE3})
 if [ "$rev" != "%find_lang_rev" ]; then
 	: Update find_lang_rev define to $rev, and retry
 	exit 1

@@ -1,11 +1,10 @@
-# $Revision$, $Date$
 # vim:ts=4 sw=4 noet ft=spec
 #
 # PLD Linux rpm macros.
 # <http://www.pld-linux.org/>
 
 # can be used by builder script to check for version
-%rpm_build_macros	%(R="$Revision$"; RR="${R##: }"; echo ${RR%%?})
+%rpm_build_macros	$Revision$
 
 %epoch		0
 %x8664		x86_64 amd64 ia32e

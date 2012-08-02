@@ -1,5 +1,4 @@
 #!/bin/sh
-# $Id$
 
 # find-lang - automagically generate list of language specific files
 # for inclusion in an rpm spec file.
@@ -35,7 +34,7 @@
 #   * start support for KDE help files
 
 PROG=${0##*/}
-VERSION=$(set -- $Revision$; echo $2)
+VERSION=1.35
 
 usage () {
 cat <<EOF
