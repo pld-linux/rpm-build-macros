@@ -1,4 +1,4 @@
-%define		rpm_macros_rev	1.650
+%define		rpm_macros_rev	1.651
 %define		find_lang_rev	1.35
 Summary:	PLD Linux RPM build macros
 Summary(pl.UTF-8):	Makra do budowania pakietów RPM dla Linuksa PLD
@@ -9,7 +9,6 @@ License:	GPL
 Group:		Development/Building
 Source0:	rpm.macros
 Source1:	service_generator.sh
-Source2:	rpm-build.sh
 Source3:	rpm-find-lang
 Source4:	dokuwiki-find-lang.sh
 Patch0:		disable-systemd.patch
@@ -72,10 +71,9 @@ fi
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_usrlibrpm},/etc/shrc.d}
+install -d $RPM_BUILD_ROOT%{_usrlibrpm}
 cp -a rpm.macros $RPM_BUILD_ROOT%{_usrlibrpm}/macros.build
 install -p service_generator.sh $RPM_BUILD_ROOT%{_usrlibrpm}
-install -p %{SOURCE2} $RPM_BUILD_ROOT/etc/shrc.d/rpm-build.sh
 install -p %{SOURCE3} $RPM_BUILD_ROOT%{_usrlibrpm}/find-lang.sh
 install -p %{SOURCE4} $RPM_BUILD_ROOT%{_usrlibrpm}
 
@@ -88,4 +86,3 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_usrlibrpm}/service_generator.sh
 %attr(755,root,root) %{_usrlibrpm}/find-lang.sh
 %attr(755,root,root) %{_usrlibrpm}/dokuwiki-find-lang.sh
-/etc/shrc.d/rpm-build.sh
