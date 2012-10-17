@@ -843,9 +843,21 @@ fi; \
 #
 %__noautoreqfiles	%(sed -e s'/#.*//' /etc/rpm/noautoreqfiles)%{?_noautoreqfiles: %{_noautoreqfiles}}
 %__noautoprovfiles	%(sed -e s'/#.*//' /etc/rpm/noautoprovfiles)%{?_noautoprovfiles: %{_noautoprovfiles}}
-%__noautoreq		%(sed -e s'/#.*//' /etc/rpm/noautoreq)%{?_noautoreq: %{_noautoreq}}
 %__noautoreqdep		%(sed -e s'/#.*//' /etc/rpm/noautoreqdep)%{?_noautoreqdep: %{_noautoreqdep}}
 %__noautoprov		%(sed -e s'/#.*//' /etc/rpm/noautoprov)%{?_noautoprov: %{_noautoprov}}
+%__noautoreq		%(sed -e s'/#.*//' /etc/rpm/noautoreq) \
+	%{?_noautoreq: %{_noautoreq}} \
+	%{?_noautoreq_pear: %{__noauto_regexp_helper -p pear %{_noautoreq_pear}}} \
+	%{?_noautoreq_perl: %{__noauto_regexp_helper -p perl %{_noautoreq_perl}}} \
+	%{nil}
+
+# helper for wrapping _noautoreq between perl() or pear()
+# Author: Elan Ruusamäe <glen@pld-linux.org>
+# Usage:
+# BuildRequires:	rpmbuild(macros) >= 1.654
+# %define _noautoreq_pear Excluded.php PEAR/Something.php
+# %define _noautoreq_perl Apache::.*
+%__noauto_regexp_helper(p:) %(echo "%*" | awk 'BEGIN{RS=" "}{printf("%{-p*}\\\\\\(%%s\\\\\\) ", $1)}')
 
 #%_noautocompressdoc	%{nil}
 #
