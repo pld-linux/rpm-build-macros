@@ -428,9 +428,9 @@ CXXFLAGS="%{rpmcxxflags}" \
 %bootstrap_release() %{!?with_bootstrap:%{1}%{?2:.%{2}}}%{?with_bootstrap:%{!?2:%(expr %{1} - 1)}%{?2:%{1}.%(expr %{2} - 1)}.zzz.bootstrap}
 
 # -n drm to generate kernel%{_alt_kernel}-drm dependency
-%releq_kernel(n:)		%{expand:%%global releq_kernel %(R=$(cd %{_kernelsrcdir} 2>/dev/null && LC_ALL=C rpm -q --qf '%{N}%{?-n:-%{-n*}} = %|E?{%{E}:}|%{V}-%{R}' -f include/linux/version.h 2>/dev/null | grep -v 'is not' | sed -e 's:-headers::;s:-config::'); echo ${R:-ERROR})}%releq_kernel
-%releq_kernel_up(n:)	%{expand:%%global releq_kernel_up %(R=$(cd %{_kernelsrcdir} 2>/dev/null && LC_ALL=C rpm -q --qf '%{N}%{?-n:-%{-n*}}-up = %|E?{%{E}:}|%{V}-%{R}' -f include/linux/version.h 2>/dev/null | grep -v 'is not' | sed -e 's:-headers::;s:-config::'); echo ${R:-ERROR})}%releq_kernel_up
-%releq_kernel_smp(n:)	%{expand:%%global releq_kernel_smp %(R=$(cd %{_kernelsrcdir} 2>/dev/null && LC_ALL=C rpm -q --qf '%{N}%{?-n:-%{-n*}}-smp = %|E?{%{E}:}|%{V}-%{R}' -f include/linux/version.h 2>/dev/null | grep -v 'is not' | sed -e 's:-headers::;s:-config::'); echo ${R:-ERROR})}%releq_kernel_smp
+%releq_kernel(n:)		%{expand:%%global releq_kernel %(R=$(LC_ALL=C rpm -q --qf '%{N}%{?-n:-%{-n*}} = %|E?{%{E}:}|%{V}-%{R}' -f %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | grep -v 'is not' | sed -e 's:-headers::;s:-config::'); echo ${R:-ERROR})}%releq_kernel
+%releq_kernel_up(n:)	%{expand:%%global releq_kernel_up %(R=$(LC_ALL=C rpm -q --qf '%{N}%{?-n:-%{-n*}}-up = %|E?{%{E}:}|%{V}-%{R}' -f %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | grep -v 'is not' | sed -e 's:-headers::;s:-config::'); echo ${R:-ERROR})}%releq_kernel_up
+%releq_kernel_smp(n:)	%{expand:%%global releq_kernel_smp %(R=$(LC_ALL=C rpm -q --qf '%{N}%{?-n:-%{-n*}}-smp = %|E?{%{E}:}|%{V}-%{R}' -f %{_kernelsrcdir}/include/linux/version.h 2>/dev/null | grep -v 'is not' | sed -e 's:-headers::;s:-config::'); echo ${R:-ERROR})}%releq_kernel_smp
 
 # -s post to generate Requires(post) dependency
 %requires_releq_kernel(s:n:)		Requires%{-s:(%{-s*})}: %releq_kernel
@@ -464,8 +464,8 @@ Provides: %{1} = %{?epoch:%{epoch}:}%{?version:%{version}}%{?release:-%{release}
 	echo ${Z:-ERROR}; \\
 )}%__kernel_ver
 
-%__kernel_rel	%{expand:%%global __kernel_rel %(Z=$(cd %{_kernelsrcdir} 2>/dev/null && LC_ALL=C rpm -qf include/linux/fs.h 2>/dev/null --qf "%{R}" | grep -v "is not"); echo ${Z:-ERROR})}%__kernel_rel
-%__kernel_rpmvr	%{expand:%%global __kernel_rpmvr %(Z=$(cd %{_kernelsrcdir} 2>/dev/null && LC_ALL=C rpm -qf include/linux/fs.h 2>/dev/null --qf "%{V}-%{R}" | grep -v "is not"); echo ${Z:-ERROR})}%__kernel_rpmvr
+%__kernel_rel	%{expand:%%global __kernel_rel %(Z=$(LC_ALL=C rpm -qf %{_kernelsrcdir}/include/linux/fs.h 2>/dev/null --qf "%{R}" | grep -v "is not"); echo ${Z:-ERROR})}%__kernel_rel
+%__kernel_rpmvr	%{expand:%%global __kernel_rpmvr %(Z=$(LC_ALL=C rpm -qf %{_kernelsrcdir}/include/linux/fs.h 2>/dev/null --qf "%{V}-%{R}" | grep -v "is not"); echo ${Z:-ERROR})}%__kernel_rpmvr
 %_kernel_ver	%{expand:%%global _kernel_ver %{__kernel_ver}%{?with_dist_kernel:%(echo %{__kernel_ver} | grep -q -e - || echo -%{__kernel_rel})}}%_kernel_ver
 %_kernel_ver_str %{expand:%%global _kernel_ver_str %(echo %{!?_without_dist_kernel:%{__kernel_rpmvr}}%{?_without_dist_kernel:%{__kernel_ver}} | sed -e 's/-/_/g')}%_kernel_ver_str
 
