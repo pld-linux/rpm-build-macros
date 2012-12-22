@@ -14,27 +14,29 @@
 
 # Changes:
 #
-# 2006-08-28 Elan Ruusam‰e <glen@pld-linux.org>
+# 2012-12-22 Elan Ruusam√§e <glen@pld-linux.org>
+#   * added --with-mate
+# 2006-08-28 Elan Ruusam√§e <glen@pld-linux.org>
 #   * fixed --all-name which got broken with last change.
-# 2006-08-09 Elan Ruusam‰e <glen@pld-linux.org>
+# 2006-08-09 Elan Ruusam√§e <glen@pld-linux.org>
 #   * huge performance boost for packages calling %find_lang multiple times (kde*i18n)
-# 2001-01-08 Micha≥ Kochanowicz <mkochano@pld.org.pl>
+# 2001-01-08 Micha≈Ç Kochanowicz <mkochano@pld.org.pl>
 #   * --all-name support for KDE.
-# 2000-11-28 Rafa≥ Cygnarowski <pascalek@pld.org.pl>
+# 2000-11-28 Rafa≈Ç Cygnarowski <pascalek@pld.org.pl>
 #   * next simple rule for KDE
-# 2000-11-12 Rafa≥ Cygnarowski <pascalek@pld.org.pl>
+# 2000-11-12 Rafa≈Ç Cygnarowski <pascalek@pld.org.pl>
 #   * simple rules for KDE help files
-# 2000-06-05 Micha≥ Kochanowicz <mkochano@pld.org.pl>
+# 2000-06-05 Micha≈Ç Kochanowicz <mkochano@pld.org.pl>
 #   * exact, not substring matching $NAME, i.e. find-lang top_dir NAME will
 #     no longer find /usr/share/locale/pl/LC_MESSAGES/<anything>NAME.mo.
-# 2000-04-17 Arkadiusz Mi∂kiewicz <misiek@pld.org.pl>
+# 2000-04-17 Arkadiusz Mi≈õkiewicz <misiek@pld.org.pl>
 #   * exit 1 when no files found
 # 1999-10-19 Artur Frysiak <wiget@pld.org.pl>
 #   * added support for GNOME help files
 #   * start support for KDE help files
 
 PROG=${0##*/}
-VERSION=1.35
+VERSION=1.36
 
 usage () {
 cat <<EOF
@@ -49,6 +51,7 @@ PACKAGE_NAME.lang unless \$3 is given in which case output is written
 to \$3.
 Additional options:
   --with-gnome		find GNOME help files
+  --with-mate		find MATE help files
   --with-kde		find KDE help files
   --with-omf		find OMF files
   --with-qm			find QT .qm files
@@ -81,6 +84,7 @@ fi
 shift
 
 GNOME='#'
+MATE='#'
 KDE='#'
 OMF='#'
 QM='#'
@@ -94,6 +98,11 @@ while test $# -gt 0; do
 	--with-gnome)
   		GNOME=''
 		echo "$PROG: Enabling with GNOME"
+		shift
+		;;
+	--with-mate)
+  		MATE=''
+		echo "$PROG: Enabling with MATE"
 		shift
 		;;
 	--with-kde)
@@ -233,6 +242,23 @@ fi
 '"$ALL_NAME$GNOME"'s:\(.*/share/help/\)\([^/]\+\)\(/[^/]\+\)$:%lang(\2) \1\2\3:
 '"$ALL_NAME$GNOME"'s:\(.*/gnome/help/[^/]\+$\):%dir \1:
 '"$ALL_NAME$GNOME"'s:\(.*/gnome/help/[^/]\+/\)\([^/]\+\)$:%lang(\2) \1\2:
+/^[^%]/d
+s:%lang(C) ::' >> $MO_NAME
+
+# mate
+(
+	if [ "$ALL_NAME" ]; then
+		fgrep $NAME __find.dirs
+	else
+		cat __find.dirs
+	fi
+) | sed '
+'"$NO_ALL_NAME$MATE"'s:\(.*/share/help/\)\([^/]\+\)\(/'"$NAME"'\)$:%lang(\2) \1\2\3:
+'"$NO_ALL_NAME$MATE"'s:\(.*/mate/help/'"$NAME"'$\):%dir \1:
+'"$NO_ALL_NAME$MATE"'s:\(.*/mate/help/'"$NAME"'/\)\([^/]\+\)$:%lang(\2) \1\2:
+'"$ALL_NAME$MATE"'s:\(.*/share/help/\)\([^/]\+\)\(/[^/]\+\)$:%lang(\2) \1\2\3:
+'"$ALL_NAME$MATE"'s:\(.*/mate/help/[^/]\+$\):%dir \1:
+'"$ALL_NAME$MATE"'s:\(.*/mate/help/[^/]\+/\)\([^/]\+\)$:%lang(\2) \1\2:
 /^[^%]/d
 s:%lang(C) ::' >> $MO_NAME
 
