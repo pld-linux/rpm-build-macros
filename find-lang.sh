@@ -186,7 +186,7 @@ fi
 # .mo
 (
 	if [ "$ALL_NAME" ]; then
-		fgrep $NAME __find.files
+		grep -F $NAME __find.files
 	else
 		cat __find.files
 	fi
@@ -199,7 +199,7 @@ s:%lang(C) ::' >> $MO_NAME
 # .omf
 (
 	if [ "$ALL_NAME" ]; then
-		fgrep $NAME __omf.files
+		grep -F $NAME __omf.files
 	else
 		cat __omf.files
 	fi
@@ -212,7 +212,7 @@ s:%lang(C) ::' >> $MO_NAME
 # .qm
 (
 	if [ "$ALL_NAME" ]; then
-		fgrep $NAME __qm.files
+		grep -F $NAME __qm.files
 	else
 		cat __qm.files
 	fi
@@ -231,7 +231,7 @@ fi
 # gnome
 (
 	if [ "$ALL_NAME" ]; then
-		fgrep $NAME __find.dirs
+		grep -F $NAME __find.dirs
 	else
 		cat __find.dirs
 	fi
@@ -248,7 +248,7 @@ s:%lang(C) ::' >> $MO_NAME
 # mate
 (
 	if [ "$ALL_NAME" ]; then
-		fgrep $NAME __find.dirs
+		grep -F $NAME __find.dirs
 	else
 		cat __find.dirs
 	fi
@@ -265,7 +265,7 @@ s:%lang(C) ::' >> $MO_NAME
 # kde
 (
 	if [ "$ALL_NAME" ]; then
-		fgrep $NAME __find.dirs
+		grep -F $NAME __find.dirs
 	else
 		cat __find.dirs
 	fi
@@ -277,7 +277,7 @@ s:%lang(C) ::' >> $MO_NAME
 
 (
 	if [ "$ALL_NAME" ]; then
-		fgrep $NAME __find.dirs
+		grep -F $NAME __find.dirs
 	else
 		cat __find.dirs
 	fi
@@ -287,7 +287,7 @@ s:%lang(C) ::' >> $MO_NAME
 /^[^%]/d
 s:%lang(C) ::' >> $MO_NAME
 
-if [ "$(egrep -v '(^%defattr|^$)' $MO_NAME | wc -l)" -le 0 ]; then
+if [ "$(grep -Ev '(^%defattr|^$)' $MO_NAME | wc -l)" -le 0 ]; then
 	echo >&2 "$PROG: Error: international files not found for '$NAME'!"
 	exit 1
 fi
