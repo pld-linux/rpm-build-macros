@@ -1,10 +1,10 @@
-%define		rpm_macros_rev	1.654
+%define		rpm_macros_rev	1.655
 %define		find_lang_rev	1.36
 Summary:	PLD Linux RPM build macros
 Summary(pl.UTF-8):	Makra do budowania pakietów RPM dla Linuksa PLD
 Name:		rpm-build-macros
 Version:	%{rpm_macros_rev}
-Release:	2
+Release:	1
 License:	GPL
 Group:		Development/Building
 Source0:	rpm.macros
@@ -56,7 +56,7 @@ cp -p %{SOURCE1} .
 %endif
 
 %build
-%{__sed} -i -e 's,\$Revision\$,%{rpm_macros_rev},' rpm.macros
+%{__sed} -i -e 's,{Revision},%{rpm_macros_rev},' rpm.macros
 
 rev=$(awk '/^%%rpm_build_macros/{print $2}' rpm.macros)
 if [ "$rev" != "%rpm_macros_rev" ]; then

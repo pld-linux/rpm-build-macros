@@ -4,7 +4,7 @@
 # <http://www.pld-linux.org/>
 
 # can be used by builder script to check for version
-%rpm_build_macros	$Revision$
+%rpm_build_macros	{Revision}
 
 %epoch		0
 %x8664		x86_64 amd64 ia32e
@@ -918,7 +918,8 @@ fi; \
 # name of php package
 %php_name				php%{?php_suffix}
 # use rpmbuild -D 'php_suffix 54' to build php extension for php 5.4
-%php_suffix				%{nil}
+# NOTE: error output must be empty. otherwise can't build pecl packages if no php*-devel is installed
+%php_suffix             %(c=$(php-config --sysconfdir 2>/dev/null) || echo '' && echo ${c#/etc/php})
 
 # helper macro
 %__php_api_requires(v:) Requires: %{php_name}(%{expand:%1}) = %{expand:%{%{!?2:%{1}}%{?2}}}
