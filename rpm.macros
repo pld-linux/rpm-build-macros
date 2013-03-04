@@ -534,6 +534,14 @@ Provides: %{1} = %{?epoch:%{epoch}:}%{?version:%{version}}%{?release:-%{release}
 				echo ".so $l" > $a; \
 				echo >&2 "Converted ${a#$RPM_BUILD_ROOT} from symlink to man link: $l"; \
 			done; \
+			# verify that .so links point to existing files (not allowed to point to "other package")
+			err=$(grep -rl '^\.so ' "$RPM_BUILD_ROOT$i" | while read doc; do \
+				l=$(cat "$doc"); \
+				l=${l#.so }; \
+				# TODO: iterate over all man dirs, but in Th there's only one true man dir \
+				test -e $RPM_BUILD_ROOT$i/$l || echo "  ${doc#$RPM_BUILD_ROOT} points to inexistent manpage: $l"; \
+			done); \
+			test "$err" != "" && { echo >&2 "Man page link errors:"; echo >&2 "$err"; exit 1; }; \
 			find "$RPM_BUILD_ROOT$i" -type f -size +%{_min_compress_bytes}c -print | xargs -r %{__gzip} -9nf; \
 		fi; \
 	done; \
