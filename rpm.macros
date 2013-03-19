@@ -958,8 +958,8 @@ if [ -x /etc/rc.d/init.d/php-fcgi ]; then \
 		%service -q php-fcgi restart \
 	fi \
 fi \
-if [ -x /etc/rc.d/init.d/php-fpm ]; then \
-	%service -q php-fpm restart \
+if [ -x /etc/rc.d/init.d/%{php_name}-fpm ]; then \
+	%service -q %{php_name}-fpm restart \
 fi \
 %{nil}
 
