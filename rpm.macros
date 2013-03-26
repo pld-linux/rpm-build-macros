@@ -538,8 +538,9 @@ Provides: %{1} = %{?epoch:%{epoch}:}%{?version:%{version}}%{?release:-%{release}
 			err=$(grep -rl '^\.so ' "$RPM_BUILD_ROOT$i" | while read doc; do \
 				l=$(cat "$doc"); \
 				l=${l#.so }; \
+				d=$(dirname $doc); \
 				# TODO: iterate over all man dirs, but in Th there's only one true man dir \
-				test -e $RPM_BUILD_ROOT$i/$l || echo "  ${doc#$RPM_BUILD_ROOT} points to inexistent manpage: $l"; \
+				test -e $RPM_BUILD_ROOT$i/$l || test -e $d/$l || echo "  ${doc#$RPM_BUILD_ROOT} points to inexistent manpage: $l"; \
 			done); \
 			test "$err" != "" && { echo >&2 "Man page link errors:"; echo >&2 "$err"; exit 1; }; \
 			find "$RPM_BUILD_ROOT$i" -type f -size +%{_min_compress_bytes}c -print | xargs -r %{__gzip} -9nf; \
