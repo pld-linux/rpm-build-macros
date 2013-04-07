@@ -534,8 +534,8 @@ Provides: %{1} = %{?epoch:%{epoch}:}%{?version:%{version}}%{?release:-%{release}
 				echo ".so $l" > $a; \
 				echo >&2 "Converted ${a#$RPM_BUILD_ROOT} from symlink to man link: $l"; \
 			done; \
-			# verify that .so links point to existing files (not allowed to point to "other package")
-			# TODO: iterate over all man dirs, but in Th there is only one true man dir
+			# verify that .so links point to existing files (not allowed to point to "other package") \
+			# TODO: iterate over all man dirs, but in Th there is only one true man dir \
 			err=$(grep -rl '^\.so ' "$RPM_BUILD_ROOT$i" | while read doc; do \
 				l=$(cat "$doc"); \
 				l=${l#.so }; \
