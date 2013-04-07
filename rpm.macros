@@ -535,11 +535,11 @@ Provides: %{1} = %{?epoch:%{epoch}:}%{?version:%{version}}%{?release:-%{release}
 				echo >&2 "Converted ${a#$RPM_BUILD_ROOT} from symlink to man link: $l"; \
 			done; \
 			# verify that .so links point to existing files (not allowed to point to "other package")
+			# TODO: iterate over all man dirs, but in Th there is only one true man dir
 			err=$(grep -rl '^\.so ' "$RPM_BUILD_ROOT$i" | while read doc; do \
 				l=$(cat "$doc"); \
 				l=${l#.so }; \
 				d=$(dirname $doc); \
-				# TODO: iterate over all man dirs, but in Th there\'s only one true man dir \
 				test -e $RPM_BUILD_ROOT$i/$l || test -e $d/$l || echo "  ${doc#$RPM_BUILD_ROOT} points to inexistent manpage: $l"; \
 			done); \
 			test "$err" != "" && { echo >&2 "Man page link errors:"; echo >&2 "$err"; exit 1; }; \
