@@ -26,17 +26,19 @@
 %__autopoint	autopoint --force
 
 # add parallel build flags: -jN
+# jobs macro is available since 1.657
 #
 # if you want to disable parallel build do:
-# echo '%_smp_mflags %{nil}' >> ~/.rpmmacros
-#
+# echo '%__jobs %{nil}' >> ~/.rpmmacros
+%__jobs		%{expand:%%global __jobs %(_NCPUS=$(/usr/bin/getconf _NPROCESSORS_ONLN); [ "$_NCPUS" -gt 2 ] && echo $(($_NCPUS / 2)))}%__jobs
+
+# expands to -jN if %__jobs has a value
+%_smp_mflags	%{expand:%%global _smp_mflags %(jobs=%{__jobs}; echo ${jobs:+-j$jobs}%%{nil})}%_smp_mflags
+
 %__make		/usr/bin/make %{?_smp_mflags}
 %__scons	/usr/bin/scons %{?_smp_mflags}
 %__waf		/usr/bin/waf %{?_smp_mflags}
 %__cmake	/usr/bin/cmake
-
-%_smp_mflags %(_NCPUS=$(/usr/bin/getconf _NPROCESSORS_ONLN); \\\
-				[ "$_NCPUS" -gt 2 ] && echo "-j$(($_NCPUS / 2))")
 
 %__gettextize { \
 	if grep -qs 'AM_GNU_GETTEXT.*external' configure.{ac,in} ; then \
