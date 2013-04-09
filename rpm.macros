@@ -1093,10 +1093,19 @@ if [ -d "$RPM_BUILD_ROOT" ]; then \
 fi; \
 }; __spec_install_post_py_hardlink } }
 
-# remove python sources, so that check-files won't complain
-%py_postclean() \
+# Remove Python 2.x sources,
+# PLD Linux policy is to package only compiled .py[co] for Python 2.x libraries.
+# Author: Elan Ruusamäe <glen@pld-linux.org>
+#
+# Usage:
+# %py_postclean /usr/share/extra -x keepme.py,keeptoo.py
+# Options:
+# -x - comma separated of file basenames to preserve
+# ARGS - extra directories to clean for .py sources
+#
+%py_postclean(x:) \
 for d in %{py_sitescriptdir} %{py_sitedir} %*; do \
- [ ! -d "$RPM_BUILD_ROOT$d" ] || find "$RPM_BUILD_ROOT$d" -name '*.py' -print0 | xargs -0r -l512 rm;\
+	[ ! -d "$RPM_BUILD_ROOT$d" ] || find "$RPM_BUILD_ROOT$d" -name '*.py' -print0 %{-x:| grep -ZzvE '/(%(echo '%{-x*}' | tr ',' '|'))$'} | xargs -0r -l512 rm;\
 done \
 %{nil}
 
