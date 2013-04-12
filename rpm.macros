@@ -1815,18 +1815,18 @@ fi											\
 %define ModprobeD $RPM_BUILD_ROOT%{_sysconfdir}/modprobe.d/%{_kernel_ver} \
 																	\
 __install_kernel_modules() {										\
-%{!?debug:set +x;} \
+%{!?debug:set +x;}													\
 																	\
 for MODULE in {%{-m*},}; do											\
 	[ -n "${MODULE}" ] || continue									\
-	MNAME=${MODULE##*/}											\
-	install -D ${MODULE}.ko %{KernelD}/%{-d*}/${MNAME}%{-s:-%{-s*}}.ko	\
-	%{?-s:install -d %{ModprobeD}							\
+	MNAME=${MODULE##*/}												\
+	install -m 644 -D ${MODULE}.ko %{KernelD}/%{-d*}/${MNAME}%{-s:-%{-s*}}.ko	\
+	%{?-s:install -d %{ModprobeD}									\
 		echo "alias ${MNAME} ${MNAME}-%{-s*}" >> %{ModprobeD}/%{-n*}.conf}	\
 done																\
 }																	\
 __install_kernel_modules_old() {									\
-%{!?debug:set +x;} \
+%{!?debug:set +x;}													\
 local cfgs='%{?with_dist_kernel:%{?with_smp: smp}%{?with_up: up}}%{!?with_dist_kernel: nondist}' \
 																	\
 for MODULE in {%{-m*},}; do											\
@@ -1834,7 +1834,7 @@ for MODULE in {%{-m*},}; do											\
 	for cfg in ${cfgs:-dist}; do                                    \
 		[ "$cfg" = smp ] && suf=smp || suf=							\
 		MNAME=${MODULE##*/}											\
-		install -D ${MODULE}-$cfg.ko								\\\
+		install -m 644 -D ${MODULE}-$cfg.ko							\\\
 			%{KernelD}$suf/%{-d*}/${MNAME}%{-s:-%{-s*}}.ko			\
 		%{?-s:install -d %{ModprobeD}$suf							\
 			echo "alias ${MNAME} ${MNAME}-%{-s*}"					\\\
@@ -1842,11 +1842,11 @@ for MODULE in {%{-m*},}; do											\
 	done															\
 done																\
 }																	\
-if [ -r "%{_kernelsrcdir}/.config" ]; then	\
-	__install_kernel_modules				\
-else										\
-	__install_kernel_modules_old			\
-fi											\
+if [ -r "%{_kernelsrcdir}/.config" ]; then							\
+	__install_kernel_modules										\
+else																\
+	__install_kernel_modules_old									\
+fi																	\
 %{nil}
 
 # patchset macros
