@@ -653,7 +653,7 @@ if [ -d "$RPM_BUILD_ROOT" ]; then \
 		while read file; do \
 			rpath= ; \
 			chmod u+w "$file"; \
-			for dir in $(chrpath -l "$file" | awk '/R(|UN)PATH=/ { gsub(/.*R(|UN)PATH=/,""); gsub(/:/," "); print $0 }'); do \
+			for dir in $(chrpath -l "$file" | awk '/R(|UN)PATH=/ { gsub(/.*RPATH=/,""); gsub(/.*RUNPATH=/,""); gsub(/:/," "); print $0 }'); do \
 					case $dir in \
 					'$ORIGIN' ) \
 						if [ "$rpath" = "" ] ; then rpath="$dir" ; \
