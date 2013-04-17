@@ -631,7 +631,7 @@ if [ -d "$RPM_BUILD_ROOT" ]; then \
 fi; }; __spec_install_post_strip } } }
 
 #-----------------------------------------------------------------
-# remove all RPATH from executable binaries and shared object files
+# remove all RPATH/RUNPATH from executable binaries and shared object files
 #
 # Requires: find, awk, cut, xargs, chrpath, uname
 #
@@ -648,12 +648,12 @@ if [ -d "$RPM_BUILD_ROOT" ]; then \
 		objs=`echo "$files" | xargs -r -d'\\n' file | awk -F: '/ELF.*(executable.*dynamically linked|shared object)/ {print $1}'`; \
 	fi; \
 	if [ -n "$objs" ]; then \
-		printf "Remove RPATH from %d executable binaries and shared object files.\n" $(echo "$objs" | wc -l); \
+		printf "Remove RPATH/RUNPATH from %d executable binaries and shared object files.\n" $(echo "$objs" | wc -l); \
 		echo "$objs" | \
 		while read file; do \
 			rpath= ; \
 			chmod u+w "$file"; \
-			for dir in $(chrpath -l "$file" | awk '/RPATH=/ { gsub(/.*RPATH=/,""); gsub(/:/," "); print $0 }'); do \
+			for dir in $(chrpath -l "$file" | awk '/R(|UN)PATH=/ { gsub(/.*R(|UN)PATH=/,""); gsub(/:/," "); print $0 }'); do \
 					case $dir in \
 					'$ORIGIN' ) \
 						if [ "$rpath" = "" ] ; then rpath="$dir" ; \
