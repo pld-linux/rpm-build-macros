@@ -897,18 +897,18 @@ fi; \
 # Ruby
 %__ruby				/usr/bin/ruby
 
-%ruby_archdir		%{expand:%%global ruby_archdir %(%{__ruby} -r rbconfig -e 'print Config::CONFIG["archdir"]' 2>/dev/null || echo ERROR)}%ruby_archdir
-%ruby_libdir		%{expand:%%global ruby_libdir %(%{__ruby} -r rbconfig -e 'print Config::CONFIG["rubylibdir"]' 2>/dev/null || echo ERROR)}%ruby_libdir
+%ruby_archdir		%{expand:%%global ruby_archdir %(%{__ruby} -r rbconfig -e 'print RbConfig::CONFIG["archdir"]' 2>/dev/null || echo ERROR)}%ruby_archdir
+%ruby_libdir		%{expand:%%global ruby_libdir %(%{__ruby} -r rbconfig -e 'print RbConfig::CONFIG["rubylibdir"]' 2>/dev/null || echo ERROR)}%ruby_libdir
 %ruby_ridir			%{expand:%%global ruby_ridir %(%{__ruby} -r rbconfig -e 'include Config; print File.join(CONFIG["datadir"], "ri", CONFIG["ruby_version"], "system")' 2>/dev/null || echo ERROR)}%ruby_ridir
-%ruby_rubylibdir	%{expand:%%global ruby_rubylibdir %(%{__ruby} -r rbconfig -e 'print Config::CONFIG["rubylibdir"]' 2>/dev/null || echo ERROR)}%ruby_rubylibdir
-%ruby_vendorarchdir	%{expand:%%global ruby_vendorarchdir %(%{__ruby} -r rbconfig -e 'print Config::CONFIG["vendorarchdir"]' 2>/dev/null || echo ERROR)}%ruby_vendorarchdir
-%ruby_vendorlibdir	%{expand:%%global ruby_vendorlibdir %(%{__ruby} -r rbconfig -e 'print Config::CONFIG["vendorlibdir"]' 2>/dev/null || echo ERROR)}%ruby_vendorlibdir
-%ruby_sitearchdir	%{expand:%%global ruby_sitearchdir %(%{__ruby} -r rbconfig -e 'print Config::CONFIG["sitearchdir"]' 2>/dev/null || echo ERROR)}%ruby_sitearchdir
-%ruby_sitedir		%{expand:%%global ruby_sitedir %(%{__ruby} -r rbconfig -e 'print Config::CONFIG["sitedir"]' 2>/dev/null || echo ERROR)}%ruby_sitedir
-%ruby_sitelibdir	%{expand:%%global ruby_sitelibdir %(%{__ruby} -r rbconfig -e 'print Config::CONFIG["sitelibdir"]' 2>/dev/null || echo ERROR)}%ruby_sitelibdir
+%ruby_rubylibdir	%{expand:%%global ruby_rubylibdir %(%{__ruby} -r rbconfig -e 'print RbConfig::CONFIG["rubylibdir"]' 2>/dev/null || echo ERROR)}%ruby_rubylibdir
+%ruby_vendorarchdir	%{expand:%%global ruby_vendorarchdir %(%{__ruby} -r rbconfig -e 'print RbConfig::CONFIG["vendorarchdir"]' 2>/dev/null || echo ERROR)}%ruby_vendorarchdir
+%ruby_vendorlibdir	%{expand:%%global ruby_vendorlibdir %(%{__ruby} -r rbconfig -e 'print RbConfig::CONFIG["vendorlibdir"]' 2>/dev/null || echo ERROR)}%ruby_vendorlibdir
+%ruby_sitearchdir	%{expand:%%global ruby_sitearchdir %(%{__ruby} -r rbconfig -e 'print RbConfig::CONFIG["sitearchdir"]' 2>/dev/null || echo ERROR)}%ruby_sitearchdir
+%ruby_sitedir		%{expand:%%global ruby_sitedir %(%{__ruby} -r rbconfig -e 'print RbConfig::CONFIG["sitedir"]' 2>/dev/null || echo ERROR)}%ruby_sitedir
+%ruby_sitelibdir	%{expand:%%global ruby_sitelibdir %(%{__ruby} -r rbconfig -e 'print RbConfig::CONFIG["sitelibdir"]' 2>/dev/null || echo ERROR)}%ruby_sitelibdir
 %ruby_rdocdir		/usr/share/rdoc
-%ruby_vendordir		%{expand:%%global ruby_vendordir %(%{__ruby} -r rbconfig -e 'print Config::CONFIG["vendordir"]' 2>/dev/null || echo ERROR)}%ruby_vendordir
-%ruby_version		%{expand:%%global ruby_version %(%{__ruby} -r rbconfig -e 'print Config::CONFIG["ruby_version"]' 2>/dev/null || echo ERROR)}%ruby_version
+%ruby_vendordir		%{expand:%%global ruby_vendordir %(%{__ruby} -r rbconfig -e 'print RbConfig::CONFIG["vendordir"]' 2>/dev/null || echo ERROR)}%ruby_vendordir
+%ruby_version		%{expand:%%global ruby_version %(%{__ruby} -r rbconfig -e 'print RbConfig::CONFIG["ruby_version"]' 2>/dev/null || echo ERROR)}%ruby_version
 
 %ruby_ver_requires_eq	Requires:	ruby(ver) = %ruby_version
 %ruby_mod_ver_requires_eq	Requires:	ruby-modules(ver) = %ruby_version
