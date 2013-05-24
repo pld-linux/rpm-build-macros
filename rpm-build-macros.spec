@@ -12,6 +12,7 @@ Source1:	service_generator.sh
 Source3:	find-lang.sh
 Source4:	dokuwiki-find-lang.sh
 Patch0:		disable-systemd.patch
+Patch1:		rpm4.patch
 #Patchx: %{name}-pydebuginfo.patch
 BuildRequires:	rpm >= 4.4.9-56
 BuildRequires:	sed >= 4.0
@@ -53,6 +54,7 @@ cp -p %{SOURCE1} .
 %if "%{pld_release}" == "ac"
 %{__sed} -i -e '/libtoolize --copy --force --install/s/ --install//' rpm.macros
 %patch0 -p1
+%patch1 -p1
 %endif
 
 %build

@@ -1,0 +1,11 @@
+--- ./rpm.macros	2013-05-24 11:28:51.286668104 +0300
++++ ./rpm.macros	2013-05-24 11:27:45.091068572 +0300
+@@ -868,7 +857,7 @@
+ # BuildRequires:	rpmbuild(macros) >= 1.654
+ # %define _noautoreq_pear Excluded.php PEAR/Something.php
+ # %define _noautoreq_perl Apache::.*
+-%__noauto_regexp_helper(p:) %(echo "%*" | awk 'BEGIN{RS=" "}{printf("%{-p*}\\\\\\(%%s\\\\\\) ", $1)}')
++%__noauto_regexp_helper(p:) %(echo "%*" | awk 'BEGIN{RS=" "}{printf("%{-p*}\\\\(%%s\\\\) ", $1)}')
+ 
+ #%_noautocompressdoc	%{nil}
+ #
