@@ -2179,7 +2179,7 @@ fi; \
 #
 %ghc_pkg_recache() {{ \
 	umask 022; \
-	/usr/bin/ghc-pkg recache; \
+	[ ! -x /usr/bin/ghc-pkg ] || /usr/bin/ghc-pkg recache; \
 };} \
 %{nil}
 
