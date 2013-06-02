@@ -429,10 +429,17 @@ CXXFLAGS="%{rpmcxxflags}" \
 # and release 0.zzz.bootstrap if built with bootstrap
 %bootstrap_release() %{!?with_bootstrap:%{1}%{?2:.%{2}}}%{?with_bootstrap:%{!?2:%(expr %{1} - 1)}%{?2:%{1}.%(expr %{2} - 1)}.zzz.bootstrap}
 
+# rpm -qf on kernel version.h file
+%__kernel_qf()		%(R=$(cd %{_kernelsrcdir} 2>/dev/null && LC_ALL=C rpm -q --qf '%*' -f include/linux/version.h 2>/dev/null | grep -v 'is not'); echo ${R:-ERROR})
+
+# kernel %{name} and kernel %{epoch}:%{version}-%{release} macro respecing alt_kernel
+%kernel_name	%{expand:%%global kernel_name %(N=%{__kernel_qf %{N}};echo ${N%%-headers})}%kernel_name
+%kernel_version	%{expand:%%global kernel_version %{__kernel_qf %|E?{%{E}:}|%{V}-%{R}}}%kernel_version
+
 # -n drm to generate kernel%{_alt_kernel}-drm dependency
-%releq_kernel(n:)		%{expand:%%global releq_kernel %(R=$(cd %{_kernelsrcdir} 2>/dev/null && LC_ALL=C rpm -q --qf '%{N}%{?-n:-%{-n*}} = %|E?{%{E}:}|%{V}-%{R}' -f include/linux/version.h 2>/dev/null | grep -v 'is not' | sed -e 's:-headers::;s:-config::'); echo ${R:-ERROR})}%releq_kernel
-%releq_kernel_up(n:)	%{expand:%%global releq_kernel_up %(R=$(cd %{_kernelsrcdir} 2>/dev/null && LC_ALL=C rpm -q --qf '%{N}%{?-n:-%{-n*}}-up = %|E?{%{E}:}|%{V}-%{R}' -f include/linux/version.h 2>/dev/null | grep -v 'is not' | sed -e 's:-headers::;s:-config::'); echo ${R:-ERROR})}%releq_kernel_up
-%releq_kernel_smp(n:)	%{expand:%%global releq_kernel_smp %(R=$(cd %{_kernelsrcdir} 2>/dev/null && LC_ALL=C rpm -q --qf '%{N}%{?-n:-%{-n*}}-smp = %|E?{%{E}:}|%{V}-%{R}' -f include/linux/version.h 2>/dev/null | grep -v 'is not' | sed -e 's:-headers::;s:-config::'); echo ${R:-ERROR})}%releq_kernel_smp
+%releq_kernel(n:)		%{kernel_name}%{?-n:-%{-n*}} = %{kernel_version}
+%releq_kernel_up(n:)	%{kernel_name}-up%{?-n:-%{-n*}} = %{kernel_version}
+%releq_kernel_smp(n:)	%{kernel_name}-smp%{?-n:-%{-n*}} = %{kernel_version}
 
 # -s post to generate Requires(post) dependency
 %requires_releq_kernel(s:n:)		Requires%{-s:(%{-s*})}: %releq_kernel
