@@ -1,3 +1,10 @@
+#
+# Conditional build:
+%bcond_with	rpm4	# prepare macros for PLD rpm 4.5 instead of rpm5
+#
+%if "%{pld_release}" == "ac"
+%define	with_rpm4	1
+%endif
 %define		rpm_macros_rev	1.664
 %define		find_lang_rev	1.36
 Summary:	PLD Linux RPM build macros
@@ -54,8 +61,8 @@ cp -p %{SOURCE1} .
 %if "%{pld_release}" == "ac"
 %{__sed} -i -e '/libtoolize --copy --force --install/s/ --install//' rpm.macros
 %patch0 -p1
-%patch1 -p1
 %endif
+%{?with_rpm4:%patch1 -p1}
 
 %build
 %{__sed} -i -e 's,{Revision},%{rpm_macros_rev},' rpm.macros
