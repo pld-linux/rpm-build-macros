@@ -948,6 +948,9 @@ fi; \
 # NOTE: error output must be empty. otherwise can't build pecl packages if no php*-devel is installed
 %php_suffix             %(c=$(php-config --sysconfdir 2>/dev/null) || echo '' && echo ${c#/etc/php})
 
+# php cli. version that php headers are installed for
+%__php					/usr/bin/%{php_name}
+
 # helper macro
 %__php_api_requires(v:) Requires: %{php_name}(%{expand:%1}) = %{expand:%{%{!?2:%{1}}%{?2}}}
 
