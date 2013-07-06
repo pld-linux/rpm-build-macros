@@ -1609,6 +1609,7 @@ f = io.open("%{_docdir}/%{name}-%{version}/optional-packages.txt", "r") \
 if f then \
 	for l in f:lines() do print(l); end \
 end \
+f:close() \
 %{nil}
 
 
@@ -1988,7 +1989,7 @@ s=""\
 for _, l in pairs(t) do\
 	s=s..l.."\\n"\
 end\
-io.open("/etc/shells", "w"):write(s)\
+f = io.open("/etc/shells", "w"); f:write(s); f:close()\
 %{nil}
 
 # Backwards compat. Use of %lua_ prefixed macros is preferred as these are cleaner to read.
