@@ -1608,7 +1608,7 @@ fi \
 f = io.open("%{_docdir}/%{name}-%{version}/optional-packages.txt", "r") \
 if f then \
 	for l in f:lines() do print(l); end \
-	f.close() \
+	f:close() \
 end \
 %{nil}
 
@@ -1969,7 +1969,10 @@ end\
 for _, s in ipairs({%{expand:%%__lua_split %*}}) do\
 	if not t[s] then\
 		print("Adding "..s.." to /etc/shells")\
-		f = io.open("/etc/shells", "a"); f:write(s.."\\n"); f:close()\
+		f = io.open("/etc/shells", "a")
+		if f then\
+			f:write(s.."\\n")\
+			f:close()\
 	end\
 end\
 %{nil}
