@@ -1973,6 +1973,7 @@ for _, s in ipairs({%{expand:%%__lua_split %*}}) do\
 		if f then\
 			f:write(s.."\\n")\
 			f:close()\
+		end\
 	end\
 end\
 %{nil}
