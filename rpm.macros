@@ -1969,7 +1969,7 @@ end\
 for _, s in ipairs({%{expand:%%__lua_split %*}}) do\
 	if not t[s] then\
 		print("Adding "..s.." to /etc/shells")\
-		f = io.open("/etc/shells", "a")
+		f = io.open("/etc/shells", "a")\
 		if f then\
 			f:write(s.."\\n")\
 			f:close()\
