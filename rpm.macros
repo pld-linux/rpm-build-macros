@@ -1995,7 +1995,7 @@ for _, l in pairs(t) do\
 end\
 f = io.open("/etc/shells", "w")\
 if f then\
-	write(s)\
+	f:write(s)\
 	f:close()\
 end\
 %{nil}
