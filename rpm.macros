@@ -546,7 +546,7 @@ Provides: %{1} = %{?epoch:%{epoch}:}%{?version:%{version}}%{?release:-%{release}
 			# verify that .so links point to existing files (not allowed to point to "other package") \
 			# TODO: iterate over all man dirs, but in Th there is only one true man dir \
 			err=$(grep -rl '^\.so ' "$RPM_BUILD_ROOT$i" | while read doc; do \
-				l=$(cat "$doc"); \
+				l=$(grep -r '^\.so ' "$doc"); \
 				l=${l#.so }; \
 				d=$(dirname $doc); \
 				test -e $RPM_BUILD_ROOT$i/$l || test -e $d/$l || echo "  ${doc#$RPM_BUILD_ROOT} points to inexistent manpage: $l"; \
