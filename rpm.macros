@@ -867,6 +867,7 @@ fi; \
 	%{?_noautoreq: %{_noautoreq}} \
 	%{?_noautoreq_pear: %{__noauto_regexp_helper -p pear %{_noautoreq_pear}}} \
 	%{?_noautoreq_perl: %{__noauto_regexp_helper -p perl %{_noautoreq_perl}}} \
+	%{?_noautoreq_java: %{__noauto_regexp_helper -p java %{_noautoreq_java}}} \
 	%{nil}
 
 # helper for wrapping _noautoreq between perl() or pear()
@@ -875,6 +876,8 @@ fi; \
 # BuildRequires:	rpmbuild(macros) >= 1.654
 # %define _noautoreq_pear Excluded.php PEAR/Something.php
 # %define _noautoreq_perl Apache::.*
+# BuildRequires:	rpmbuild(macros) >= 1.672
+# %define _noautoreq_java ClassDataVersion
 %__noauto_regexp_helper(p:) %(echo "%*" | awk 'BEGIN{RS=" "}{printf("%{-p*}\\\\\\(%%s\\\\\\) ", $1)}')
 
 #%_noautocompressdoc	%{nil}
