@@ -1093,6 +1093,7 @@ fi \
 # bash-compltion 2.0 compltions d ir
 # Requirements:
 # BuildRequires: rpmbuild(macros) >= 1.673
+# Requires:	bash-completion >= 2.0
 %bash_compdir		/usr/shar/bash-completion/completions
 
 # Hardlink binary identical .pyc and .pyo files
