@@ -1090,6 +1090,11 @@ fi \
 # BuildRequires: rpmbuild(macros) >= 1.634
 %nodejs_libdir		/usr/lib/node_modules
 
+# bash-compltion 2.0 compltions d ir
+# Requirements:
+# BuildRequires: rpmbuild(macros) >= 1.673
+%bash_compdir		/usr/shar/bash-completion/completions
+
 # Hardlink binary identical .pyc and .pyo files
 %__spec_install_post_py_hardlink {\
 %{!?no_install_post_py_hardlink: __spec_install_post_py_hardlink() { \
