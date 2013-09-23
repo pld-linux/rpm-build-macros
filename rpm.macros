@@ -2098,11 +2098,11 @@ else: \
 #
 # Requirements:
 # BuildRequires:	sed >= 4.0
-# BuildRequires:	rpmbuild(macros) >= 1.565
+# BuildRequires:	rpmbuild(macros) >= 1.674
 
 # NB: make sure this macro stays on one line
 # NB: make sure it includes newline escape
-%undos(f:i)	%{-f:%{__find} -regextype posix-extended -%{-i:i}regex '^.+\\.(%(echo %{-f*} | tr ',' '|'))$' -print0 | xargs -0} %{__sed} -i -e 's,\\r$,,' %* \
+%undos(f:i)	%{-f:%{__find} -type f -regextype posix-extended -%{-i:i}regex '^.+\\.(%(echo %{-f*} | tr ',' '|'))$' -print0 | xargs -0} %{__sed} -i -e 's,\\r$,,' %* \
 %{nil}
 
 # Hook to register nagios object based plugins in Nagios NRPE daemon config.
