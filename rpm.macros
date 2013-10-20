@@ -123,8 +123,8 @@
 # Regular expressions are supported, but to avoid some character be treated
 # as regular expression it must be escaped twice.
 
-%filter_out 						\
-	for (i = 1; i in I; i++) { 	A=0;	\
+%filter_out							\
+	for (i = 1; i in I; i++) { A=0;	\
 		for (f in F) {				\
 			if (I[i] ~ "^" F[f] "$") A=1;	\
 		};							\
@@ -221,7 +221,7 @@
  %{?__cxx:CXX="%{__cxx}" ; export CXX ; } \
  %{?configuredir:%{configuredir}}%{!?configuredir:.}/configure \
 	--host=%{_target_platform} \
- 	--prefix=%{_prefix} \
+	--prefix=%{_prefix} \
 	--exec-prefix=%{_exec_prefix} \
 	--bindir=%{_bindir} \
 	--sbindir=%{_sbindir} \
@@ -291,7 +291,7 @@ CXXFLAGS="%{rpmcxxflags}" \
 %configure_cache_file	%{buildroot}.configure.cache
 
 %configure {./configure \
- 	LDFLAGS="${LDFLAGS:-%rpmldflags}" \
+	LDFLAGS="${LDFLAGS:-%rpmldflags}" \
 	CFLAGS="${CFLAGS:-%rpmcflags}" \
 	CXXFLAGS="${CXXFLAGS:-%rpmcxxflags}" \
 	FFLAGS="${FFLAGS:-%rpmcflags}" \
@@ -301,7 +301,7 @@ CXXFLAGS="%{rpmcxxflags}" \
 	%{?__cxx:CXX="%{__cxx}"} \
 	--host=%{_target_platform} \
 	--build=%{_target_platform} \
- 	--prefix=%{_prefix} \
+	--prefix=%{_prefix} \
 	--exec-prefix=%{_exec_prefix} \
 	--bindir=%{_bindir} \
 	--sbindir=%{_sbindir} \
@@ -399,7 +399,7 @@ CXXFLAGS="%{rpmcxxflags}" \
 %__unsermake /usr/share/unsermake/unsermake
 
 # Current date
-%date 		%(LC_ALL=C date +"%a %b %d %Y")
+%date		%(LC_ALL=C date +"%a %b %d %Y")
 
 # Example files, programs, scripts...
 %_examplesdir	/usr/src/examples
@@ -469,11 +469,11 @@ CXXFLAGS="%{rpmcxxflags}" \
 # Requires: name >= version (version based on querying package %2)
 %requires_ge_to(r)	%{!?2:ERROR}%{?3:ERROR}%{?2:%{!?3:%(if ! LC_ALL=C rpm -q --qf 'Requires: %1 >= %|E?{%{E}:}|%{V}%{?-r:-%{R}}\\n' %2 | grep '^Requires:'; then echo "BuildRequires: %2"; fi)}}
 
-# \helper for renaming packages
+# helper for renaming packages
 # %rename old-package
 %rename() \
 Obsoletes: %{1} < %{?epoch:%{epoch}:}%{?version:%{version}}%{?release:-%{release}} \
-Provides: %{1} = %{?epoch:%{epoch}:}%{?version:%{version}}%{?release:-%{release}} 
+Provides: %{1} = %{?epoch:%{epoch}:}%{?version:%{version}}%{?release:-%{release}}
 
 %apache_modules_api %{expand:%%global apache_modules_api %(awk '/#define MODULE_MAGIC_NUMBER_MAJOR/ {print $3}' /usr/include/apache/ap_mmn.h 2>/dev/null || echo ERROR)}%apache_modules_api
 
@@ -1699,7 +1699,7 @@ done \
 %build_kernel_modules(p:P:m:C:c)									\
 %{!?-m:%{error:%{0}: Required module name/list missing} exit 1}		\
 																	\
-%define Opts 														\\\\\\\
+%define Opts														\\\\\\\
 %if "%{_target_base_arch}" != "%{_host_base_arch}"					\\\
 	%if "%{_host_base_arch}" == "x86_64" && "%{_target_base_arch}" == "i386" \\\
 	CC="%{__cc}" ARCH=%{_target_base_arch}							\\\
@@ -1707,7 +1707,7 @@ done \
 	ARCH=%{_target_base_arch} CROSS_COMPILE=%{_target_cpu}-pld-linux- \\\
 	%endif															\\\
 %else																\\\
-	CC="%{__cc}" 													\\\
+	CC="%{__cc}"													\\\
 %endif																\
 %define	MakeOpts HOSTCC="%{__cc}" SYSSRC=%{_kernelsrcdir} SYSOUT=$PWD/o \\\\\\\
 		O=$PWD/o %{?with_verbose:V=1} %{Opts}						\
@@ -1725,7 +1725,7 @@ compile() {															\
 	ln -sf %{_kernelsrcdir}/Module.symvers o/Module.symvers			\
 	if [ -f %{_kernelsrcdir}/include/generated/autoconf.h ]; then	\
 		ln -sf %{_kernelsrcdir}/include/generated/autoconf.h o/include/generated/autoconf.h \
-		ln -s ../generated/autoconf.h o/include/linux/autoconf.h 	\
+		ln -s ../generated/autoconf.h o/include/linux/autoconf.h	\
 	else															\
 		ln -sf %{_kernelsrcdir}/include/linux/autoconf.h o/include/linux/autoconf.h \
 	fi																\
