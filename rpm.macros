@@ -10,10 +10,6 @@
 %x8664		x86_64 amd64 ia32e
 %arm		armv3l armv4b armv4l armv5teb armv5tel
 
-# kernel compiler
-%kgcc		%{__cc}
-%kgcc_package	gcc
-
 # compiler version
 %cc_version	%{expand:%%global cc_version %(%{__cc} -dumpversion 2>/dev/null || echo 0.0)}%cc_version
 %cxx_version	%{expand:%%global cxx_version %(%{__cxx} -dumpversion 2>/dev/null || echo 0.0)}%cxx_version
