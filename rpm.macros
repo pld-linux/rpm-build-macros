@@ -408,12 +408,6 @@ CXXFLAGS="%{rpmcxxflags}" \
 # Example files, programs, scripts...
 %_examplesdir	/usr/src/examples
 
-# Alternative kernel type/version
-%_alt_kernel	%{nil}%{?alt_kernel:-%{?alt_kernel}}
-
-# The directory holding Linux kernel sources
-%_kernelsrcdir	/usr/src/linux%{_alt_kernel}
-
 # SysV-style initscripts dir
 %_initddir		/etc/rc.d/init.d
 
@@ -428,6 +422,12 @@ CXXFLAGS="%{rpmcxxflags}" \
 # Package will have release 1 if built normally,
 # and release 0.zzz.bootstrap if built with bootstrap
 %bootstrap_release() %{!?with_bootstrap:%{1}%{?2:.%{2}}}%{?with_bootstrap:%{!?2:%(expr %{1} - 1)}%{?2:%{1}.%(expr %{2} - 1)}.zzz.bootstrap}
+
+# Alternative kernel type/version
+%_alt_kernel	%{nil}%{?alt_kernel:-%{?alt_kernel}}
+
+# The directory holding Linux kernel sources
+%_kernelsrcdir	/usr/src/linux%{_alt_kernel}
 
 # rpm -qf on kernel version.h file
 %__kernel_qf()		%(R=$(cd %{_kernelsrcdir} 2>/dev/null && LC_ALL=C rpm -q --qf '%*' -f include/linux/version.h 2>/dev/null | grep -v 'is not'); echo ${R:-ERROR})
@@ -445,6 +445,21 @@ CXXFLAGS="%{rpmcxxflags}" \
 %requires_releq_kernel(s:n:)		Requires%{-s:(%{-s*})}: %releq_kernel
 %requires_releq_kernel_up(s:n:)		Requires%{-s:(%{-s*})}: %releq_kernel_up
 %requires_releq_kernel_smp(s:n:)	Requires%{-s:(%{-s*})}: %releq_kernel_smp
+
+# kernel version-release handling
+%__kernel_ver	 %{expand:%%global __kernel_ver %( \\
+	Z=$([ -f '%{_kernelsrcdir}/include/generated/utsrelease.h' ] && awk -F'"' '/UTS_RELEASE/{print $2}' %{_kernelsrcdir}/include/{linux/version,generated/utsrelease}.h 2>/dev/null || awk -F'"' '/UTS_RELEASE/{print $2}' %{_kernelsrcdir}/include/linux/{version,utsrelease}.h 2>/dev/null); \\
+	Z=${Z:-$(awk -F' = ' '/^VERSION/{v=$2} /^PATCHLEVEL/{p=$2} /^SUBLEVEL/{s=$2} /^EXTRAVERSION/{e=$2} END {printf("%d.%d.%d%s", v, p, s, e)}' %{_kernelsrcdir}/Makefile 2>/dev/null)}; \\
+	echo ${Z:-ERROR}; \\
+)}%__kernel_ver
+
+%__kernel_rel	%{expand:%%global __kernel_rel %(Z=$(cd %{_kernelsrcdir} 2>/dev/null && LC_ALL=C rpm -qf include/linux/fs.h 2>/dev/null --qf "%{R}" | grep -v "is not"); echo ${Z:-ERROR})}%__kernel_rel
+%__kernel_rpmvr	%{expand:%%global __kernel_rpmvr %(Z=$(cd %{_kernelsrcdir} 2>/dev/null && LC_ALL=C rpm -qf include/linux/fs.h 2>/dev/null --qf "%{V}-%{R}" | grep -v "is not"); echo ${Z:-ERROR})}%__kernel_rpmvr
+%_kernel_ver	%{expand:%%global _kernel_ver %{__kernel_ver}%{?with_dist_kernel:%(echo %{__kernel_ver} | grep -q -e - || echo -%{__kernel_rel})}}%_kernel_ver
+%_kernel_ver_str %{expand:%%global _kernel_ver_str %(echo %{!?_without_dist_kernel:%{__kernel_rpmvr}}%{?_without_dist_kernel:%{__kernel_ver}} | sed -e 's/-/_/g')}%_kernel_ver_str
+
+# `uname -r` to be used in @release field
+%_kernel_vermagic	%{expand:%%global _kernel_vermagic %(echo %{_kernel_ver} | sed -e 's/-/_/g')}%_kernel_vermagic
 
 # Requires name = version-release
 %requires_releq()	%{!?1:ERROR}%{?2:ERROR}%{?1:%{!?2:%{expand:%%requires_eq_to -r %1 %1}}}
@@ -465,21 +480,6 @@ Obsoletes: %{1} < %{?epoch:%{epoch}:}%{?version:%{version}}%{?release:-%{release
 Provides: %{1} = %{?epoch:%{epoch}:}%{?version:%{version}}%{?release:-%{release}} 
 
 %apache_modules_api %{expand:%%global apache_modules_api %(awk '/#define MODULE_MAGIC_NUMBER_MAJOR/ {print $3}' /usr/include/apache/ap_mmn.h 2>/dev/null || echo ERROR)}%apache_modules_api
-
-# kernel version-release handling
-%__kernel_ver	 %{expand:%%global __kernel_ver %( \\
-	Z=$([ -f '%{_kernelsrcdir}/include/generated/utsrelease.h' ] && awk -F'"' '/UTS_RELEASE/{print $2}' %{_kernelsrcdir}/include/{linux/version,generated/utsrelease}.h 2>/dev/null || awk -F'"' '/UTS_RELEASE/{print $2}' %{_kernelsrcdir}/include/linux/{version,utsrelease}.h 2>/dev/null); \\
-	Z=${Z:-$(awk -F' = ' '/^VERSION/{v=$2} /^PATCHLEVEL/{p=$2} /^SUBLEVEL/{s=$2} /^EXTRAVERSION/{e=$2} END {printf("%d.%d.%d%s", v, p, s, e)}' %{_kernelsrcdir}/Makefile 2>/dev/null)}; \\
-	echo ${Z:-ERROR}; \\
-)}%__kernel_ver
-
-%__kernel_rel	%{expand:%%global __kernel_rel %(Z=$(cd %{_kernelsrcdir} 2>/dev/null && LC_ALL=C rpm -qf include/linux/fs.h 2>/dev/null --qf "%{R}" | grep -v "is not"); echo ${Z:-ERROR})}%__kernel_rel
-%__kernel_rpmvr	%{expand:%%global __kernel_rpmvr %(Z=$(cd %{_kernelsrcdir} 2>/dev/null && LC_ALL=C rpm -qf include/linux/fs.h 2>/dev/null --qf "%{V}-%{R}" | grep -v "is not"); echo ${Z:-ERROR})}%__kernel_rpmvr
-%_kernel_ver	%{expand:%%global _kernel_ver %{__kernel_ver}%{?with_dist_kernel:%(echo %{__kernel_ver} | grep -q -e - || echo -%{__kernel_rel})}}%_kernel_ver
-%_kernel_ver_str %{expand:%%global _kernel_ver_str %(echo %{!?_without_dist_kernel:%{__kernel_rpmvr}}%{?_without_dist_kernel:%{__kernel_ver}} | sed -e 's/-/_/g')}%_kernel_ver_str
-
-# `uname -r` to be used in @release field
-%_kernel_vermagic	%{expand:%%global _kernel_vermagic %(echo %{_kernel_ver} | sed -e 's/-/_/g')}%_kernel_vermagic
 
 # sgml macros
 %xmlcat_add()		/usr/bin/xmlcatalog --noout --add nextCatalog \"\" %1 /etc/xml/catalog ;
