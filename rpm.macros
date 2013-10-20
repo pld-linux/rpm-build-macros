@@ -449,8 +449,8 @@ CXXFLAGS="%{rpmcxxflags}" \
 	echo ${Z:-ERROR}; \\
 )}%__kernel_ver
 
-%__kernel_rel	%{expand:%%global __kernel_rel %(Z=$(cd %{_kernelsrcdir} 2>/dev/null && LC_ALL=C rpm -qf include/linux/fs.h 2>/dev/null --qf "%{R}" | grep -v "is not"); echo ${Z:-ERROR})}%__kernel_rel
-%__kernel_rpmvr	%{expand:%%global __kernel_rpmvr %(Z=$(cd %{_kernelsrcdir} 2>/dev/null && LC_ALL=C rpm -qf include/linux/fs.h 2>/dev/null --qf "%{V}-%{R}" | grep -v "is not"); echo ${Z:-ERROR})}%__kernel_rpmvr
+%__kernel_rel	%{expand:%%global __kernel_rel %{__kernel_qf %{R}}}%__kernel_rel
+%__kernel_rpmvr	%{expand:%%global __kernel_rpmvr %{__kernel_qf %{V}-%{R}}}%__kernel_rpmvr
 %_kernel_ver	%{expand:%%global _kernel_ver %{__kernel_ver}%{?with_dist_kernel:%(echo %{__kernel_ver} | grep -q -e - || echo -%{__kernel_rel})}}%_kernel_ver
 %_kernel_ver_str %{expand:%%global _kernel_ver_str %(echo %{!?_without_dist_kernel:%{__kernel_rpmvr}}%{?_without_dist_kernel:%{__kernel_ver}} | sed -e 's/-/_/g')}%_kernel_ver_str
 
