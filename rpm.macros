@@ -1822,11 +1822,16 @@ fi											\
 #		with same name exists in kernel already
 #  -n <file> -- name of modprobe config file to use (without .conf extension)
 #		for defining aliases, only useful with -s
+#  -D <directory> -- DESTDIR, base directory for installed files,
+#		defaults to RPM_BUILD_ROOT
 
-%install_kernel_modules(m:d:s:n:)									\
+%install_kernel_modules(m:d:s:n:D:)									\
 %{!?-m:%{error:%{0}: Required module name (-m) missing}exit 1}		\
 %{!?-d:%{error:%{0}: Required module directory missing}exit 1}		\
 %{?-n:%{!?-s:%{error:%{0}: Modprobe .conf file requires module suffix}exit 1}} \
+																	\
+INSTALLROOT=%{-D*}													\
+[ -n "$INSTALLROOT" ] || INSTALLROOT=$RPM_BUILD_ROOT				\
 																	\
 %define KernelD $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}			\
 %define ModprobeD $RPM_BUILD_ROOT%{_sysconfdir}/modprobe.d/%{_kernel_ver} \
@@ -1864,6 +1869,7 @@ if [ -r "%{_kernelsrcdir}/.config" ]; then							\
 else																\
 	__install_kernel_modules_old									\
 fi																	\
+unset INSTALLROOT													\
 %{nil}
 
 # patchset macros
