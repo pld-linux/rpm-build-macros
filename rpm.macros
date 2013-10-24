@@ -1833,8 +1833,8 @@ fi											\
 INSTALLROOT=%{-D*}													\
 [ -n "$INSTALLROOT" ] || INSTALLROOT=$RPM_BUILD_ROOT				\
 																	\
-%define KernelD $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}			\
-%define ModprobeD $RPM_BUILD_ROOT%{_sysconfdir}/modprobe.d/%{_kernel_ver} \
+%define KernelD $INSTALLROOT/lib/modules/%{_kernel_ver}				\
+%define ModprobeD $INSTALLROOT%{_sysconfdir}/modprobe.d/%{_kernel_ver} \
 																	\
 __install_kernel_modules() {										\
 %{!?debug:set +x;}													\
