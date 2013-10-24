@@ -449,10 +449,10 @@ CXXFLAGS="%{rpmcxxflags}" \
 	echo ${Z:-ERROR}; \\
 )
 
-%__kernel_rel	%{__kernel_qf %{R}}
-%__kernel_rpmvr	%{__kernel_qf %{V}-%{R}}
-%_kernel_ver	%{!?_without_dist_kernel:%{__kernel_rpmvr}}%{?_without_dist_kernel:%{__kernel_ver}}
-%_kernel_ver_str %(echo %{_kernel_ver} | tr '-' '_')
+# `uname -r` used for building/installing kernel modules
+%_kernel_ver	%{__kernel_ver}%{!?_without_dist_kernel:%(echo %{__kernel_ver} | grep -q -e - || echo -%{__kernel_qf %{R}})}
+# package version OR `uname -r` for non-dist kernel to be used in @release field
+%_kernel_ver_str %(echo %{!?_without_dist_kernel:%{__kernel_qf %{V}-%{R}}}%{?_without_dist_kernel:%{__kernel_ver}} | tr '-' '_')
 
 # Requires name = version-release
 %requires_releq()	%{!?1:ERROR}%{?2:ERROR}%{?1:%{!?2:%{expand:%%requires_eq_to -r %1 %1}}}
