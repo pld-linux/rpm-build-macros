@@ -449,6 +449,13 @@ CXXFLAGS="%{rpmcxxflags}" \
 	echo ${Z:-ERROR}; \\
 )
 
+%_kernel_version_code	 %( \\
+	Z=$(awk '/LINUX_VERSION_CODE/{print $3}' %{_kernelsrcdir}/include/linux/version.h 2>/dev/null); \\
+	echo ${Z:-ERROR}; \\
+)
+
+%_kernel_version_magic()	 %(echo $((%{1} * 65536 + %{2} * 256 + %{3})))
+
 # `uname -r` used for building/installing kernel modules
 %_kernel_ver	%{__kernel_ver}%{!?_without_dist_kernel:%(echo %{__kernel_ver} | grep -q -e - || echo -%{__kernel_qf %{R}})}
 # package version OR `uname -r` for non-dist kernel to be used in @release field
