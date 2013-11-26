@@ -1,7 +1,7 @@
---- rpm-build-macros-1.647/rpm.macros~	2012-03-13 18:09:42.876512532 +0200
-+++ rpm-build-macros-1.647/rpm.macros	2012-03-13 18:10:01.389010815 +0200
-@@ -2166,79 +2166,17 @@
- # BuildRequires:	rpmbuild(macros) >= 1.647
+--- rpm-build-macros-1.680/rpm.macros~	2013-11-27 01:15:12.122464636 +0200
++++ rpm-build-macros-1.680/rpm.macros	2013-11-27 01:16:06.644922965 +0200
+@@ -2258,79 +2258,17 @@
+ # BuildRequires:	rpmbuild(macros) >= 1.671
  # Requires:	systemd-units >= 38
  
 -%systemd_reload /bin/systemd_booted && SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog /bin/systemctl --quiet daemon-reload || :
@@ -46,7 +46,7 @@
 -want_enable_service() { \
 -	[ -f /etc/sysconfig/rpm ] && . /etc/sysconfig/rpm \
 -	[ ${RPM_ENABLE_SYSTEMD_SERVICE:-yes} = no ] && return 1 \
--	/sbin/chkconfig --list ${1%.service} 2>/dev/null | grep -qsv "[0-6]:on" && return 1 \
+-	[ "$(echo /etc/rc.d/rc[0-6].d/S[0-9][0-9]${1%.service})" = "/etc/rc.d/rc[0-6].d/S[0-9][0-9]${1%.service}" ] && return 1 \
 -	return 0 \
 -}\
 -	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
