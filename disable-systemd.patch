@@ -1,5 +1,14 @@
 --- rpm-build-macros-1.680/rpm.macros~	2013-11-27 01:15:12.122464636 +0200
 +++ rpm-build-macros-1.680/rpm.macros	2013-11-27 01:16:06.644922965 +0200
+@@ -716,7 +716,7 @@
+ # tmpfiles.d configuration. Warn and terminate build if config is
+ # missing.
+ #
+-#%no_install_post_check_tmpfiles 1
++%no_install_post_check_tmpfiles 1
+ #
+ %__spec_install_post_check_tmpfiles { \
+ __spec_install_post_check_tmpfiles() { \
 @@ -2258,79 +2258,17 @@
  # BuildRequires:	rpmbuild(macros) >= 1.671
  # Requires:	systemd-units >= 38
