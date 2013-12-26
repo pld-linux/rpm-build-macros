@@ -1490,7 +1490,7 @@ echo -e "</dependencies>\\n" >> %{_mavendepmapdir}/maven2-depmap.xml
 # JAVA macros specific for PLD
 
 # Directory for tomcat context configuration files
-%_tomcatconfdir	%{_sharedstatedir}/tomcat/conf/Catalina/localhost
+%_tomcatconfdir	/etc/tomcat/Catalina/localhost
 
 # Tomcat cache path
 %_tomcatcachedir %{_sharedstatedir}/tomcat/work/Catalina/localhost
