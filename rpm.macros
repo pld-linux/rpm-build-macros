@@ -1880,24 +1880,42 @@ unset INSTALLROOT													\
 %{nil}
 
 # patchset macros
+# generate SourceX urls from range START STOP
+# Format can be SINGLE format char of %e, %f, %g, see seq(1)
+# The sources start from 10000
+#
 # Author: Elan Ruusamäe <glen@pld-linux.org>
 #
 # Usage:
 #   %patchset_source -f <seq(1) format> <start> [<end>]
 #   %patchset_patch <start> [<end>]
-#
 # If <end> is omited, it is assumed to be <start>.
 #
 # For example in preamble:
 #  %patchset_source -f ftp://ftp.vim.org/pub/editors/vim/patches/7.0/7.0.%03g 33 44
 # and in %prep:
 #  %patchset_patch 33 44
+#
+# Using sources list:
+#   %patchset_source -f <url> -s <filelist>
+#   %patchset_patch -s <filelist>
+# For example (ncurses):
+#   %patchset_source -f ftp://dickey.his.com/ncurses/%{basever}/ -s sources
+#   %patchset_patch -s sources -p1
+#
 
-# generate SourceX urls from range START STOP
-# Format can be SINGLE format char of %e, %f, %g, see seq(1)
-# The sources start from 10000
-%patchset_source(f:b:) %(
-	base=%{-b*}%{!-b*:10000};
+%patchset_source(f:b:s:) %(
+	base=%{-b*}%{!-b*:10000}
+%{-s:
+	baseurl='%{-f*}'
+	filelist='%{-s*}'
+	i=$base
+	while read checksum file; do
+		printf "Patch%d: %s%s\\n" $i "$baseurl" "$file"
+		i=$((i+1))
+	done < $filelist
+}
+%{!-s:
 	start=$(expr $base + %1);
 	end=$(expr $base + %{?2}%{!?2:%{1}});
 	# we need to call seq twice as it doesn't allow two formats
@@ -1905,18 +1923,31 @@ unset INSTALLROOT													\
 	seq -f '%{-f*}' %1 %{?2}%{!?2:%{1}} > %{tmpdir}/__ps2;
 	paste %{tmpdir}/__ps{1,2};
 	rm -f %{tmpdir}/__ps{1,2};
+}
 ) \
 %{nil}
 
 # apply sources from %patchset_source
 # -p specify -pX for %patch line
 # -b base offset: defaults to 10000
-%patchset_patch(f:p:b:) %(
-	base=%{-b*}%{!-b*:10000};
+# -s filelist to read files from
+%patchset_patch(f:p:b:s:) %(
+	base=%{-b*}%{!-b*:10000}
+	patchlevel=%{-p*:-p%{-p*}}
+%{-s:
+	filelist='%{-s*}'
+	i=$base
+	while read checksum file; do
+		printf "patch%d %s\\n" $i "$patchlevel" | sed -e s,^,%%,
+		i=$((i+1))
+	done < $filelist
+}
+%{!-s:
 	start=$(expr $base + %1);
 	end=$(expr $base + %{?2}%{!?2:%{1}});
 	echo ": patchset_patch %1%{?2: to %2}";
-	seq -f 'patch%g %{-p*:-p%{-p*}}' $start $end | sed -e s,^,%%,;
+	seq -f "patch%g $patchlevel" $start $end | sed -e s,^,%%,;
+}
 ) \
 %{nil}
 
