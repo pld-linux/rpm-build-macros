@@ -1897,9 +1897,11 @@ unset INSTALLROOT													\
 #  %patchset_patch 33 44
 #
 # Using sources list:
+#   BuildRequires:	rpmbuild(macros) >= 1.426
 #   %patchset_source -f <url> -s <filelist>
 #   %patchset_patch -s <filelist>
 # For example (ncurses):
+#   BuildRequires:	rpmbuild(macros) >= 1.683
 #   %patchset_source -f ftp://dickey.his.com/ncurses/%{basever}/ -s sources
 #   %patchset_patch -s sources -p1
 #
