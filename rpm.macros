@@ -283,6 +283,7 @@ CXX="%{__cxx}" \
 CPP="%{__cpp}" \
 CFLAGS="%{rpmcflags}" \
 CXXFLAGS="%{rpmcxxflags}" \
+LINKFLAGS="%{rpmldflags}" \
 %{__waf} \
 }
 
