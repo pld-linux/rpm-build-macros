@@ -238,6 +238,15 @@
 	%{dependencytracking} \
 }
 
+# Note: pass only standard cmake macros here.
+# The only exception is SYSCONF_INSTALL_DIR, used commonly in KDE packages,
+# where the default (${CMAKE_INSTALL_PREFIX}/etc) is not FHS-compliant and
+# absolute path MUST be used to comply with FHS.
+# The other non-standard cmake macros used commonly in KDE
+# (INCLUDE_INSTALL_DIR, LIB_INSTALL_DIR, SHARE_INSTALL_PREFIX)
+# have sane default values in KDE, and some packages use these names
+# in different way (e.g. expect them to be always relative or always
+# absolute).
 %cmake \
 %{?__cc:CC="${CC:-%{__cc}}"} \\\
 %{?__cxx:CXX="${CXX:-%{__cxx}}"} \\\
@@ -247,9 +256,6 @@ CPPFLAGS="${CPPFLAGS:-%{rpmcppflags}}" \\\
 	-DCMAKE_BUILD_TYPE=%{!?debug:PLD}%{?debug:Debug} \\\
 	-DCMAKE_INSTALL_LIBDIR:PATH=%{_libdir} \\\
 	-DCMAKE_INSTALL_PREFIX:PATH=%{_prefix} \\\
-	-DINCLUDE_INSTALL_DIR:PATH=%{_includedir} \\\
-	-DLIB_INSTALL_DIR:PATH=%{_libdir} \\\
-	-DSHARE_INSTALL_PREFIX:PATH=%{_datadir} \\\
 	-DSYSCONF_INSTALL_DIR:PATH=%{_sysconfdir} \\\
 	-DCMAKE_CXX_FLAGS_PLD="${CXXFLAGS:-%{rpmcxxflags} -DNDEBUG -DQT_NO_DEBUG}" \\\
 	-DCMAKE_C_FLAGS_PLD="${CFLAGS:-%{rpmcflags} -DNDEBUG -DQT_NO_DEBUG}" \\\
