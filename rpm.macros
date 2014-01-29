@@ -958,8 +958,11 @@ fi; \
 # NOTE: error output must be empty. otherwise can't build pecl packages if no php*-devel is installed
 %php_suffix				%{expand:%%global php_suffix %(c=$(php-config --sysconfdir 2>/dev/null) || echo '' && echo ${c#/etc/php})%%{nil}}%php_suffix
 
+# phpXY, version always present for using current php version (in regards of php*-devel package)
+%php_versuffix			%{expand:%%global php_versuffix %((IFS=.; set -- $(php-config --version); echo $1$2))%%{nil}}%php_versuffix
+
 # php cli. version that php headers are installed for
-%__php					/usr/bin/%{php_name}
+%__php					/usr/bin/php%{php_versuffix}
 
 # helper macro
 %__php_api_requires(v:) Requires: %{php_name}(%{expand:%1}) = %{expand:%{%{!?2:%{1}}%{?2}}}
