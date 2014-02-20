@@ -1766,7 +1766,27 @@ compile() {															\
 		M=$PWD CONSTIFY_PLUGIN="" %{MakeOpts}						\
 %{?-C:cd -}															\
 }																	\
-compile_old() {														\
+compile %{*}														\
+%{nil}
+
+%build_kernel_modules_compat(p:P:m:C:c)								\
+%{!?-m:%{error:%{0}: Required module name/list missing} exit 1}		\
+																	\
+%define Opts														\\\\\\\
+%if "%{_target_base_arch}" != "%{_host_base_arch}"					\\\
+	%if "%{_host_base_arch}" == "x86_64" && "%{_target_base_arch}" == "i386" \\\
+	CC="%{__cc}" ARCH=%{_target_base_arch}							\\\
+	%else															\\\
+	ARCH=%{_target_base_arch} CROSS_COMPILE=%{_target_cpu}-pld-linux- \\\
+	%endif															\\\
+%else																\\\
+	CC="%{__cc}"													\\\
+%endif																\
+%define	MakeOpts HOSTCC="%{__cc}" SYSSRC=%{_kernelsrcdir} SYSOUT=$PWD/o \\\\\\\
+		O=$PWD/o %{?with_verbose:V=1} %{Opts}						\
+																	\
+%{?-C:cd %{-C*}}													\
+compile() {															\
 	local L="<" PATCH_SH;											\
 	[[ '%{*}' != *$L$L* ]] || PATCH_SH="set -x -e;$(cat)"			\
 	set -e -x														\
@@ -1781,7 +1801,7 @@ for cfg in ${cfgs:-dist}; do                                        \
 	ln -sf %{_kernelsrcdir}/Module.symvers-$cfg o/Module.symvers	\
 	if [ -f %{_kernelsrcdir}/include/generated/autoconf-$cfg.h ]; then	\
 		ln -sf %{_kernelsrcdir}/include/generated/autoconf-$cfg.h o/include/generated/autoconf.h \
-		ln -s ../generated/autoconf.h o/include/linux/autoconf.h \
+		ln -s ../generated/autoconf.h o/include/linux/autoconf.h 	\
 	else															\
 		ln -sf %{_kernelsrcdir}/include/linux/autoconf-$cfg.h o/include/linux/autoconf.h \
 	fi																\
@@ -1802,7 +1822,7 @@ for cfg in ${cfgs:-dist}; do                                        \
 	%endif															\
 																	\
 	%{!?-c:%{__make} -C %{_kernelsrcdir} clean						\\\
-		RCS_FIND_IGNORE="-name '*.[ks]o' -o"							\\\
+		RCS_FIND_IGNORE="-name '*.[ks]o' -o"						\\\
 		${1+"$@"}													\\\
 		M=$PWD %{MakeOpts}}											\
 																	\
@@ -1816,11 +1836,7 @@ for cfg in ${cfgs:-dist}; do                                        \
 done																\
 %{?-C:cd -}															\
 }																	\
-if [ -r "%{_kernelsrcdir}/.config" ]; then	\
-	compile %{*}							\
-else										\
-	compile_old %{*}						\
-fi											\
+compile %{*}														\
 %{nil}
 
 
@@ -1864,7 +1880,22 @@ for MODULE in {%{-m*},}; do											\
 		echo "alias ${MNAME} ${MNAME}-%{-s*}" >> %{ModprobeD}/%{-n*}.conf}	\
 done																\
 }																	\
-__install_kernel_modules_old() {									\
+__install_kernel_modules											\
+unset INSTALLROOT													\
+%{nil}
+
+%install_kernel_modules_compat(m:d:s:n:D:)							\
+%{!?-m:%{error:%{0}: Required module name (-m) missing}exit 1}		\
+%{!?-d:%{error:%{0}: Required module directory missing}exit 1}		\
+%{?-n:%{!?-s:%{error:%{0}: Modprobe .conf file requires module suffix}exit 1}} \
+																	\
+INSTALLROOT=%{-D*}													\
+[ -n "$INSTALLROOT" ] || INSTALLROOT=$RPM_BUILD_ROOT				\
+																	\
+%define KernelD $INSTALLROOT/lib/modules/%{_kernel_ver}				\
+%define ModprobeD $INSTALLROOT%{_sysconfdir}/modprobe.d/%{_kernel_ver} \
+																	\
+__install_kernel_modules() {										\
 %{!?debug:set +x;}													\
 local cfgs='%{?with_dist_kernel:%{?with_smp: smp}%{?with_up: up}}%{!?with_dist_kernel: nondist}' \
 																	\
@@ -1881,11 +1912,7 @@ for MODULE in {%{-m*},}; do											\
 	done															\
 done																\
 }																	\
-if [ -r "%{_kernelsrcdir}/.config" ]; then							\
-	__install_kernel_modules										\
-else																\
-	__install_kernel_modules_old									\
-fi																	\
+__install_kernel_modules											\
 unset INSTALLROOT													\
 %{nil}
 
