@@ -208,6 +208,16 @@
 	}
 }')
 
+# override %__spec_build_pre and %__spec_install_pre from macros.rpmbuild
+# adding %{_clean_env}
+%__spec_build_pre	%{_clean_env}\
+%{___build_pre}\
+%{nil}
+%__spec_install_pre	%{_clean_env}\
+%{___build_pre}\
+%{?buildroot:%{__rm} -rf '%{buildroot}'; %{__mkdir_p} '%{buildroot}'}\
+%{nil}
+
 #-----------------------------------------------------------------
 %configure2_13 { \
  if [ -n "$LINGUAS" ]; then unset LINGUAS; fi; \
