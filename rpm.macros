@@ -2260,6 +2260,7 @@ fi; \
 # pre/post script for -upstart subpackages
 #
 # Author: Jacek Konieczny <jajcus@jajcus.net>
+# Author: Elan Ruusamäe <glen@pld-linux.org>
 #
 # Usage:
 #	%upstart_post service_name
@@ -2273,12 +2274,12 @@ fi; \
 # %upstart_postun %{name}
 #
 # Requirements:
-# BuildRequires:	rpmbuild(macros) >= 1.689
+# BuildRequires:	rpmbuild(macros) >= 1.690
 # Requires:			rc-scripts >= 0.4.3
 
 # migrate from init script to upstart job
 %upstart_post() \
-	if [ -f /var/lock/subsys/%1 ]; then \
+	if [ -x /sbin/initctl ] && [ -f /var/lock/subsys/%1 ]; then \
 		/sbin/service --no-upstart %1 stop \
 		/sbin/service %1 start \
 	fi \
