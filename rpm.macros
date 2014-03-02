@@ -2424,4 +2424,15 @@ want_enable_service() { \
 %systemduserunitdir /usr/lib/systemd/user
 %systemdtmpfilesdir /usr/lib/tmpfiles.d
 
+#-----------------------------------------------------------------
+# Update hardware database index
+#
+# Requirements:
+# BuildRequires:	rpmbuild(macros) >= 1.691
+# Requires:		udev-core >= 1:196
+
+%udev_hwdb_update() \
+/sbin/udevadm hwdb --update >/dev/null 2>&1 || : \
+%{nil}
+
 # EOF
