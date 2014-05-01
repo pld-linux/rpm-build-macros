@@ -85,10 +85,10 @@
 %_specdir       %{expand:%%global _specdir %([ ! -d %{_topdir}/SPECS ] && echo %{_topdir}/%{name} || echo %{_topdir}/SPECS)}%_specdir
 %_sourcedir		%{expand:%%global _sourcedir %([ ! -d %{_topdir}/SOURCES ] && echo %{_specdir} || echo %{_topdir}/SOURCES)}%_sourcedir
 
-# BUILD/RPMS/SRPMS are one same level by default as packages dir, if these exist
+# BUILD/RPMS/SRPMS are on same level by default as packages dir, if these exist
 # if they don't exist assume we are having custom topdir (which is not named as
 # "packages", i.e ~/rpm/kde/{kdelibs,BUILD/RPMS/SRPMS})
-# NOTE: readlink fails if some parent dir is not readable (/home/services/builder for example can't read /home/services), therfore the extra echo
+# NOTE: readlink fails if some parent dir is not readable (/home/services/builder for example can't read /home/services), therefore the extra echo
 %_builddir		%{expand:%%global _builddir %(if [ -d %{_topdir}/BUILD ]; then echo %{_topdir}/BUILD; else readlink -m %{_topdir}/../BUILD || echo %{_topdir}/../BUILD; fi)}%_builddir
 %_rpmdir		%{expand:%%global _rpmdir %(if [ -d %{_topdir}/RPMS ]; then echo %{_topdir}/RPMS; else readlink -m %{_topdir}/../RPMS || echo readlink -m %{_topdir}/../RPMS; fi)}%_rpmdir
 %_srcrpmdir		%{expand:%%global _srcrpmdir %(if [ -d %{_topdir}/SRPMS ]; then echo %{_topdir}/SRPMS; else readlink -m %{_topdir}/../SRPMS || echo readlink -m %{_topdir}/../SRPMS; fi)}%_srcrpmdir
@@ -926,7 +926,7 @@ fi; \
 
 %ruby_archdir		%{expand:%%global ruby_archdir %(%{__ruby} -r rbconfig -e 'print RbConfig::CONFIG["archdir"]' 2>/dev/null || echo ERROR)}%ruby_archdir
 %ruby_libdir		%{expand:%%global ruby_libdir %(%{__ruby} -r rbconfig -e 'print RbConfig::CONFIG["rubylibdir"]' 2>/dev/null || echo ERROR)}%ruby_libdir
-%ruby_ridir			%{expand:%%global ruby_ridir %(%{__ruby} -r rbconfig -e 'include Config; print File.join(CONFIG["datadir"], "ri", CONFIG["ruby_version"], "system")' 2>/dev/null || echo ERROR)}%ruby_ridir
+%ruby_ridir			%{expand:%%global ruby_ridir %(%{__ruby} -r rbconfig -e 'print File.join(RbConfig::CONFIG["datadir"], "ri", RbConfig::CONFIG["ruby_version"], "system")' 2>/dev/null || echo ERROR)}%ruby_ridir
 %ruby_rubylibdir	%{expand:%%global ruby_rubylibdir %(%{__ruby} -r rbconfig -e 'print RbConfig::CONFIG["rubylibdir"]' 2>/dev/null || echo ERROR)}%ruby_rubylibdir
 %ruby_vendorarchdir	%{expand:%%global ruby_vendorarchdir %(%{__ruby} -r rbconfig -e 'print RbConfig::CONFIG["vendorarchdir"]' 2>/dev/null || echo ERROR)}%ruby_vendorarchdir
 %ruby_vendorlibdir	%{expand:%%global ruby_vendorlibdir %(%{__ruby} -r rbconfig -e 'print RbConfig::CONFIG["vendorlibdir"]' 2>/dev/null || echo ERROR)}%ruby_vendorlibdir
