@@ -34,6 +34,9 @@ while read dir; do
 		ca-valencia)
 			lang=ca@valencia
 		;;
+		hu-formal)
+			lang=hu
+		;;
 		de-informal)
 			lang=de
 		;;
