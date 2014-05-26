@@ -1146,6 +1146,8 @@ fi; \
 # -x - comma separated of file basenames to preserve (rpmbuild(macros) >= 1.658)
 # ARGS - extra directories to clean for .py sources
 #
+# BuildRequires:	rpmbuild(macros) >= 1.189
+#
 %py_postclean(x:) \
 for d in %{py_sitescriptdir} %{py_sitedir} %*; do \
 	[ ! -d "$RPM_BUILD_ROOT$d" ] || find "$RPM_BUILD_ROOT$d" -name '*.py' -print0 %{-x:| grep -ZzvE '/(%(echo '%{-x*}' | tr ',' '|'))$'} | xargs -0r -l512 rm;\
