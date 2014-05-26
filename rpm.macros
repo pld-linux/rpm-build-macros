@@ -1143,7 +1143,7 @@ fi; \
 # Usage:
 # %py_postclean /usr/share/extra -x keepme.py,keeptoo.py
 # Options:
-# -x - comma separated of file basenames to preserve
+# -x - comma separated of file basenames to preserve (rpmbuild(macros) >= 1.658)
 # ARGS - extra directories to clean for .py sources
 #
 %py_postclean(x:) \
