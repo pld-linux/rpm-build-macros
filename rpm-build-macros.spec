@@ -1,10 +1,3 @@
-#
-# Conditional build:
-%bcond_with	rpm4	# prepare macros for PLD rpm 4.5 instead of rpm5
-#
-%if "%{pld_release}" == "ac"
-%define	with_rpm4	1
-%endif
 %define		rpm_macros_rev	1.694
 %define		find_lang_rev	1.36
 Summary:	PLD Linux RPM build macros
@@ -19,7 +12,6 @@ Source1:	service_generator.sh
 Source3:	find-lang.sh
 Source4:	dokuwiki-find-lang.sh
 Patch0:		disable-systemd.patch
-Patch1:		rpm4.patch
 #Patchx: %{name}-pydebuginfo.patch
 BuildRequires:	rpm >= 4.4.9-56
 BuildRequires:	sed >= 4.0
@@ -62,7 +54,6 @@ cp -p %{SOURCE1} .
 %{__sed} -i -e '/libtoolize --copy --force --install/s/ --install//' rpm.macros
 %patch0 -p1
 %endif
-%{?with_rpm4:%patch1 -p1}
 
 %build
 %{__sed} -i -e 's,{Revision},%{rpm_macros_rev},' rpm.macros

@@ -895,7 +895,12 @@ fi; \
 # %define _noautoreq_perl Apache::.*
 # BuildRequires:	rpmbuild(macros) >= 1.672
 # %define _noautoreq_java ClassDataVersion
-%__noauto_regexp_helper(p:) %(echo "%*" | awk 'BEGIN{RS=" "}{printf("%{-p*}\\\\\\(%%s\\\\\\) ", $1)}')
+#
+%__noauto_regexp_helper(p:) %(echo "%*" | awk 'BEGIN{RS=" "}{printf("%{-p*}%{__qchar}(%%s%{__qchar}) ", $1)}')
+# detect quote character runtime
+%__qchar_4 \\\\%{nil}
+%__qchar_5 \\\\\\%{nil}
+%__qchar %{expand:%%global __qchar %%__qchar_%(echo %{_rpmversion} | cut -c1)}%__qchar
 
 #%_noautocompressdoc	%{nil}
 #
