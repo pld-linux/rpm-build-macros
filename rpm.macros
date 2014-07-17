@@ -931,19 +931,20 @@ fi; \
 
 # get rbconfig parameter
 %__ruby_rbconfig()	%(%{__ruby} -r rbconfig -e 'print RbConfig::CONFIG["%1"]' 2>/dev/null || echo ERROR)
+%__ruby_rbconfig_path()	%(%{__ruby} -r rbconfig -r pathname -e 'print Pathname(RbConfig::CONFIG["%1"]).cleanpath' 2>/dev/null || echo ERROR)
 
-%ruby_archdir		%{expand:%%global ruby_archdir %{__ruby_rbconfig archdir}}%ruby_archdir
+%ruby_archdir		%{expand:%%global ruby_archdir %{__ruby_rbconfig_path archdir}}%ruby_archdir
 %ruby_libdir		%{expand:%%global ruby_libdir %{__ruby_rbconfig rubylibdir}}%ruby_libdir
 %ruby_ridir			%{expand:%%global ruby_ridir %(%{__ruby} -r rbconfig -e 'print File.join(RbConfig::CONFIG["datadir"], "ri", RbConfig::CONFIG["ruby_version"], "system")' 2>/dev/null || echo ERROR)}%ruby_ridir
-%ruby_rubylibdir	%{expand:%%global ruby_rubylibdir %{__ruby_rbconfig rubylibdir}}%ruby_rubylibdir
+%ruby_rubylibdir	%{expand:%%global ruby_rubylibdir %{__ruby_rbconfig_path rubylibdir}}%ruby_rubylibdir
 %ruby_vendorarchdir	%{expand:%%global ruby_vendorarchdir %{__ruby_rbconfig vendorarchdir}}%ruby_vendorarchdir
-%ruby_vendorlibdir	%{expand:%%global ruby_vendorlibdir %{__ruby_rbconfig vendorlibdir}}%ruby_vendorlibdir
+%ruby_vendorlibdir	%{expand:%%global ruby_vendorlibdir %{__ruby_rbconfig_path vendorlibdir}}%ruby_vendorlibdir
 %ruby_sitearchdir	%{expand:%%global ruby_sitearchdir %{__ruby_rbconfig sitearchdir}}%ruby_sitearchdir
 %ruby_sitedir		%{expand:%%global ruby_sitedir %{__ruby_rbconfig sitedir}}%ruby_sitedir
-%ruby_sitelibdir	%{expand:%%global ruby_sitelibdir %{__ruby_rbconfig sitelibdir}}%ruby_sitelibdir
+%ruby_sitelibdir	%{expand:%%global ruby_sitelibdir %{__ruby_rbconfig_path sitelibdir}}%ruby_sitelibdir
 %ruby_rdocdir		/usr/share/rdoc
 %ruby_vendordir		%{expand:%%global ruby_vendordir %{__ruby_rbconfig vendordir}}%ruby_vendordir
-%ruby_version		%{expand:%%global ruby_version %{__ruby_rbconfig ruby_version}}%ruby_version
+%ruby_version		%{expand:%%global ruby_version %(r=%{__ruby_rbconfig ruby_version}; echo ${r:-%%nil})}%ruby_version
 
 %ruby_gemdir		%{expand:%%global ruby_gemdir %(%{__ruby} -r rubygems -e 'puts Gem.respond_to?(:default_dirs) ? Gem.default_dirs[:system][:gem_dir] : Gem.path.first' 2>/dev/null || echo ERROR)}%{ruby_gemdir}
 %ruby_specdir		%{ruby_gemdir}/specifications
