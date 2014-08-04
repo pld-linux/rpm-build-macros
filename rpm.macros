@@ -929,6 +929,10 @@ fi; \
 # Ruby
 %__ruby				/usr/bin/ruby
 
+# Ruby ABI version
+# NOTE: %ruby_version may be empty, depending how Ruby was built
+%ruby_abi			%{expand:%%global ruby_abi %(%{__ruby} -r rbconfig -e 'print [RbConfig::CONFIG["MAJOR"], RbConfig::CONFIG["MINOR"]].join(".")' 2>/dev/null || echo ERROR)}%ruby_abi
+
 # get rbconfig parameter
 %__ruby_rbconfig()	%(%{__ruby} -r rbconfig -e 'print RbConfig::CONFIG["%1"]' 2>/dev/null || echo ERROR)
 %__ruby_rbconfig_path()	%(%{__ruby} -r rbconfig -r pathname -e 'print Pathname(RbConfig::CONFIG["%1"]).cleanpath' 2>/dev/null || echo ERROR)
