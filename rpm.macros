@@ -31,7 +31,7 @@
 # expands to -jN if %__jobs has a value
 %_smp_mflags	%{expand:%%global _smp_mflags %(jobs=%{__jobs}; echo ${jobs:+-j$jobs}%%{nil})}%_smp_mflags
 
-%__make		/usr/bin/make %{?_smp_mflags}
+%__make		/usr/bin/make %{?_make_opts} %{?_smp_mflags}
 %__scons	/usr/bin/scons %{?_smp_mflags}
 %__waf		/usr/bin/waf %{?_smp_mflags}
 %__cmake	/usr/bin/cmake
