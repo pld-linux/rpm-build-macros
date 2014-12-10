@@ -1,4 +1,4 @@
-%define		rpm_macros_rev	1.699
+%define		rpm_macros_rev	1.700
 %define		find_lang_rev	1.36
 Summary:	PLD Linux RPM build macros
 Summary(pl.UTF-8):	Makra do budowania pakietów RPM dla Linuksa PLD
@@ -11,6 +11,7 @@ Source0:	rpm.macros
 Source1:	service_generator.sh
 Source3:	find-lang.sh
 Source4:	dokuwiki-find-lang.sh
+Source5:	rpm.macros.kernel
 Patch0:		disable-systemd.patch
 #Patchx: %{name}-pydebuginfo.patch
 BuildRequires:	rpm >= 4.4.9-56
@@ -49,6 +50,7 @@ Ten pakiet zawiera makra rpm-a do budowania pakietów dla Linuksa PLD.
 %setup -qcT
 cp -p %{SOURCE0} .
 cp -p %{SOURCE1} .
+cp -p %{SOURCE5} .
 
 %if "%{pld_release}" == "ac"
 %{__sed} -i -e '/libtoolize --copy --force --install/s/ --install//' rpm.macros
