@@ -16,12 +16,18 @@
 %_alt_kernel	%{nil}%{?alt_kernel:-%{?alt_kernel}}
 %_build_kernels	%{nil}%{?build_kernels:%{?build_kernels}}%{!?build_kernels:%{?alt_kernel}}
 
-%buildrequires_kernel	%(echo %{_build_kernels} | tr , '\\n' | while read n ; do \
-if [ -z "$n" -o "$n" = "head" ]; then \
-echo "BuildRequires:	kernel-module-build >= 3:2.6.20.2" \
-else \
-echo "BuildRequires:	kernel-$n-module-build >= 3:2.6.20.2" \
-fi; done)
+# Macros for building kernel packages for multiple kernels from same spec
+# Usage:
+#
+# %{expand:%buildrequires_kernel kernel%%{_alt_kernel}-module-build >= 3:2.6.20.2}}
+# %{expand:%create_kernel_packages}
+# %{expand:%build_kernel_packages}
+# %{expand:%install_kernel_packages}
+#
+%buildrequires_kernel()	%(echo %{_build_kernels} | tr , '\\n' | while read n ; do \
+[ -z "$n" -o "$n" = "head" ] || echo %%define alt_kernel $n \
+echo "BuildRequires:	%{1}" \
+done)
 
 %create_kernel_packages	%(echo %{_build_kernels} | tr , '\\n' | while read n ; do \
 echo %%undefine alt_kernel \
