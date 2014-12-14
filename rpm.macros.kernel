@@ -25,6 +25,7 @@
 # %{expand:%install_kernel_packages}
 #
 %buildrequires_kernel()	%(echo %{_build_kernels} | tr , '\\n' | while read n ; do \
+echo %%undefine alt_kernel \
 [ -z "$n" -o "$n" = "head" ] || echo %%define alt_kernel $n \
 echo "BuildRequires:	%{*}" \
 done)
