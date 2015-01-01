@@ -290,6 +290,9 @@ CPPFLAGS="${CPPFLAGS:-%{rpmcppflags}}" \\\
 %if "%{_lib}" == "lib64" \
 	-DLIB_SUFFIX=64 \\\
 %endif \
+%if "%{_lib}" == "libx32" \
+	-DLIB_SUFFIX=x32 \\\
+%endif \
 	-DBUILD_SHARED_LIBS:BOOL=ON \\\
 %{nil}
 
