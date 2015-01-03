@@ -1,4 +1,4 @@
-%define		rpm_macros_rev	1.704
+%define		rpm_macros_rev	1.705
 %define		find_lang_rev	1.36
 Summary:	PLD Linux RPM build macros
 Summary(pl.UTF-8):	Makra do budowania pakietów RPM dla Linuksa PLD

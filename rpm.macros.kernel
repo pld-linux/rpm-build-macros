@@ -90,6 +90,9 @@ done)
 # package version to be used in @release field
 %_kernel_ver_str	%(echo %{__kernel_qf %{V}-%{R}} | tr '-' '_')
 
+%_host_base_arch	%{expand:%%global _host_base_arch %(echo %{_host_cpu} | sed 's/i.86/i386/;s/athlon/i386/;s/pentium./i386/;s/amd64/x86_64/;s/ia32e/x86_64/;s/x32/x86_64/;s/sparcv./sparc/;s/arm.*/arm/')}%_host_base_arch
+%_target_base_arch	%{expand:%%global _target_base_arch %(echo %{_target_cpu} | sed 's/i.86/i386/;s/athlon/i386/;s/pentium./i386/;s/amd64/x86_64/;s/ia32e/x86_64/;s/x32/x86_64/;s/sparcv./sparc/;s/arm.*/arm/')}%_target_base_arch
+
 #-----------------------------------------------------------------
 # Find and gzip all kernel modules
 #
