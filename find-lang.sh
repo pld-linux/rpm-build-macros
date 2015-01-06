@@ -97,36 +97,36 @@ while test $# -gt 0; do
     case "$1" in
 	--with-gnome)
   		GNOME=''
-		echo "$PROG: Enabling with GNOME"
+		echo >&2 "$PROG: Enabling with GNOME"
 		shift
 		;;
 	--with-mate)
   		MATE=''
-		echo "$PROG: Enabling with MATE"
+		echo >&2 "$PROG: Enabling with MATE"
 		shift
 		;;
 	--with-kde)
-		echo "$PROG: Enabling with KDE"
+		echo >&2 "$PROG: Enabling with KDE"
 		KDE=''
 		shift
 		;;
 	--with-omf)
-		echo "$PROG: Enabling with OMF"
+		echo >&2 "$PROG: Enabling with OMF"
 		OMF=''
 		shift
 		;;
 	--with-qm)
-		echo "$PROG: Enabling with Qt QM"
+		echo >&2 "$PROG: Enabling with Qt QM"
 		QM=''
 		shift
 		;;
 	--without-mo)
-		echo "$PROG: Disabling .mo files"
+		echo >&2 "$PROG: Disabling .mo files"
 		MO='#'
 		shift
 		;;
 	--all-name)
-		echo "$PROG: Enabling with all names"
+		echo >&2 "$PROG: Enabling with all names"
 		ALL_NAME=''
 		NO_ALL_NAME='#'
 		shift
@@ -149,7 +149,7 @@ while test $# -gt 0; do
     esac
 done
 
-echo "$PROG/$VERSION: find-lang '$NAME' $APPEND> $OUTPUT"
+echo >&2 "$PROG/$VERSION: find-lang '$NAME' $APPEND> $OUTPUT"
 
 MO_NAME=.$OUTPUT.tmp~
 echo '%defattr(644,root,root,755)' > $MO_NAME
@@ -162,7 +162,7 @@ if [ ! -f __find.files ] || [ "$TOP_DIR" -nt __find.files ]; then
 		s/:.*//
 		s:'"$TOP_DIR"'::' > __find.files
 else
-	echo "$PROG: Using cached __find.files"
+	echo >&2 "$PROG: Using cached __find.files"
 fi
 
 # .omf
@@ -171,7 +171,7 @@ if [ ! -f __omf.files ] || [ "$TOP_DIR" -nt __omf.files ]; then
 	sed -e '
 		s:'"$TOP_DIR"'::' > __omf.files
 else
-	echo "$PROG: Using cached __omf.files"
+	echo >&2 "$PROG: Using cached __omf.files"
 fi
 
 # .qm
@@ -180,7 +180,7 @@ if [ ! -f __qm.files ] || [ "$TOP_DIR" -nt __qm.files ]; then
 	sed -e '
 		s:'"$TOP_DIR"'::' > __qm.files
 else
-	echo "$PROG: Using cached __qm.files"
+	echo >&2 "$PROG: Using cached __qm.files"
 fi
 
 # .mo
@@ -225,7 +225,7 @@ s:%lang(C) ::' >> $MO_NAME
 if [ ! -f __find.dirs ] || [ "$TOP_DIR" -nt __find.dirs ]; then
 	find $TOP_DIR -mindepth 1 -type d | sed 's:'"$TOP_DIR"'::' > __find.dirs
 else
-	echo "$PROG: Using cached __find.dirs"
+	echo >&2 "$PROG: Using cached __find.dirs"
 fi
 
 # gnome
