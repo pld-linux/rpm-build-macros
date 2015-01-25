@@ -36,7 +36,7 @@
 #   * start support for KDE help files
 
 PROG=${0##*/}
-VERSION=1.36
+VERSION=1.37
 
 usage () {
 cat <<EOF
@@ -217,8 +217,12 @@ s:%lang(C) ::' >> $MO_NAME
 		cat __qm.files
 	fi
 ) | sed '
-'"$ALL_NAME$QM"'s:\(.*/share/locale/\)\([^/@]\+\)\(@quot\|@boldquot\)\?\(@[^/]*\)\?\(/.*\.qm$\):%lang(\2\4) \1\2\3\4\5:
-'"$NO_ALL_NAME$QM"'s:\(.*/share/locale/\)\([^/@]\+\)\(@quot\|@boldquot\)\?\(@[^/]*\)\?\(/.*/'"$NAME"'\.qm$\):%lang(\2\4) \1\2\3\4\5:
+'"$NO_ALL_NAME$QM"'s:\(.*/'"$NAME"'_\([a-zA-Z]\{2\}\([_@].*\)\?\)\.qm$\):%lang(\2) \1:
+'"$ALL_NAME$QM"'s:\(.*/[^/_]\+_\([a-zA-Z]\{2\}[_@].*\)\.qm$\):%lang(\2) \1:
+'"$ALL_NAME$QM"'s:\(.*/[^/_]\+_\([a-zA-Z]\{2\}\)\.qm$\):%lang(\2) \1:
+'"$ALL_NAME$QM"'s:^\([^%].*/[^/]\+_\([a-zA-Z]\{2\}[_@].*\)\.qm$\):%lang(\2) \1:
+'"$ALL_NAME$QM"'s:^\([^%].*/[^/]\+_\([a-zA-Z]\{2\}\)\.qm$\):%lang(\2) \1:
+s:^[^%].*::
 /^[^%]/d
 s:%lang(C) ::' >> $MO_NAME
 
