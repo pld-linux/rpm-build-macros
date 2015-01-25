@@ -25,6 +25,8 @@ Conflicts:	coreutils < 6.9
 Conflicts:	gettext-devel < 0.11
 # tmpdir/_tmppath macros problems; optcppflags missing
 Conflicts:	rpm < 4.4.9-72
+# macros.d/kernel
+Conflicts:	rpm-build < 5.4.15-6
 # php-config --sysconfdir
 Conflicts:	php-devel < 4:5.2.0-3
 Conflicts:	php4-devel < 3:4.4.4-10
