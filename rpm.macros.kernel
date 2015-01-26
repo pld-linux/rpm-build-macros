@@ -93,23 +93,33 @@ done)
 %_host_base_arch	%{expand:%%global _host_base_arch %(echo %{_host_cpu} | sed 's/i.86/i386/;s/athlon/i386/;s/pentium./i386/;s/amd64/x86_64/;s/ia32e/x86_64/;s/x32/x86_64/;s/sparcv./sparc/;s/arm.*/arm/')}%_host_base_arch
 %_target_base_arch	%{expand:%%global _target_base_arch %(echo %{_target_cpu} | sed 's/i.86/i386/;s/athlon/i386/;s/pentium./i386/;s/amd64/x86_64/;s/ia32e/x86_64/;s/x32/x86_64/;s/sparcv./sparc/;s/arm.*/arm/')}%_target_base_arch
 
+# Compression used for %__spec_install_post_compress_modules
+# Supported values:
+# - "gzip -9nf" (module-init-tools and kmod)
+# - "xz" (kmod)
+# @since 1.707
+%kmod_compress_cmd %{__gzip} -9nf
+
 #-----------------------------------------------------------------
-# Find and gzip all kernel modules
+# Find and compress all kernel modules
 #
 # Requires: find
+# Depends: kmod_compress_cmd
 #
 #%no_install_post_compress_modules	1
 %__spec_install_post_compress_modules { \
 %{!?no_install_post_compress_modules: __spec_install_post_compress_modules() { \
 %{!?debug:set +x;} \
 	if [ -d $RPM_BUILD_ROOT/lib/modules ]; then \
+		tool=$(%{kmod_compress_cmd} --version | head -n1); \
+		ext=$(case "$tool" in gzip*) ext=gz;; xz*) ext=xz;; esac; \
 		q=$(find $RPM_BUILD_ROOT/lib/modules -name '*o' -type f -print); \
 		if [ "$q" ]; then \
 			printf "Compress %d kernel modules..." $(echo "$q" | wc -l); \
-			echo "$q" | xargs -r %{__gzip} -9nf; \
+			echo "$q" | xargs -r %{kmod_compress_cmd}; \
 			echo "DONE"; \
 			find $RPM_BUILD_ROOT/lib/modules -name '*o' -type l -printf "%p %l\n" | \
-			while read a b; do ln -sf $b.gz $a.gz; rm -f $a; done; \
+			while read a b; do ln -sf $b.$ext $a.$ext; rm -f $a; done; \
 		fi; \
 	fi; \
 }; __spec_install_post_compress_modules } }
