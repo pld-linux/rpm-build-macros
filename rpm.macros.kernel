@@ -97,6 +97,7 @@ done)
 # Supported values:
 # - "gzip -9nf" (module-init-tools and kmod)
 # - "xz" (kmod)
+# - "xz -9e" (kmod), however size difference with "xz" default options is very minimal
 # @since 1.707
 %kmod_compress_cmd %{__gzip} -9nf
 
