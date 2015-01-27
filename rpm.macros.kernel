@@ -113,7 +113,7 @@ done)
 %{!?debug:set +x;} \
 	if [ -d $RPM_BUILD_ROOT/lib/modules ]; then \
 		tool=$(%{kmod_compress_cmd} --version | head -n1); \
-		ext=$(case "$tool" in gzip*) ext=gz;; xz*) ext=xz;; esac; \
+		case "$tool" in gzip*) ext=gz;; xz*) ext=xz;; esac; \
 		q=$(find $RPM_BUILD_ROOT/lib/modules -name '*o' -type f -print); \
 		if [ "$q" ]; then \
 			printf "Compress %d kernel modules..." $(echo "$q" | wc -l); \
