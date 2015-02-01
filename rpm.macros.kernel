@@ -68,12 +68,24 @@ done)
 %requires_releq_kernel_up(s:n:)		Requires%{-s:(%{-s*})}: %releq_kernel_up
 %requires_releq_kernel_smp(s:n:)	Requires%{-s:(%{-s*})}: %releq_kernel_smp
 
-# kernel version-release handling
-%__kernel_ver	 %( \\
+# kernel version-release handling, `uname -r` used for building/installing kernel modules
+%_kernel_ver	 %( \\
 	Z=$([ -f '%{_kernelsrcdir}/include/generated/utsrelease.h' ] && \\
 		awk -F'"' '/UTS_RELEASE/{print $2}' %{_kernelsrcdir}/include/{linux/version,generated/utsrelease}.h 2>/dev/null || \\
 		awk -F'"' '/UTS_RELEASE/{print $2}' %{_kernelsrcdir}/include/linux/{version,utsrelease}.h 2>/dev/null); \\
 	Z=${Z:-$(awk -F' = ' '/^VERSION/{v=$2} /^PATCHLEVEL/{p=$2} /^SUBLEVEL/{s=$2} /^EXTRAVERSION/{e=$2} END {printf("%d.%d.%d%s", v, p, s, e)}' \\
+		%{_kernelsrcdir}/Makefile 2>/dev/null)}; \\
+	echo ${Z:-ERROR}; \\
+)
+# left for compatibility
+%__kernel_ver		%{_kernel_ver}
+
+# package version to be used in @release field
+%_kernel_ver_str	 %( \\
+	Z=$([ -f '%{_kernelsrcdir}/include/generated/utsrelease.h' ] && \\
+		awk -F'"' '/UTS_RELEASE/{gsub(/-/,"_",$2); print $2}' %{_kernelsrcdir}/include/{linux/version,generated/utsrelease}.h 2>/dev/null || \\
+		awk -F'"' '/UTS_RELEASE/{gsub(/-/,"_",$2); print $2}' %{_kernelsrcdir}/include/linux/{version,utsrelease}.h 2>/dev/null); \\
+	Z=${Z:-$(awk -F' = ' '/^VERSION/{v=$2} /^PATCHLEVEL/{p=$2} /^SUBLEVEL/{s=$2} /^EXTRAVERSION/{e=$2} END {z=sprintf("%d.%d.%d%s", v, p, s, e); gsub(/-/,"_",z); print z}' \\
 		%{_kernelsrcdir}/Makefile 2>/dev/null)}; \\
 	echo ${Z:-ERROR}; \\
 )
@@ -84,11 +96,6 @@ done)
 )
 
 %_kernel_version_magic()	 %(echo $((%{1} * 65536 + %{2} * 256 + %{3})))
-
-# `uname -r` used for building/installing kernel modules
-%_kernel_ver		%{__kernel_qf %{V}-%{R}}
-# package version to be used in @release field
-%_kernel_ver_str	%(echo %{__kernel_qf %{V}-%{R}} | tr '-' '_')
 
 %_host_base_arch	%{expand:%%global _host_base_arch %(echo %{_host_cpu} | sed 's/i.86/i386/;s/athlon/i386/;s/pentium./i386/;s/amd64/x86_64/;s/ia32e/x86_64/;s/x32/x86_64/;s/sparcv./sparc/;s/arm.*/arm/')}%_host_base_arch
 %_target_base_arch	%{expand:%%global _target_base_arch %(echo %{_target_cpu} | sed 's/i.86/i386/;s/athlon/i386/;s/pentium./i386/;s/amd64/x86_64/;s/ia32e/x86_64/;s/x32/x86_64/;s/sparcv./sparc/;s/arm.*/arm/')}%_target_base_arch
