@@ -170,39 +170,8 @@ get-buildlog() {
 
 fi # no $dist set
 
-alias cv='cvs status -v'
 alias adif="dif -x '*.m4' -x ltmain.sh -x install-sh -x depcomp -x 'Makefile.in' -x compile -x 'config.*' -x configure -x missing -x mkinstalldirs -x autom4te.cache"
 alias pclean="sed -i~ -e '/^\(?\|=\+$\|unchanged:\|diff\|only\|Only\|Files\|Common\|Index:\|RCS file\|retrieving\)/d'"
-
-# makes diff from PLD CVS urls
-# requires: cvs, tee
-urldiff() {
-	local url="$1"
-	if [ -z "$url" ]; then
-		echo >&2 "Reading STDIN"
-		read url
-	fi
-
-	echo >&2 "Process $url"
-	local file="$url"
-	file=${file#*SPECS/}
-	file=${file#*SOURCES/}
-	file=${file##*/}
-	local r1=${file#*r1=}
-	local r2=${r1#*r2=}
-	r2=${r2%%[&;]*}
-	r1=${r1%%[&;]*}
-	file=${file%\?*}
-	file=${file%.diff}
-
-	echo >&2 "$file: $r1 -> $r2"
-
-	if [ -t 1 ]; then
-		cvs diff -u -r$r1 -r$r2 $file | tee m.patch | diffcol
-	else
-		cvs diff -u -r$r1 -r$r2 $file
-	fi
-}
 
 # makes diff from kde svn path
 # requires: wget, tee
@@ -269,14 +238,6 @@ sed -e '
 	s,\([^[:space:]]\)\([[:space:]]\+\)$,\1[41m\2[49m,g;
 	s,$,[0m,
 ' ${1:+"$@"}
-}
-
-# chdir to file location and do 'cvs log'
-cvslog() {
-	local f="$1"
-	local d="${f%/*}"
-	[ "$d" = "$f" ] && d=.
-	(builtin cd $d && cvs log ${f##*/})
 }
 
 # does diff between FILE~ and FILE
