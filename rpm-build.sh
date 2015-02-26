@@ -19,6 +19,8 @@ alias $dist-tag="./builder -cf -T $(echo $dist | tr '[a-z]' '[A-Z]')-branch -r H
 alias $dist-verify=dist-verify
 alias $dist-requires=dist-requires
 
+alias q='rpm -q --qf "%{N}-%|E?{%{E}:}|%{V}-%{R}.%{ARCH}\n"'
+
 # undo spec utf8
 # note: it will do it blindly, so any lang other than -pl is most likely broken
 specutfundo() {
