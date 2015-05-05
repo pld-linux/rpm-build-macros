@@ -839,6 +839,8 @@ fi; \
 	%{?_noautoreq_pear: %{__noauto_regexp_helper -p pear %{_noautoreq_pear}}} \
 	%{?_noautoreq_perl: %{__noauto_regexp_helper -p perl %{_noautoreq_perl}}} \
 	%{?_noautoreq_java: %{__noauto_regexp_helper -p java %{_noautoreq_java}}} \
+	%{?_noautoreq_pyegg: %{__noauto_regexp_helper -p pythonegg %{_noautoreq_pyegg}}} \
+	%{?_noautoreq_py3egg: %{__noauto_regexp_helper -p python3egg %{_noautoreq_py3egg}}} \
 	%{nil}
 
 # helper for wrapping _noautoreq between perl() or pear()
