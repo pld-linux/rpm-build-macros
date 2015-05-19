@@ -15,7 +15,6 @@ if [ "$dist" ]; then
 
 alias ipoldek-$dist="poldek -q --sn $dist --cmd"
 alias $dist-provides="ipoldek-$dist what-provides"
-alias $dist-tag="./builder -cf -T $(echo $dist | tr '[a-z]' '[A-Z]')-branch -r HEAD"
 alias $dist-verify=dist-verify
 alias $dist-requires=dist-requires
 
