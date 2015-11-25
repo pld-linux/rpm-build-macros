@@ -1074,6 +1074,53 @@ fi \
 
 %py3_ocomp		%{__python3} -O -c "import compileall; import sys; compileall.compile_dir(sys.argv[1], ddir=sys.argv[1][len('$RPM_BUILD_ROOT'):])"
 
+%py_build	{ \
+	LDFLAGS="${LDFLAGS:-%rpmldflags}"; export LDFLAGS; \
+	CFLAGS="${CFLAGS:-%rpmcppflags %rpmcflags}"; export CFLAGS; \
+	CXXFLAGS="${CXXFLAGS:-%rpmcppflags %rpmcxxflags}"; export CXXFLAGS; \
+	%{?__cc:CC="%{__cc}"; export CC;} \
+	%{?__cxx:CXX="%{__cxx}"; export CXX;} \
+	%{__python} setup.py \
+				build --build-base build-2 \
+}
+
+%py_install	{ \
+	LDFLAGS="${LDFLAGS:-%rpmldflags}"; export LDFLAGS; \
+	CFLAGS="${CFLAGS:-%rpmcppflags %rpmcflags}"; export CFLAGS; \
+	CXXFLAGS="${CXXFLAGS:-%rpmcppflags %rpmcxxflags}"; export CXXFLAGS; \
+	%{?__cc:CC="%{__cc}"; export CC;} \
+	%{?__cxx:CXX="%{__cxx}"; export CXX;} \
+	%{__python} setup.py \
+				build --build-base build-2 \
+				install --skip-build \
+				--prefix=%{_prefix} \
+				--optimize=2 \
+				--root=$RPM_BUILD_ROOT \
+}
+
+%py3_build	{ \
+	LDFLAGS="${LDFLAGS:-%rpmldflags}"; export LDFLAGS; \
+	CFLAGS="${CFLAGS:-%rpmcppflags %rpmcflags}"; export CFLAGS; \
+	CXXFLAGS="${CXXFLAGS:-%rpmcppflags %rpmcxxflags}"; export CXXFLAGS; \
+	%{?__cc:CC="%{__cc}"; export CC;} \
+	%{?__cxx:CXX="%{__cxx}"; export CXX;} \
+	%{__python3} setup.py build --build-base build-3 \
+}
+
+%py3_install	{ \
+	LDFLAGS="${LDFLAGS:-%rpmldflags}"; export LDFLAGS; \
+	CFLAGS="${CFLAGS:-%rpmcppflags %rpmcflags}"; export CFLAGS; \
+	CXXFLAGS="${CXXFLAGS:-%rpmcppflags %rpmcxxflags}"; export CXXFLAGS; \
+	%{?__cc:CC="%{__cc}"; export CC;} \
+	%{?__cxx:CXX="%{__cxx}"; export CXX;} \
+	%{__python3} setup.py \
+				build --build-base build-3 \
+				install --skip-build \
+				--prefix=%{_prefix} \
+				--optimize=2 \
+				--root=$RPM_BUILD_ROOT \
+}
+
 # node.js libdir
 # Requirements:
 # BuildRequires: rpmbuild(macros) >= 1.634
