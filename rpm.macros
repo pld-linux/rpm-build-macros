@@ -727,6 +727,36 @@ __spec_install_post_check_tmpfiles() { \
 	%{!?no_install_post_check_tmpfiles:return $fail;} \
 }; __spec_install_post_check_tmpfiles }}
 
+#-----------------------------------------------------------------
+# Verify that scripts have reasonable shebangs
+#
+#%no_install_post_check_shebangs 1
+#
+%__spec_install_post_check_shebangs { \
+__spec_install_post_check_shebangs() { \
+%{!?debug:set +x;} \
+	fail=0; \
+	echo "Checking script shebangs..."; \
+	for f in $(find $RPM_BUILD_ROOT -type f -perm -500 -print) ; do \
+		shebang=$(sed -e'1s/#! *\(.*\)/\1/;t;d;q' "$f") ; \
+		f=${f##$RPM_BUILD_ROOT}; \
+		case "$shebang" in \
+			"%{__python}"|"%{__python3}"|"%{__python} "*|"%{__python3} ") \
+				;; \
+			"/usr/bin/env python"*|"/usr/bin/python"|"/usr/bin/python "*) \
+				echo "$f starts with '#!$shebang', should be '#!%{__python}' or '#!%{__python3}'" >&2;\
+				fail=1 ; \
+				;; \
+			"/usr/bin/env "*) \
+				echo "$f starts with '#!$shebang', should be explicit interpreter path" >&2;\
+				fail=1 ; \
+				;; \
+			*) ;;\
+		esac ; \
+	done ; \
+	echo " DONE" ; \
+}; %{!?no_install_post_check_shebangs:__spec_install_post_check_shebangs} }
+
 # Remove common Perl files we don't package
 %__spec_install_post_perl_clean {\
 %{!?no_install_post_perl_clean: \
