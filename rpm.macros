@@ -741,7 +741,7 @@ __spec_install_post_check_shebangs() { \
 		shebang=$(sed -e'1s/#! *\(.*\)/\1/;t;d;q' "$f") ; \
 		f=${f##$RPM_BUILD_ROOT}; \
 		case "$shebang" in \
-			"%{__python}"|"%{__python3}"|"%{__python} "*|"%{__python3} " \
+			"%{__python}"|"%{__python3}"|"%{__python} "*|"%{__python3} "* \
 			|"/usr/bin/python%{py_ver}"|"/usr/bin/python%{py_ver} "* \
 			|"/usr/bin/python%{py3_ver}"|"/usr/bin/python%{py3_ver} "*) \
 				;; \
