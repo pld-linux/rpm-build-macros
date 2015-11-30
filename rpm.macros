@@ -729,6 +729,7 @@ __spec_install_post_check_tmpfiles() { \
 
 #-----------------------------------------------------------------
 # Verify that scripts have reasonable shebangs
+# Test spec: see "test/spec_install_post_check_shebangs" branch on packages/test.spec
 #
 #%no_install_post_check_shebangs 1
 #
