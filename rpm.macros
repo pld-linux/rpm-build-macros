@@ -1127,6 +1127,8 @@ fi \
 				build --build-base=build-2 \
 				install --skip-build \
 				--prefix=%{_prefix} \
+				--install-purelib=%{py_sitescriptdir} \
+				--install-platlib=%{py_sitedir} \
 				--optimize=2 \
 				--root=$RPM_BUILD_ROOT \
 }
@@ -1150,6 +1152,8 @@ fi \
 				build --build-base=build-3 \
 				install --skip-build \
 				--prefix=%{_prefix} \
+				--install-purelib=%{py3_sitescriptdir} \
+				--install-platlib=%{py3_sitedir} \
 				--optimize=2 \
 				--root=$RPM_BUILD_ROOT \
 }
