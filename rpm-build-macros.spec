@@ -77,12 +77,12 @@ fi
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d
 
-cp -a rpm.macros $RPM_BUILD_ROOT%{_usrlibrpm}/macros.build
-cp -a rpm.macros.kernel $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/kernel
+cp -p rpm.macros $RPM_BUILD_ROOT%{_usrlibrpm}/macros.build
+cp -p rpm.macros.kernel $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/kernel
 
 install -p service_generator.sh $RPM_BUILD_ROOT%{_usrlibrpm}
 install -p %{SOURCE3} $RPM_BUILD_ROOT%{_usrlibrpm}/find-lang.sh
-install -p %{SOURCE4} $RPM_BUILD_ROOT%{_usrlibrpm}
+install -p %{SOURCE4} $RPM_BUILD_ROOT%{_usrlibrpm}/dokuwiki-find-lang.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
