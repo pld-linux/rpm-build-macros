@@ -977,7 +977,7 @@ fi; \
 %__php					/usr/bin/php%{php_versuffix}
 
 # helper macro
-%__php_api_requires(v:) Requires: %{php_name}(%{expand:%1}) = %{expand:%{%{!?2:%{1}}%{?2}}}
+%__php_api_requires() Requires: %{php_name}(%{expand:%1}) = %{expand:%{%{!?2:%{1}}%{?2}}}
 
 # macros for public use
 # for php extensions (php-pecl)
