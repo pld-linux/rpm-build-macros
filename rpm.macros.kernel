@@ -176,7 +176,7 @@ done)
 	CC="%{__cc}"													\\\
 %endif																\
 %define	MakeOpts HOSTCC="%{__cc}" SYSSRC=%{_kernelsrcdir} SYSOUT=$PWD/o \\\\\\\
-		O=$PWD/o %{?with_verbose:V=1} %{Opts}						\
+		%{?with_verbose:V=1} %{Opts}						\
 																	\
 %{?-C:cd %{-C*}}													\
 compile() {															\
@@ -235,7 +235,7 @@ compile %{*}														\
 	CC="%{__cc}"													\\\
 %endif																\
 %define	MakeOpts HOSTCC="%{__cc}" SYSSRC=%{_kernelsrcdir} SYSOUT=$PWD/o \\\\\\\
-		O=$PWD/o %{?with_verbose:V=1} %{Opts}						\
+		%{?with_verbose:V=1} %{Opts}						\
 																	\
 %{?-C:cd %{-C*}}													\
 compile() {															\
