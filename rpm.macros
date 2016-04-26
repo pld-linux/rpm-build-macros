@@ -738,9 +738,10 @@ __spec_install_post_check_shebangs() { \
 %{!?debug:set +x;} \
 	fail=0; \
 	echo "Checking script shebangs..."; \
-	for f in $(find $RPM_BUILD_ROOT -type f -perm -500 -print) ; do \
-		shebang=$(sed -e'1s/#! *\(.*\)/\1/;t;d;q' "$f") ; \
-		f=${f##$RPM_BUILD_ROOT}; \
+	find $RPM_BUILD_ROOT -type f -perm -500 -print | \
+	while read f ; do \
+		shebang="$(sed -e'1s/#! *\(.*\)/\1/;t;d;q' "$f")" ; \
+		f="${f##$RPM_BUILD_ROOT}"; \
 		case "$shebang" in \
 			"%{__python}"|"%{__python3}"|"%{__python} "*|"%{__python3} "* \
 			|"/usr/bin/python%{py_ver}"|"/usr/bin/python%{py_ver} "* \
