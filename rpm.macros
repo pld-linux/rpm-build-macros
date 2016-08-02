@@ -2270,7 +2270,7 @@ want_enable_service() { \
 # Requires(post,postun):	vim-rt >= 4:7.4.2054-2
 %vim_doc_helptags() \
 umask 022; \
-/usr/bin/vim -c ':helptags %{_datadir}/vim/doc' -c ':q' 2>/dev/null \
+/usr/bin/vim -c ':helptags /usr/share/vim/doc' -c ':q' 2>/dev/null \
 %{nil}
 
 # EOF
