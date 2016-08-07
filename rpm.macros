@@ -82,7 +82,7 @@
 )}%_topdir
 
 # if %{_topdir}/SPECS exists, it's old style structure
-%_specdir       %{expand:%%global _specdir %([ ! -d %{_topdir}/SPECS ] && echo %{_topdir}/%{name} || echo %{_topdir}/SPECS)}%_specdir
+%_specdir		%{expand:%%global _specdir %([ ! -d %{_topdir}/SPECS ] && echo %{_topdir}/%{name} || echo %{_topdir}/SPECS)}%_specdir
 %_sourcedir		%{expand:%%global _sourcedir %([ ! -d %{_topdir}/SOURCES ] && echo %{_specdir} || echo %{_topdir}/SOURCES)}%_sourcedir
 
 # BUILD/RPMS/SRPMS are on same level by default as packages dir, if these exist
@@ -486,7 +486,7 @@ Provides: %{1} = %{?epoch:%{epoch}:}%{?version:%{version}}%{?release:-%{release}
 'DTDDECL "-//OASIS//DTD DocBook XML V%2//EN" "../../xml.dcl"' \
 '  -- hacks for opensp --' \
 'SYSTEM "file://%{_datadir}/sgml/docbook/xml-dtd-%2/docbookx.dtd" "%{_datadir}/sgml/docbook/xml-dtd-%2/docbookx.dtd"' \
-'SYSTEM "http://www.oasis-open.org/docbook/xml/%2/docbookx.dtd"                  "%{_datadir}/sgml/docbook/xml-dtd-%2/docbookx.dtd"' \
+'SYSTEM   "http://www.oasis-open.org/docbook/xml/%2/docbookx.dtd" "%{_datadir}/sgml/docbook/xml-dtd-%2/docbookx.dtd"' \
 '' \
 ; do echo $l; done >> %1 \
 }
@@ -719,7 +719,7 @@ __spec_install_post_check_tmpfiles() { \
 		[ -d "$d" ] || continue; \
 		d=${d##$RPM_BUILD_ROOT}; \
 		if ! grep -qsF "$d" $RPM_BUILD_ROOT/usr/lib/tmpfiles.d/*.conf $RPM_BUILD_ROOT/etc/tmpfiles.d/*.conf; then\
-		    echo "No tmpfiles configuration for '$d'";\
+			echo "No tmpfiles configuration for '$d'";\
 			fail=1 ; \
 		fi \
 	done ; \
@@ -816,8 +816,8 @@ fi; \
 
 #-----------------------------------------------------------------
 # Update icon cache
-# BuildRequires:  rpmbuild(macros) >= 1.596
-# Requires:  hicolor-icon-theme
+# BuildRequires:	rpmbuild(macros) >= 1.596
+# Requires:		hicolor-icon-theme
 #
 %update_icon_cache() {{ \
 	%{!?1:%{error:%{0}: Required theme name missing}} \
@@ -897,7 +897,7 @@ fi; \
 %_missing_doc_files_terminate_build	1%{nil}
 %_unpackaged_files_terminate_build	%{nil}
 # (X)emacs support
-%___emacs_lispdir_helper  -batch -q -eval '(while load-path (princ (concat (car load-path) "\\n")) (setq load-path (cdr load-path)))' 2> /dev/null|sed -n '/\\(.*\\/x\\?emacs\\/site-lisp\\)\\/\\?$/{s,,\\1,p;q;}'
+%___emacs_lispdir_helper -batch -q -eval '(while load-path (princ (concat (car load-path) "\\n")) (setq load-path (cdr load-path)))' 2> /dev/null|sed -n '/\\(.*\\/x\\?emacs\\/site-lisp\\)\\/\\?$/{s,,\\1,p;q;}'
 %_emacs_lispdir %{expand:%%global _emacs_lispdir %(Z=$(emacs %___emacs_lispdir_helper); echo ${Z:-ERROR})}%_emacs_lispdir
 %_xemacs_lispdir %{expand:%%global _xemacs_lispdir %(Z=$(xemacs %___emacs_lispdir_helper); echo ${Z:-ERROR})}%_xemacs_lispdir
 
@@ -1285,11 +1285,11 @@ fi; \
 # You can use any form of here-document, <<'EOF' <<-EOT will do.
 # NOTE: if your use "<<-EOF", then You can actually indent inside here-document.
 #
-# -a   - append to the banner
-# -e   - send to stderr instead of stdout
-# -n   - no show banner (overrides -t)
-# -t   - show only, if RPM_SCRIPTVERBOSITY >= n; default n=5
-# -o   - show only once, i.e when package is installed for the first time
+# -a	- append to the banner
+# -e	- send to stderr instead of stdout
+# -n	- don't show banner (overrides -t)
+# -t	- show only, if RPM_SCRIPTVERBOSITY >= n; default n=5
+# -o	- show only once, i.e when package is installed for the first time
 #
 # Tests:
 # (rpm -E '%banner -e banner <<EOF'; echo -e 'hi\nEOF') > m; sh -x m
@@ -1501,12 +1501,12 @@ cat > $RPM_BUILD_ROOT%{_bindir}/%5 << 'EOF' \
 \
 # Source system prefs\
 if [ -f %{_sysconfdir}/java/%{name}.conf ]; then\
-    . %{_sysconfdir}/java/%{name}.conf\
+      . %{_sysconfdir}/java/%{name}.conf\
 fi\
 \
 # Source user prefs\
 if [ -f $HOME/.%{name}rc ]; then\
-    . $HOME/.%{name}rc\
+      . $HOME/.%{name}rc\
 fi\
 \
 # Configuration\
@@ -2123,12 +2123,12 @@ fi; \
 %{nil}
 
 # Haskell Macros
-# BuildRequires:  rpmbuild(macros) >= 1.608
+# BuildRequires:	rpmbuild(macros) >= 1.608
 %ghcdir		ghc-%(/usr/bin/ghc --numeric-version 2>/dev/null || echo ERROR)
 
 # update /usr/lib*/ghc-*/package.conf.d/package.cache
 # Requires: ghc
-# BuildRequires:  rpmbuild(macros) >= 1.607
+# BuildRequires:	rpmbuild(macros) >= 1.607
 #
 %ghc_pkg_recache() {{ \
 	umask 022; \
@@ -2139,8 +2139,8 @@ fi; \
 
 # pre/post script for packages supporting systemd units
 #
-# Author: Bartlomiej Zimon <uzi18@o2.pl>
-#		  Jan Rękorajski <baggins@mimuw.edu.pl>
+# Authors:	Bartlomiej Zimon <uzi18@o2.pl>
+#		Jan Rękorajski <baggins@mimuw.edu.pl>
 #
 # Usage:
 # %systemd_reload
@@ -2177,7 +2177,7 @@ fi; \
 
 %systemd_service_enable() \
 	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
-	/bin/systemctl --quiet enable %{*} || : \
+	/bin/systemctl preset --preset-mode=enable-only %{*} >/dev/null || : \
 	/bin/systemd_booted && echo 'Run "/bin/systemctl start %{*}" to start %{*}.' || : \
 %{nil}
 
@@ -2201,16 +2201,19 @@ fi; \
 	/bin/systemd_booted && /bin/systemctl --quiet stop %{*} || : \
 %{nil}
 
+# doesn't honour RPM_SKIP_AUTO_RESTART, avoid using
 %systemd_service_restart() \
 	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
 	/bin/systemd_booted && /bin/systemctl --quiet try-restart %{*} || : \
 %{nil}
 
+# doesn't honour RPM_SKIP_AUTO_RESTART, avoid using
 %systemd_service_reload() \
 	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
 	/bin/systemd_booted && /bin/systemctl --quiet reload %{*} || : \
 %{nil}
 
+# NOTE: this trigger disobeys systemd.preset in favour of RPM_ENABLE_SYSTEMD_SERVICE
 %systemd_trigger() \
 want_enable_service() { \
 	[ -f /etc/sysconfig/rpm ] && . /etc/sysconfig/rpm \
@@ -2226,11 +2229,12 @@ want_enable_service() { \
 	done \
 %{nil}
 
+# TODO: resurrect RPM_SKIP_AUTO_RESTART by using $(skip_auto_restart) function defined by %service from service_generator.sh
 %systemd_post() \
 	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
 	/bin/systemd_booted && /bin/systemctl --quiet daemon-reload || : \
 	if [ $1 -eq 1 ]; then \
-		/bin/systemctl --quiet enable %{*} || : \
+		/bin/systemctl preset --preset-mode=enable-only %{*} || >/dev/null : \
 		/bin/systemd_booted && echo 'Run "/bin/systemctl start %{*}" to start %{*}.' || : \
 	elif [ -z "$NORESTART" ]; then \
 		/bin/systemd_booted && /bin/systemctl --quiet try-restart %{*} || : \
