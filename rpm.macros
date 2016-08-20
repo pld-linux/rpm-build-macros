@@ -2182,7 +2182,7 @@ fi; \
 
 %systemd_service_enable() \
 	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
-	/bin/systemctl preset --preset-mode=enable-only %{*} >/dev/null || : \
+	/bin/systemctl preset --preset-mode=enable-only %{*} || : \
 	/bin/systemd_booted && echo 'Run "/bin/systemctl start %{*}" to start %{*}.' || : \
 %{nil}
 
