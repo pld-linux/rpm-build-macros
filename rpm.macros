@@ -1177,9 +1177,14 @@ fi \
 
 # bash-completion 2.0 completions dir
 # Requirements:
-# BuildRequires: rpmbuild(macros) >= 1.673
+# BuildRequires:	rpmbuild(macros) >= 1.673
 # Requires:	bash-completion >= 2.0
 %bash_compdir		/usr/share/bash-completion/completions
+
+# zsh completions dir
+# Requirements:
+# BuildRequires:	rpmbuild(macros) >= 1.719
+%zsh_compdir		/usr/share/zsh/site-functions
 
 # Hardlink binary identical .pyc and .pyo files
 %__spec_install_post_py_hardlink {\
