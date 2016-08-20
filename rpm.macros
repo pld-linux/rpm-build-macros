@@ -1181,6 +1181,11 @@ fi \
 # Requires:	bash-completion >= 2.0
 %bash_compdir		/usr/share/bash-completion/completions
 
+# fish completions dir
+# Requirements:
+# BuildRequires:	rpmbuild(macros) >= 1.720
+%fish_compdir		/usr/share/fish/vendor_completions.d
+
 # zsh completions dir
 # Requirements:
 # BuildRequires:	rpmbuild(macros) >= 1.719
