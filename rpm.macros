@@ -1434,6 +1434,9 @@ fi \
 # calls usual service restart on package %post, but skips the restart if
 # administrator has disabled automatic service restarts in either global
 # /etc/sysconfig/rpm or per service /etc/sysconfig/SERVICE file.
+# NOTE: systemd_booted machines do not print
+#		Run "{command}" to restart {service}.
+# message for packages without native systemd unit (not here, no %systemd_post).
 #
 # Usage:
 #   %service [-q] [-n] SERVICE ACTION ["SERVICE NICE DESCRIPTION"]
@@ -2217,13 +2220,13 @@ fi; \
 	/bin/systemd_booted && /bin/systemctl --quiet stop %{*} || : \
 %{nil}
 
-# doesn't honour RPM_SKIP_AUTO_RESTART, avoid using
+# NOTE: doesn't honour RPM_SKIP_AUTO_RESTART, avoid using
 %systemd_service_restart() \
 	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
 	/bin/systemd_booted && /bin/systemctl --quiet try-restart %{*} || : \
 %{nil}
 
-# doesn't honour RPM_SKIP_AUTO_RESTART, avoid using
+# NOTE: doesn't honour RPM_SKIP_AUTO_RESTART, avoid using
 %systemd_service_reload() \
 	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
 	/bin/systemd_booted && /bin/systemctl --quiet reload %{*} || : \
@@ -2245,7 +2248,6 @@ want_enable_service() { \
 	done \
 %{nil}
 
-# TODO: resurrect RPM_SKIP_AUTO_RESTART by using $(skip_auto_restart) function defined by %service from service_generator.sh
 %systemd_post() \
 	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
 	/bin/systemd_booted && /bin/systemctl --quiet daemon-reload || : \
