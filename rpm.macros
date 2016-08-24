@@ -2243,7 +2243,7 @@ want_enable_service() { \
 	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
 	for s in %{*}; do \
 		if want_enable_service $s; then \
-			/bin/systemctl --quiet enable $s || : \
+			/bin/systemctl enable $s || : \
 		fi \
 	done \
 %{nil}
