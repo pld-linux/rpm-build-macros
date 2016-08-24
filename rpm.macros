@@ -807,9 +807,15 @@ fi; \
 #-----------------------------------------------------------------
 # Update shared MIME info database
 # requires: shared-mime-info
+# Note:	https://bugs.freedesktop.org/show_bug.cgi?id=70366#c19
+#	https://bugzilla.redhat.com/show_bug.cgi?id=1052173
+# TODO:	if you want this running with fdatasync(), make sure it's:
+#	1. announcing ~minute delay by echoing appropriate message,
+#	2. running only once after rpm transaction.
 #
 %update_mime_database() {{ \
 	umask 022; \
+	PKGSYSTEM_ENABLE_FSYNC=0 \\\
 	/usr/bin/update-mime-database %{_datadir}/mime; \
 };} \
 %{nil}
