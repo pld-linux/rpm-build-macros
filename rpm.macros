@@ -2192,7 +2192,7 @@ fi; \
 # BuildRequires:	rpmbuild(macros) >= 1.671
 # Requires:	systemd-units >= 38
 
-%systemd_reload /bin/systemd_booted && SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog /bin/systemctl --quiet daemon-reload || :
+%systemd_reload /bin/systemd_booted && SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog /bin/systemctl daemon-reload || :
 
 %systemd_service_enable() \
 	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
@@ -2207,29 +2207,29 @@ fi; \
 
 %systemd_service() \
 	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
-	/bin/systemd_booted && /bin/systemctl --quiet %{*} || : \
+	/bin/systemd_booted && /bin/systemctl %{*} || : \
 %{nil}
 
 %systemd_service_start() \
 	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
-	/bin/systemd_booted && /bin/systemctl --quiet start %{*} || : \
+	/bin/systemd_booted && /bin/systemctl start %{*} || : \
 %{nil}
 
 %systemd_service_stop() \
 	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
-	/bin/systemd_booted && /bin/systemctl --quiet stop %{*} || : \
+	/bin/systemd_booted && /bin/systemctl stop %{*} || : \
 %{nil}
 
 # NOTE: doesn't honour RPM_SKIP_AUTO_RESTART, avoid using
 %systemd_service_restart() \
 	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
-	/bin/systemd_booted && /bin/systemctl --quiet try-restart %{*} || : \
+	/bin/systemd_booted && /bin/systemctl try-restart %{*} || : \
 %{nil}
 
 # NOTE: doesn't honour RPM_SKIP_AUTO_RESTART, avoid using
 %systemd_service_reload() \
 	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
-	/bin/systemd_booted && /bin/systemctl --quiet reload %{*} || : \
+	/bin/systemd_booted && /bin/systemctl reload %{*} || : \
 %{nil}
 
 # NOTE: this trigger disobeys systemd.preset in favour of RPM_ENABLE_SYSTEMD_SERVICE
@@ -2250,12 +2250,12 @@ want_enable_service() { \
 
 %systemd_post() \
 	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
-	/bin/systemd_booted && /bin/systemctl --quiet daemon-reload || : \
+	/bin/systemd_booted && /bin/systemctl daemon-reload || : \
 	if [ $1 -eq 1 ]; then \
 		/bin/systemctl preset --preset-mode=enable-only %{*} || >/dev/null : \
 		/bin/systemd_booted && echo 'Run "/bin/systemctl start %{*}" to start %{*}.' || : \
 	elif [ -z "$NORESTART" ]; then \
-		/bin/systemd_booted && /bin/systemctl --quiet try-restart %{*} || : \
+		/bin/systemd_booted && /bin/systemctl try-restart %{*} || : \
 	else \
 		/bin/systemd_booted && echo 'Run "/bin/systemctl restart %{*}" to restart %{*}.' || : \
 	fi \
@@ -2264,7 +2264,7 @@ want_enable_service() { \
 %systemd_preun() \
 	if [ $1 -eq 0 ]; then \
 		export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
-		/bin/systemd_booted && /bin/systemctl --quiet stop %{*} || : \
+		/bin/systemd_booted && /bin/systemctl stop %{*} || : \
 		/bin/systemctl --quiet disable %{*} || : \
 	fi \
 %{nil}
