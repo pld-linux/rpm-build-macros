@@ -2252,7 +2252,7 @@ want_enable_service() { \
 	export SYSTEMD_LOG_LEVEL=warning SYSTEMD_LOG_TARGET=syslog \
 	/bin/systemd_booted && /bin/systemctl daemon-reload || : \
 	if [ $1 -eq 1 ]; then \
-		/bin/systemctl preset --preset-mode=enable-only %{*} || >/dev/null : \
+		/bin/systemctl preset --preset-mode=enable-only %{*} >/dev/null || : \
 		/bin/systemd_booted && echo 'Run "/bin/systemctl start %{*}" to start %{*}.' || : \
 	elif [ -z "$NORESTART" ]; then \
 		/bin/systemd_booted && /bin/systemctl try-restart %{*} || : \
