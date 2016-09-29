@@ -891,6 +891,9 @@ fi; \
 # %define _noautoreq_perl Apache::.*
 # BuildRequires:	rpmbuild(macros) >= 1.672
 # %define _noautoreq_java ClassDataVersion
+# BuildRequires:	rpmbuild(macros) >= 1.709
+# %define _noautoreq_pyegg argparse
+# %define _noautoreq_py3egg backports.ssl-match-hostname ipaddress
 #
 %__noauto_regexp_helper(p:) %(echo "%*" | awk 'BEGIN{RS=" "}{printf("%{-p*}%{__qchar}(%%s%{__qchar}) ", $1)}')
 # detect quote character runtime
