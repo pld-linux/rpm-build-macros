@@ -8,7 +8,6 @@
 
 %epoch		0
 %x8664		x86_64 amd64 ia32e
-%arm		armv3l armv4b armv4l armv5teb armv5tel
 
 # compiler version
 %cc_version	%{expand:%%global cc_version %(%{__cc} -dumpversion 2>/dev/null || echo 0.0)}%cc_version
@@ -766,6 +765,15 @@ __spec_install_post_check_shebangs() { \
 %{!?no_install_post_perl_clean: \
 %{?pdir:rm -f $RPM_BUILD_ROOT{%{perl_archlib}/perllocal.pod,%{perl_vendorarch}/auto/%{pdir}%{?pnam:/%(echo %{pnam} | tr - /)}/.packlist}} \
 } }
+
+# Helpers to specify SONAME depdendencies, e.g.:
+#   Requires: %{_soname_prov libfoo.so.1}
+#   Requires: %{_soname_prov libfoo.so.1(SOME_SYMVER)}
+#
+# BuildRequires:	rpmbuild(macros) >= 1.721
+#
+%_soname_tag %(echo %{_lib} | sed -e 's/^lib//' -e 's/^\\(.\\+\\)$/(\\1bit)/')
+%_soname_prov() %(echo "%{1}()%{_soname_tag}" | sed -e 's/^\\([^(]*([^)]\\+)\\)()%{_soname_tag}$/\\1%{_soname_tag}/;s/()$//')
 
 #-----------------------------------------------------------------
 # Update GConf2 schemas
@@ -2275,6 +2283,9 @@ want_enable_service() { \
 %systemdunitdir /lib/systemd/system
 %systemduserunitdir /usr/lib/systemd/user
 %systemdtmpfilesdir /usr/lib/tmpfiles.d
+
+# BuildRequires:	rpmbuild(macros) >= 1.721
+%journal_catalog_update() [ ! -x /bin/journalctl ] || /bin/journalctl --update-catalog >/dev/null 2>&1 || :
 
 #-----------------------------------------------------------------
 # Update hardware database index
