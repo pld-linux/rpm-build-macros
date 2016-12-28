@@ -823,7 +823,7 @@ fi; \
 #
 %update_mime_database() {{ \
 	umask 022; \
-	PKGSYSTEM_ENABLE_FSYNC=0 \\\
+	PKGSYSTEM_ENABLE_FSYNC=0 \
 	/usr/bin/update-mime-database %{_datadir}/mime; \
 };} \
 %{nil}
