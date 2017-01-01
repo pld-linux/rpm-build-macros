@@ -512,8 +512,8 @@ Provides: %{1} = %{?epoch:%{epoch}:}%{?version:%{version}}%{?release:-%{release}
 	for i in /usr/share/man /usr/X11R6/man; do \
 		if [ -d "$RPM_BUILD_ROOT$i" ]; then \
 			echo "Compress man pages: $i"; \
-			find "$RPM_BUILD_ROOT$i" -name '*.bz2' -print | xargs -r %{__bzip2} -df; \
-			find "$RPM_BUILD_ROOT$i" -name '*.gz' -print | xargs -r %{__gzip} -dnf; \
+			find "$RPM_BUILD_ROOT$i" -name '*.bz2' -print0 | xargs -0 -r %{__bzip2} -df; \
+			find "$RPM_BUILD_ROOT$i" -name '*.gz' -print0 | xargs -0 -r %{__gzip} -dnf; \
 			find $RPM_BUILD_ROOT$i -type l | while read a; do \
 				m=$(readlink "$a"); \
 				if [[ "$m" = */* ]]; then \
@@ -543,14 +543,14 @@ Provides: %{1} = %{?epoch:%{epoch}:}%{?version:%{version}}%{?release:-%{release}
 				test -e $RPM_BUILD_ROOT$i/$l || test -e $d/$(basename $l) || echo "  ${doc#$RPM_BUILD_ROOT} points to inexistent manpage: $l"; \
 			done); \
 			test "$err" != "" && { echo >&2 "Man page link errors:"; echo >&2 "$err"; exit 1; }; \
-			find "$RPM_BUILD_ROOT$i" -type f -size +%{_min_compress_bytes}c -print | xargs -r %{__gzip} -9nf; \
+			find "$RPM_BUILD_ROOT$i" -type f -size +%{_min_compress_bytes}c -print0 | xargs -0 -r %{__gzip} -9nf; \
 		fi; \
 	done; \
 	if [ -d "$RPM_BUILD_ROOT%{_infodir}" ]; then \
 		echo "Compress info pages: %{_infodir}"; \
-		find "$RPM_BUILD_ROOT%{_infodir}" -name '*.bz2' -print | xargs -r %{__bzip2} -df; \
-		find "$RPM_BUILD_ROOT%{_infodir}" -name '*.gz' -print | xargs -r %{__gzip} -dnf; \
-		find "$RPM_BUILD_ROOT%{_infodir}" -name '*.info*' -type f -size +%{_min_compress_bytes}c -print | xargs -r %{__gzip} -9nf; \
+		find "$RPM_BUILD_ROOT%{_infodir}" -name '*.bz2' -print0 | xargs -0 -r %{__bzip2} -df; \
+		find "$RPM_BUILD_ROOT%{_infodir}" -name '*.gz' -print0 | xargs -0 -r %{__gzip} -dnf; \
+		find "$RPM_BUILD_ROOT%{_infodir}" -name '*.info*' -type f -size +%{_min_compress_bytes}c -print0 | xargs -0 -r %{__gzip} -9nf; \
 	fi; \
 }; __spec_install_post_compress_docs } }
 
