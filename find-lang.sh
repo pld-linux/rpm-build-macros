@@ -36,7 +36,7 @@
 #   * start support for KDE help files
 
 PROG=${0##*/}
-VERSION=1.39
+VERSION=1.40
 
 usage () {
 cat <<EOF
@@ -55,6 +55,7 @@ Additional options:
   --with-kde		find KDE help files
   --with-omf		find OMF files
   --with-qm			find QT .qm files
+  --with-django		find translations in Django project
   --all-name		match all package/domain names
   --without-mo		skip *.mo locale files
   -o NAME			output will be saved to NAME
@@ -88,6 +89,7 @@ MATE='#'
 KDE='#'
 OMF='#'
 QM='#'
+DJANGO='#'
 MO=''
 OUTPUT=$NAME.lang
 ALL_NAME='#'
@@ -118,6 +120,11 @@ while test $# -gt 0; do
 	--with-qm)
 		echo >&2 "$PROG: Enabling with Qt QM"
 		QM=''
+		shift
+		;;
+	--with-django)
+		echo >&2 "$PROG: Enabling with Django"
+		DJANGO=''
 		shift
 		;;
 	--without-mo)
@@ -191,8 +198,14 @@ fi
 		cat __find.files
 	fi
 ) | sed '
-'"$ALL_NAME$MO"'s:\(.*/share/locale/\|.*/share/python.*/locale/\)\([^/@]\+\)\(@quot\|@boldquot\)\?\(@[^/]*\)\?\(/.*\.mo$\):%lang(\2\4) \1\2\3\4\5:
+'"$ALL_NAME$MO"'s:\(.*/share/locale/\)\([^/@]\+\)\(@quot\|@boldquot\)\?\(@[^/]*\)\?\(/.*\.mo$\):%lang(\2\4) \1\2\3\4\5:
 '"$NO_ALL_NAME$MO"'s:\(.*/share/locale/\)\([^/@]\+\)\(@quot\|@boldquot\)\?\(@[^/]*\)\?\(/.*/'"$NAME"'\.mo$\):%lang(\2\4) \1\2\3\4\5:
+/^[^%]/d
+s:%lang(C) ::' >> $MO_NAME
+
+# Django
+cat __find.dirs | sed -r -e '
+'"$DJANGO"'s:(.+/share/python.+/locale/)([^/@]+)(@quot|@boldquot)?(@[^/]*)?$:%lang(\2\4) \1\2\3\4:
 /^[^%]/d
 s:%lang(C) ::' >> $MO_NAME
 
