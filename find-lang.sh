@@ -203,12 +203,6 @@ fi
 /^[^%]/d
 s:%lang(C) ::' >> $MO_NAME
 
-# Django
-cat __find.dirs | sed -r -e '
-'"$DJANGO"'s:(.+/share/python.+/locale/)([^/@]+)(@quot|@boldquot)?(@[^/]*)?$:%lang(\2\4) \1\2\3\4:
-/^[^%]/d
-s:%lang(C) ::' >> $MO_NAME
-
 # .omf
 (
 	if [ "$ALL_NAME" ]; then
@@ -293,6 +287,7 @@ s:%lang(C) ::' >> $MO_NAME
 /^[^%]/d
 s:%lang(C) ::' >> $MO_NAME
 
+# OMF
 (
 	if [ "$ALL_NAME" ]; then
 		grep -F $NAME __find.dirs
@@ -302,6 +297,12 @@ s:%lang(C) ::' >> $MO_NAME
 ) | sed '
 '"$NO_ALL_NAME$OMF"'s:\(.*/share/omf/'"$NAME"'$\):%dir \1:
 '"$ALL_NAME$OMF"'s:\(.*/share/omf/[^/]\+$\):%dir \1:
+/^[^%]/d
+s:%lang(C) ::' >> $MO_NAME
+
+# Django
+cat __find.dirs | sed -r -e '
+'"$DJANGO"'s:(.+/share/python.+/locale/)([^/@]+)(@quot|@boldquot)?(@[^/]*)?$:%lang(\2\4) \1\2\3\4:
 /^[^%]/d
 s:%lang(C) ::' >> $MO_NAME
 
