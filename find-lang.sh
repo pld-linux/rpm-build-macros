@@ -36,7 +36,7 @@
 #   * start support for KDE help files
 
 PROG=${0##*/}
-VERSION=1.38
+VERSION=1.39
 
 usage () {
 cat <<EOF
@@ -191,7 +191,7 @@ fi
 		cat __find.files
 	fi
 ) | sed '
-'"$ALL_NAME$MO"'s:\(.*/share/locale/\)\([^/@]\+\)\(@quot\|@boldquot\)\?\(@[^/]*\)\?\(/.*\.mo$\):%lang(\2\4) \1\2\3\4\5:
+'"$ALL_NAME$MO"'s:\(.*/share/locale/\|.*/share/python.*/locale/\)\([^/@]\+\)\(@quot\|@boldquot\)\?\(@[^/]*\)\?\(/.*\.mo$\):%lang(\2\4) \1\2\3\4\5:
 '"$NO_ALL_NAME$MO"'s:\(.*/share/locale/\)\([^/@]\+\)\(@quot\|@boldquot\)\?\(@[^/]*\)\?\(/.*/'"$NAME"'\.mo$\):%lang(\2\4) \1\2\3\4\5:
 /^[^%]/d
 s:%lang(C) ::' >> $MO_NAME
