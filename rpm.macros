@@ -34,6 +34,8 @@
 %__scons	/usr/bin/scons %{?_smp_mflags}
 %__waf		/usr/bin/waf %{?_smp_mflags}
 %__cmake	/usr/bin/cmake
+%__meson	/usr/bin/meson
+%__ninja	/usr/bin/ninja %{?_smp_mflags}
 
 %__gettextize { \
 	if grep -qs 'AM_GNU_GETTEXT.*external' configure.{ac,in} ; then \
@@ -318,6 +320,22 @@ CXXFLAGS="%{rpmcxxflags}" \
 LINKFLAGS="%{rpmldflags}" \
 %{__waf} \
 }
+
+# meson
+%meson { \
+%{?__cc:CC="${CC:-%{__cc}}"} \
+%{?__cxx:CXX="${CXX:-%{__cxx}}"} \
+CFLAGS="${CFLAGS:-%{rpmcflags}}" \
+CPPFLAGS="${CPPFLAGS:-%{rpmcppflags}}" \
+CXXFLAGS="${CXXFLAGS:-%{rpmcxxflags}}" \
+LDFLAGS="${LDFLAGS:-%{rpmldflags}}" \
+%{__meson} \
+	--buildtype=plain \
+	--prefix=%{_prefix} \
+}
+
+# ninja
+%ninja %{__ninja} -v
 
 #----------------------------------------------------------------
 #%configure_cache 0
