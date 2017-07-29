@@ -332,6 +332,18 @@ LDFLAGS="${LDFLAGS:-%{rpmldflags}}" \
 %{__meson} \
 	--buildtype=plain \
 	--prefix=%{_prefix} \
+	--bindir=%{_bindir} \
+	--sbindir=%{_sbindir} \
+	--sysconfdir=%{_sysconfdir} \
+	--datadir=%{_datadir} \
+	--includedir=%{_includedir} \
+	--libdir=%{_libdir} \
+	--libexecdir=%{_libexecdir} \
+	--localstatedir=%{_localstatedir} \
+	--sharedstatedir=%{_sharedstatedir} \
+	--mandir=%{_mandir} \
+	--infodir=%{_infodir} \
+	--localedir=%{_localedir} \
 }
 
 # ninja
