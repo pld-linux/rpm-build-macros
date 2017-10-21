@@ -331,7 +331,7 @@ CFLAGS="${CFLAGS:-%{rpmcflags}}" \
 CPPFLAGS="${CPPFLAGS:-%{rpmcppflags}}" \
 CXXFLAGS="${CXXFLAGS:-%{rpmcxxflags}}" \
 LDFLAGS="${LDFLAGS:-%{rpmldflags}}" \
-LC_ALL=en_GB.UTF-8 %{__meson} \
+LC_ALL=C.UTF-8 %{__meson} \
 	--buildtype=plain \
 	--bindir=%{_bindir} \
 	--datadir=%{_datadir} \
@@ -348,9 +348,9 @@ LC_ALL=en_GB.UTF-8 %{__meson} \
 	--sysconfdir=%{_sysconfdir} \
 	--wrap-mode=%{__meson_wrap_mode} \
 }
-%meson_build %ninja_build
-%meson_install %ninja_install
-%meson_test %ninja_test
+%meson_build LC_ALL=C.UTF-8 %ninja_build
+%meson_install LC_ALL=C.UTF-8 %ninja_install
+%meson_test LC_ALL=C.UTF-8 %ninja_test
 
 # ninja
 %ninja_build %{__ninja} %{__ninja_common_opts}
