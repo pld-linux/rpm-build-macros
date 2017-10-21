@@ -35,7 +35,9 @@
 %__waf		/usr/bin/waf %{?_smp_mflags}
 %__cmake	/usr/bin/cmake
 %__meson	/usr/bin/meson
-%__ninja	/usr/bin/ninja %{?_smp_mflags}
+%__meson_wrap_mode	nodownload
+%__ninja	/usr/bin/ninja
+%__ninja_common_opts	-v %{?_smp_mflags}
 
 %__gettextize { \
 	if grep -qs 'AM_GNU_GETTEXT.*external' configure.{ac,in} ; then \
@@ -329,25 +331,31 @@ CFLAGS="${CFLAGS:-%{rpmcflags}}" \
 CPPFLAGS="${CPPFLAGS:-%{rpmcppflags}}" \
 CXXFLAGS="${CXXFLAGS:-%{rpmcxxflags}}" \
 LDFLAGS="${LDFLAGS:-%{rpmldflags}}" \
-%{__meson} \
+LC_ALL=en_GB.UTF-8 %{__meson} \
 	--buildtype=plain \
-	--prefix=%{_prefix} \
 	--bindir=%{_bindir} \
-	--sbindir=%{_sbindir} \
-	--sysconfdir=%{_sysconfdir} \
 	--datadir=%{_datadir} \
 	--includedir=%{_includedir} \
+	--infodir=%{_infodir} \
 	--libdir=%{_libdir} \
 	--libexecdir=%{_libexecdir} \
-	--localstatedir=%{_localstatedir} \
-	--sharedstatedir=%{_sharedstatedir} \
-	--mandir=%{_mandir} \
-	--infodir=%{_infodir} \
 	--localedir=%{_localedir} \
+	--localstatedir=%{_localstatedir} \
+	--mandir=%{_mandir} \
+	--prefix=%{_prefix} \
+	--sbindir=%{_sbindir} \
+	--sharedstatedir=%{_sharedstatedir} \
+	--sysconfdir=%{_sysconfdir} \
+	--wrap-mode=%{__meson_wrap_mode} \
 }
+%meson_build %ninja_build
+%meson_install %ninja_install
+%meson_test %ninja_test
 
 # ninja
-%ninja %{__ninja} -v
+%ninja_build %{__ninja} %{__ninja_common_opts}
+%ninja_install DESTDIR=%{buildroot} %{__ninja} install %{__ninja_common_opts}
+%ninja_test %{__ninja} test %{__ninja_common_opts}
 
 #----------------------------------------------------------------
 #%configure_cache 0
