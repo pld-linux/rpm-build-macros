@@ -428,6 +428,7 @@ LC_ALL=C.UTF-8 %{__meson} \
 
 # expands to true or false based on bcond; used with meson
 %__true_false() %{expand:%%{?with_%{1}:true}%%{!?with_%{1}:false}}
+%__true_false_not() %{expand:%%{?with_%{1}:false}%%{!?with_%{1}:true}}
 
 #-----------------------------------------------------------------
 
