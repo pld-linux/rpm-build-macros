@@ -988,7 +988,7 @@ fi; \
 
 %ruby_archdir		%{expand:%%global ruby_archdir %{__ruby_rbconfig_path archdir}}%ruby_archdir
 %ruby_libdir		%{expand:%%global ruby_libdir %{__ruby_rbconfig rubylibdir}}%ruby_libdir
-%ruby_ridir			%{expand:%%global ruby_ridir %(%{__ruby} -r rbconfig -e 'print File.join(RbConfig::CONFIG["datadir"], "ri", RbConfig::CONFIG["ruby_version"], "system")' 2>/dev/null || echo ERROR)}%ruby_ridir
+%ruby_ridir			%{expand:%%global ruby_ridir %(%{__ruby} -r rbconfig -e 'print File.join(RbConfig::CONFIG["datadir"], "ri", "system")' 2>/dev/null || echo ERROR)}%ruby_ridir
 %ruby_rubylibdir	%{expand:%%global ruby_rubylibdir %{__ruby_rbconfig_path rubylibdir}}%ruby_rubylibdir
 %ruby_vendorarchdir	%{expand:%%global ruby_vendorarchdir %{__ruby_rbconfig vendorarchdir}}%ruby_vendorarchdir
 %ruby_vendorlibdir	%{expand:%%global ruby_vendorlibdir %{__ruby_rbconfig_path vendorlibdir}}%ruby_vendorlibdir
