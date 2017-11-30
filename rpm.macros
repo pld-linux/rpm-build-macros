@@ -927,7 +927,7 @@ fi; \
 %__noautoreq		%(sed -e s'/#.*//' /etc/rpm/noautoreq) \
 	%{?_noautoreq: %{_noautoreq}} \
 	%{?_noautoreq_java: %{__noauto_regexp_helper -p java %{_noautoreq_java}}} \
-	%{?_noautoreq_mono: %{__noauto_regexp_helper -p mono %{_noautoreq_java}}} \
+	%{?_noautoreq_mono: %{__noauto_regexp_helper -p mono %{_noautoreq_mono}}} \
 	%{?_noautoreq_pear: %{__noauto_regexp_helper -p pear %{_noautoreq_pear}}} \
 	%{?_noautoreq_perl: %{__noauto_regexp_helper -p perl %{_noautoreq_perl}}} \
 	%{?_noautoreq_pyegg: %{__noauto_regexp_helper -p pythonegg %{_noautoreq_pyegg}}} \
