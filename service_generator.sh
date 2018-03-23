@@ -65,7 +65,7 @@ if [ "$check" = 1 ]; then
 			if [ -f /var/lock/subsys/$service ]; then
 				echo 'Run "/sbin/service $service restart" to restart $desc.'
 			fi
-		else	NORESTART=1	# for %systemd_post if called after
+		else	NORESTART=1	# for %%systemd_post if called after
 		fi
 	EOF
 	echo 'fi'
