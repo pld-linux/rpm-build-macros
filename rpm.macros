@@ -347,7 +347,7 @@ LC_ALL=C.UTF-8 %{__meson} \
 	--sharedstatedir=%{_sharedstatedir} \
 	--sysconfdir=%{_sysconfdir} \
 	--wrap-mode=%{__meson_wrap_mode} \
-	--default_library='both' \
+	--default-library='both' \
 }
 %meson_build LC_ALL=C.UTF-8 %ninja_build
 %meson_install LC_ALL=C.UTF-8 %ninja_install
