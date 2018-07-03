@@ -165,7 +165,7 @@ echo '%defattr(644,root,root,755)' > $MO_NAME
 if [ ! -f __find.files ] || [ "$TOP_DIR" -nt __find.files ]; then
 	find $TOP_DIR -xtype f -name '*.mo' | xargs -r file -L | \
 	sed -e '
-		/, 1 messages$/d
+		/, 1 message/d
 		s/:.*//
 		s:'"$TOP_DIR"'::' > __find.files
 else
