@@ -746,6 +746,31 @@ __spec_install_post_check_so() { \
 }; __spec_install_post_check_so }}
 
 #-----------------------------------------------------------------
+# Find all ELF files with executable stac. Warn and terminate if any found
+# (termination can be turned off by define).
+#%no_install_post_check_stackexec 1
+#%skip_post_check_stackexec libwithexecstackok.so.*
+#
+# NOTE: define skip_post_check_stackexec only if such program or library
+#       really requires executable stack and always leave a comment why
+#       it is required:
+#	# Programs full of nested functions that cannot be fixed
+#	%define skip_post_check_execstack /bin/foo libwithexecstack.so.*
+#
+%__spec_install_post_check_execstack { \
+__spec_install_post_check_execstack() { \
+%{!?debug:set +x;} \
+	fail=0; \
+	printf "Searching for ELF programs with executable stack..."; \
+	for f in $(find $RPM_BUILD_ROOT -type f -print) ; do \
+		LC_ALL=C readelf -lW $f 2>/dev/null | \
+		LC_ALL=C awk -v "file=$f" 'BEGIN { found=0; } /GNU_STACK/ { if ($7 ~ "E") { found=1 } } END { if (found) { print "\nExecutable stack found in: " file; %{?skip_post_check_execstack:split("%{skip_post_check_execstack}", R); for (i=1; i in R; i++) { if (file ~ "(^|/)" R[i] "$") { print "File marked with skip_post_check_execstack, ignoring errors.\n"; exit(0); } } } exit(1); } }' || fail=1 ; \
+	done ; \
+	echo " DONE"; \
+	%{!?no_install_post_check_execstack:return $fail;} \
+}; __spec_install_post_check_execstack }}
+
+#-----------------------------------------------------------------
 # Verify that for each directory under /var/run package contains
 # tmpfiles.d configuration. Warn and terminate build if config is
 # missing.
