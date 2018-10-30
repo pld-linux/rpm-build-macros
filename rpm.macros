@@ -748,6 +748,7 @@ __spec_install_post_check_so() { \
 #-----------------------------------------------------------------
 # Find all ELF files with executable stac. Warn and terminate if any found
 # (termination can be turned off by define).
+# Details: https://wiki.gentoo.org/wiki/Hardened/GNU_stack_quickstart
 #%no_install_post_check_stackexec 1
 #%skip_post_check_stackexec libwithexecstackok.so.*
 #
