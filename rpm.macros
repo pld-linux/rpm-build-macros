@@ -349,14 +349,16 @@ LC_ALL=C.UTF-8 %{__meson} \
 	--wrap-mode=%{__meson_wrap_mode} \
 	--default-library='both' \
 }
-%meson_build LC_ALL=C.UTF-8 %ninja_build
-%meson_install LC_ALL=C.UTF-8 %ninja_install
-%meson_test LC_ALL=C.UTF-8 %ninja_test
+
+%___meson_deprecate() {echo >&2 "DEPRECATED: %%%1 must be replaced with %%%2"; %{expand:%%%2} }
+%meson_build %___meson_deprecate meson_build ninja_build
+%meson_install %___meson_deprecate meson_install ninja_install
+%meson_test %___meson_deprecate meson_test ninja_test
 
 # ninja
-%ninja_build %{__ninja} %{__ninja_common_opts}
-%ninja_install DESTDIR=%{buildroot} %{__ninja} install %{__ninja_common_opts}
-%ninja_test %{__ninja} test %{__ninja_common_opts}
+%ninja_build LC_ALL=C.UTF-8 %{__ninja} %{__ninja_common_opts}
+%ninja_install LC_ALL=C.UTF-8 DESTDIR=%{buildroot} %{__ninja} install %{__ninja_common_opts}
+%ninja_test LC_ALL=C.UTF-8 %{__ninja} test %{__ninja_common_opts}
 
 #----------------------------------------------------------------
 #%configure_cache 0
