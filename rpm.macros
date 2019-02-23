@@ -952,7 +952,15 @@ fi; \
 %__noautoreqfiles	%(sed -e s'/#.*//' /etc/rpm/noautoreqfiles)%{?_noautoreqfiles: %{_noautoreqfiles}}
 %__noautoprovfiles	%(sed -e s'/#.*//' /etc/rpm/noautoprovfiles)%{?_noautoprovfiles: %{_noautoprovfiles}}
 %__noautoreqdep		%(sed -e s'/#.*//' /etc/rpm/noautoreqdep)%{?_noautoreqdep: %{_noautoreqdep}}
-%__noautoprov		%(sed -e s'/#.*//' /etc/rpm/noautoprov)%{?_noautoprov: %{_noautoprov}}
+%__noautoprov		%(sed -e s'/#.*//' /etc/rpm/noautoprov) \
+	%{?_noautoprov: %{_noautoprov}} \
+	%{?_noautoprov_java: %{__noauto_regexp_helper -p java %{_noautoprov_java}}} \
+	%{?_noautoprov_mono: %{__noauto_regexp_helper -p mono %{_noautoprov_mono}}} \
+	%{?_noautoprov_pear: %{__noauto_regexp_helper -p pear %{_noautoprov_pear}}} \
+	%{?_noautoprov_perl: %{__noauto_regexp_helper -p perl %{_noautoprov_perl}}} \
+	%{?_noautoprov_pyegg: %{__noauto_regexp_helper -p pythonegg %{_noautoprov_pyegg}}} \
+	%{?_noautoprov_py3egg: %{__noauto_regexp_helper -p python3egg %{_noautoprov_py3egg}}} \
+	%{nil}
 %__noautoreq		%(sed -e s'/#.*//' /etc/rpm/noautoreq) \
 	%{?_noautoreq: %{_noautoreq}} \
 	%{?_noautoreq_java: %{__noauto_regexp_helper -p java %{_noautoreq_java}}} \
@@ -976,6 +984,13 @@ fi; \
 # %define _noautoreq_py3egg backports.ssl-match-hostname ipaddress
 # BuildRequires:	rpmbuild(macros) >= 1.730
 # %define _noautoreq_mono Gendarme.Framework
+# BuildRequires:	rpmbuild(macros) >= 1.737
+# %define _noautoprov_java Class
+# %define _noautoprov_mono Excluded.Provide
+# %define _noautoprov_pear Excluded.php
+# %define _noautoprov_perl Excluded::Module
+# %define _noautoprov_pyegg excluded
+# %define _noautoprov_py3egg excluded3
 #
 %__noauto_regexp_helper(p:) %(echo "%*" | awk 'BEGIN{RS=" "}{printf("%{-p*}%{__qchar}(%%s%{__qchar}) ", $1)}')
 # detect quote character runtime
