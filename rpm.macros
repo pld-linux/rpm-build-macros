@@ -33,7 +33,7 @@
 %__make		/usr/bin/make %{?_make_opts} %{?_smp_mflags}
 %__scons	/usr/bin/scons %{?_smp_mflags}
 %__waf		/usr/bin/waf %{?_smp_mflags}
-%__cmake	/usr/bin/cmake
+%__cmake	/usr/bin/cmake -Wno-dev
 %__meson	/usr/bin/meson
 %__meson_wrap_mode	nodownload
 %__ninja	/usr/bin/ninja
