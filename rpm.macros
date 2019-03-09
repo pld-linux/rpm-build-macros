@@ -625,7 +625,7 @@ if [ -d "$RPM_BUILD_ROOT" ]; then \
 			echo "DONE"; \
 		fi; \
 	fi; \
-	filelist=$(find $RPM_BUILD_ROOT -type f ! -regex ".*/usr/lib[x0-9]*/debug/.*\.debug" ! -regex ".*/usr/lib[x0-9]*/guile/.*\.go" ! -regex ".*/lib/modules/.*" ! -regex ".*%{_docdir}/.*" ! -regex ".*%{_includedir}/.*" %{?_noautostrip:! -regex "%{_noautostrip}"} %{?_autostripall:! -regex "%{_autostripall}"} %{?_autostripunneeded:! -regex "%{_autostripunneeded}"} %{?_autostripdebug:! -regex "%{_autostripdebug}"}); \
+	filelist=$(find $RPM_BUILD_ROOT -type f ! -regex ".*/usr/lib[x0-9]*/debug/.*\.debug" ! -regex ".*/usr/lib[x0-9]*.*/guile/.*\.go" ! -regex ".*/lib/modules/.*" ! -regex ".*%{_docdir}/.*" ! -regex ".*%{_includedir}/.*" %{?_noautostrip:! -regex "%{_noautostrip}"} %{?_autostripall:! -regex "%{_autostripall}"} %{?_autostripunneeded:! -regex "%{_autostripunneeded}"} %{?_autostripdebug:! -regex "%{_autostripdebug}"}); \
 	if [ -n "$filelist" ]; then \
 		filetypes=`echo "$filelist" | xargs -r -d'\\n' file`; \
 		elfexelist=`echo "$filetypes" | awk -F: '/ELF.*executable/ {print $1}'`; \
