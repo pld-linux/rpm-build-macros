@@ -434,7 +434,7 @@ LC_ALL=C.UTF-8 %{__meson} \
 %__true_false_not() %{expand:%%{?with_%{1}:false}%%{!?with_%{1}:true}}
 
 # for use with cmake:
-# Usage: cmake_with BCOND_NAME [OPTION_NAME]
+# Usage: cmake_on_off BCOND_NAME [OPTION_NAME]
 # BuildRequires: rpmbuild(macros) >= 1.742
 %cmake_on_off() -D%{?2}%{!?2:%{1}}:BOOL=%{expand:%%{?with_%{1}:ON}%%{!?with_%{1}:OFF}}
 
