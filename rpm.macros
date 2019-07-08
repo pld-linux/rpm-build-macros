@@ -621,7 +621,7 @@ Provides: %{1} = %{?epoch:%{epoch}:}%{?version:%{version}}%{?release:-%{release}
 %{!?debug:set +x;} \
 if [ -d "$RPM_BUILD_ROOT" ]; then \
 	if [ -d $RPM_BUILD_ROOT/lib/modules ]; then \
-		modulelist=$(find $RPM_BUILD_ROOT/lib/modules -name '*o' -type f -print); \
+		modulelist=$(find $RPM_BUILD_ROOT/lib/modules \( -name '*.o' -o -name '*.ko' \) -type f -print); \
 		if [ "$modulelist" ]; then \
 			modulecount=$(echo "$modulelist" | wc -l); \
 			printf "Stripping %d kernel modules..." $modulecount; \
