@@ -40,11 +40,7 @@
 %__ninja_common_opts	-v %{?_smp_mflags}
 
 %__gettextize { \
-	if grep -qs 'AM_GNU_GETTEXT.*external' configure.{ac,in} ; then \
-		gettextize --copy --force --no-changelog; \
-	else \
-		gettextize --copy --force --no-changelog --intl; \
-	fi; \
+	gettextize --copy --force --no-changelog; \
 	if [ ! -f po/Makevars ]; then \
 		cp -f po/Makevars{.template,}; \
 	fi; \
