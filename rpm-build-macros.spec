@@ -18,6 +18,11 @@ Source11:	macros.ruby
 Source12:	rubygems.rb
 Source13:	gem_helper.rb
 
+Source20:	attr.java
+Source21:	macros.java
+Source22:	rpm-java-requires
+Source23:	eclipse-feature.xslt
+
 Patch0:		disable-systemd.patch
 #Patchx: %{name}-pydebuginfo.patch
 BuildRequires:	rpm >= 4.4.9-56
@@ -63,7 +68,7 @@ Requires:	ruby
 Requires:	ruby-modules
 Requires:	ruby-rubygems
 Provides:	rpm-rubyprov
-Obsoletes;	rpm-rubyprov
+Obsoletes:	rpm-rubyprov
 
 %description rubyprov
 Ruby tools, which simplifies creation of RPM packages with Ruby
@@ -72,6 +77,27 @@ software.
 %description rubyprov -l pl.UTF-8
 Makra ułatwiające tworzenie pakietów RPM z programami napisanymi w
 Ruby.
+
+%package javaprov
+Summary:	Additional utilities for checking Java provides/requires in RPM packages
+Summary(pl.UTF-8):	Dodatkowe narzędzia do sprawdzania zależności kodu w Javie w pakietach RPM
+Group:		Applications/File
+Requires:	%{name} = %{version}-%{release}
+Requires:	jar
+Requires:	file
+Requires:	findutils >= 1:4.2.26
+Requires:	mktemp
+Requires:	unzip
+Provides:	rpm-javaprov
+Obsoletes:	rpm-javaprov
+
+%description javaprov
+Additional utilities for checking Java provides/requires in RPM
+packages.
+
+%description javaprov -l pl.UTF-8
+Dodatkowe narzędzia do sprawdzania zależności kodu w Javie w pakietach
+RPM.
 
 %prep
 %setup -qcT
@@ -113,12 +139,17 @@ cat %{SOURCE11} %{SOURCE10} >$RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/ruby
 install -p %{SOURCE12} $RPM_BUILD_ROOT%{_usrlibrpm}/rubygems.rb
 install -p %{SOURCE13} $RPM_BUILD_ROOT%{_usrlibrpm}/gem_helper.rb
 
+cat %{SOURCE21} %{SOURCE20} >$RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/java
+install %{SOURCE22} $RPM_BUILD_ROOT%{_usrlibrpm}/java-find-requires
+install %{SOURCE23} $RPM_BUILD_ROOT%{_usrlibrpm}/eclipse-feature.xslt
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
 %{_usrlibrpm}/macros.build
+%{_usrlibrpm}/macros.d/java
 %{_usrlibrpm}/macros.d/kernel
 %{_usrlibrpm}/macros.d/ruby
 %attr(755,root,root) %{_usrlibrpm}/service_generator.sh
@@ -129,3 +160,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_usrlibrpm}/gem_helper.rb
 %attr(755,root,root) %{_usrlibrpm}/rubygems.rb
+
+%files javaprov
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_usrlibrpm}/java-find-requires
+%{_usrlibrpm}/eclipse-feature.xslt
