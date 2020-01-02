@@ -7,11 +7,11 @@ Version:	%{rpm_macros_rev}
 Release:	2
 License:	GPL
 Group:		Development/Building
-Source0:	rpm.macros
+Source0:	macros.pld
 Source1:	service_generator.sh
 Source3:	find-lang.sh
 Source4:	dokuwiki-find-lang.sh
-Source5:	rpm.macros.kernel
+Source5:	macros.kernel
 Patch0:		disable-systemd.patch
 #Patchx: %{name}-pydebuginfo.patch
 BuildRequires:	rpm >= 4.4.9-56
@@ -55,14 +55,14 @@ cp -p %{SOURCE1} .
 cp -p %{SOURCE5} .
 
 %if "%{pld_release}" == "ac"
-%{__sed} -i -e '/libtoolize --copy --force --install/s/ --install//' rpm.macros
+%{__sed} -i -e '/libtoolize --copy --force --install/s/ --install//' macros.pld
 %patch0 -p1
 %endif
 
 %build
-%{__sed} -i -e 's,{Revision},%{rpm_macros_rev},' rpm.macros
+%{__sed} -i -e 's,{Revision},%{rpm_macros_rev},' macros.pld
 
-rev=$(awk '/^%%rpm_build_macros/{print $2}' rpm.macros)
+rev=$(awk '/^%%rpm_build_macros/{print $2}' macros.pld)
 if [ "$rev" != "%rpm_macros_rev" ]; then
 	: Update rpm_macros_rev define to $rev, and retry
 	exit 1
@@ -77,8 +77,8 @@ fi
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d
 
-cp -p rpm.macros $RPM_BUILD_ROOT%{_usrlibrpm}/macros.build
-cp -p rpm.macros.kernel $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/kernel
+cp -p macros.pld $RPM_BUILD_ROOT%{_usrlibrpm}/macros.build
+cp -p macros.kernel $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/kernel
 
 install -p service_generator.sh $RPM_BUILD_ROOT%{_usrlibrpm}
 install -p %{SOURCE3} $RPM_BUILD_ROOT%{_usrlibrpm}/find-lang.sh
