@@ -5,7 +5,6 @@ Summary(pl.UTF-8):	Makra do budowania pakietów RPM dla Linuksa PLD
 Name:		rpm-build-macros
 Version:	%{rpm_macros_rev}
 Release:	2
-Epoch:		1
 License:	GPL
 Group:		Development/Building
 Source0:	macros.pld
@@ -55,7 +54,7 @@ This package contains rpm build macros for PLD Linux.
 %description -l pl.UTF-8
 Ten pakiet zawiera makra rpm-a do budowania pakietów dla Linuksa PLD.
 
-%package -n rpm-rubyprov
+%package rubyprov
 Summary:	Ruby tools, which simplify creation of RPM packages with Ruby software
 Summary(pl.UTF-8):	Makra ułatwiające tworzenie pakietów RPM z programami napisanymi w Ruby
 Group:		Applications/File
@@ -63,12 +62,14 @@ Requires:	%{name} = %{version}-%{release}
 Requires:	ruby
 Requires:	ruby-modules
 Requires:	ruby-rubygems
+Provides:	rpm-rubyprov
+Obsoletes;	rpm-rubyprov
 
-%description -n rpm-rubyprov
+%description rubyprov
 Ruby tools, which simplifies creation of RPM packages with Ruby
 software.
 
-%description -n rpm-rubyprov -l pl.UTF-8
+%description rubyprov -l pl.UTF-8
 Makra ułatwiające tworzenie pakietów RPM z programami napisanymi w
 Ruby.
 
@@ -124,7 +125,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_usrlibrpm}/find-lang.sh
 %attr(755,root,root) %{_usrlibrpm}/dokuwiki-find-lang.sh
 
-%files -n rpm-rubyprov
+%files rubyprov
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_usrlibrpm}/gem_helper.rb
 %attr(755,root,root) %{_usrlibrpm}/rubygems.rb
