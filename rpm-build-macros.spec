@@ -23,6 +23,12 @@ Source21:	macros.java
 Source22:	rpm-java-requires
 Source23:	eclipse-feature.xslt
 
+Source30:	attr.php
+Source31:	macros.php
+Source32:	rpm-php-provides
+Source33:	rpm-php-requires
+Source34:	rpm-php-requires.php
+
 Patch0:		disable-systemd.patch
 #Patchx: %{name}-pydebuginfo.patch
 BuildRequires:	rpm >= 4.4.9-56
@@ -99,6 +105,24 @@ packages.
 Dodatkowe narzędzia do sprawdzania zależności kodu w Javie w pakietach
 RPM.
 
+%package php-pearprov
+Summary:	Additional utilities for checking PHP PEAR provides/requires in RPM packages
+Summary(pl.UTF-8):	Dodatkowe narzędzia do sprawdzania zależności skryptów php w RPM
+Group:		Applications/File
+Requires:	%{name} = %{version}-%{release}
+Requires:	sed >= 4.0
+Suggests:	php-pear-PHP_CompatInfo
+Provides:	rpm-php-pearprov
+Obsoletes:	php-pearprov
+
+%description php-pearprov
+Additional utilities for checking PHP PEAR provides/requires in RPM
+packages.
+
+%description php-pearprov -l pl.UTF-8
+Dodatkowe narzędzia do sprawdzenia zależności skryptów PHP PEAR w
+pakietach RPM.
+
 %prep
 %setup -qcT
 cp -p %{SOURCE0} .
@@ -143,6 +167,11 @@ cat %{SOURCE21} %{SOURCE20} >$RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/java
 install %{SOURCE22} $RPM_BUILD_ROOT%{_usrlibrpm}/java-find-requires
 install %{SOURCE23} $RPM_BUILD_ROOT%{_usrlibrpm}/eclipse-feature.xslt
 
+cat %{SOURCE31} %{SOURCE30} >$RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/php
+cp -p %{SOURCE32} $RPM_BUILD_ROOT%{_usrlibrpm}/php.prov
+cp -p %{SOURCE33} $RPM_BUILD_ROOT%{_usrlibrpm}/php.req
+cp -p %{SOURCE34} $RPM_BUILD_ROOT%{_usrlibrpm}/php.req.php
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -151,6 +180,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_usrlibrpm}/macros.build
 %{_usrlibrpm}/macros.d/java
 %{_usrlibrpm}/macros.d/kernel
+%{_usrlibrpm}/macros.d/php
 %{_usrlibrpm}/macros.d/ruby
 %attr(755,root,root) %{_usrlibrpm}/service_generator.sh
 %attr(755,root,root) %{_usrlibrpm}/find-lang.sh
@@ -165,3 +195,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_usrlibrpm}/java-find-requires
 %{_usrlibrpm}/eclipse-feature.xslt
+
+%files php-pearprov
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_usrlibrpm}/php.prov
+%attr(755,root,root) %{_usrlibrpm}/php.req
+%attr(755,root,root) %{_usrlibrpm}/php.req.php
