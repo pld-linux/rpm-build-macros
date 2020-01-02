@@ -5,6 +5,7 @@ Summary(pl.UTF-8):	Makra do budowania pakietów RPM dla Linuksa PLD
 Name:		rpm-build-macros
 Version:	%{rpm_macros_rev}
 Release:	2
+Epoch:		1
 License:	GPL
 Group:		Development/Building
 Source0:	macros.pld
@@ -12,6 +13,12 @@ Source1:	service_generator.sh
 Source3:	find-lang.sh
 Source4:	dokuwiki-find-lang.sh
 Source5:	macros.kernel
+
+Source10:	attr.ruby
+Source11:	macros.ruby
+Source12:	rubygems.rb
+Source13:	gem_helper.rb
+
 Patch0:		disable-systemd.patch
 #Patchx: %{name}-pydebuginfo.patch
 BuildRequires:	rpm >= 4.4.9-56
@@ -25,8 +32,8 @@ Conflicts:	coreutils < 6.9
 Conflicts:	gettext-devel < 0.11
 # tmpdir/_tmppath macros problems; optcppflags missing
 Conflicts:	rpm < 4.4.9-72
-# macros.d/kernel
-Conflicts:	rpm-build < 5.4.15-6
+# macros.d/ruby
+Conflicts:	rpm-build < 5.4.15-52
 # php-config --sysconfdir
 Conflicts:	php-devel < 4:5.2.0-3
 Conflicts:	php4-devel < 3:4.4.4-10
@@ -47,6 +54,23 @@ This package contains rpm build macros for PLD Linux.
 
 %description -l pl.UTF-8
 Ten pakiet zawiera makra rpm-a do budowania pakietów dla Linuksa PLD.
+
+%package -n rpm-rubyprov
+Summary:	Ruby tools, which simplify creation of RPM packages with Ruby software
+Summary(pl.UTF-8):	Makra ułatwiające tworzenie pakietów RPM z programami napisanymi w Ruby
+Group:		Applications/File
+Requires:	%{name} = %{version}-%{release}
+Requires:	ruby
+Requires:	ruby-modules
+Requires:	ruby-rubygems
+
+%description -n rpm-rubyprov
+Ruby tools, which simplifies creation of RPM packages with Ruby
+software.
+
+%description -n rpm-rubyprov -l pl.UTF-8
+Makra ułatwiające tworzenie pakietów RPM z programami napisanymi w
+Ruby.
 
 %prep
 %setup -qcT
@@ -84,6 +108,10 @@ install -p service_generator.sh $RPM_BUILD_ROOT%{_usrlibrpm}
 install -p %{SOURCE3} $RPM_BUILD_ROOT%{_usrlibrpm}/find-lang.sh
 install -p %{SOURCE4} $RPM_BUILD_ROOT%{_usrlibrpm}/dokuwiki-find-lang.sh
 
+cat %{SOURCE11} %{SOURCE10} >$RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/ruby
+install -p %{SOURCE12} $RPM_BUILD_ROOT%{_usrlibrpm}/rubygems.rb
+install -p %{SOURCE13} $RPM_BUILD_ROOT%{_usrlibrpm}/gem_helper.rb
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -91,6 +119,12 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_usrlibrpm}/macros.build
 %{_usrlibrpm}/macros.d/kernel
+%{_usrlibrpm}/macros.d/ruby
 %attr(755,root,root) %{_usrlibrpm}/service_generator.sh
 %attr(755,root,root) %{_usrlibrpm}/find-lang.sh
 %attr(755,root,root) %{_usrlibrpm}/dokuwiki-find-lang.sh
+
+%files -n rpm-rubyprov
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_usrlibrpm}/gem_helper.rb
+%attr(755,root,root) %{_usrlibrpm}/rubygems.rb
