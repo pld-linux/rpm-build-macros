@@ -12,6 +12,7 @@ Source1:	service_generator.sh
 Source3:	find-lang.sh
 Source4:	dokuwiki-find-lang.sh
 Source5:	macros.kernel
+Source6:	attr.kernel
 
 Source10:	attr.ruby
 Source11:	macros.ruby
@@ -28,6 +29,21 @@ Source31:	macros.php
 Source32:	rpm-php-provides
 Source33:	rpm-php-requires
 Source34:	rpm-php-requires.php
+
+Source40:	macros.browser-plugins
+Source41:	macros.cacti
+Source42:	macros.emacs
+Source43:	macros.ghc
+Source44:	macros.nagios
+Source45:	macros.openldap
+Source46:	macros.perl
+Source47:	macros.python
+Source48:	macros.systemd
+Source49:	macros.tcl
+Source50:	macros.upstart
+Source51:	macros.webapp
+Source52:	macros.xmms
+Source53:	macros.xorg
 
 Patch0:		disable-systemd.patch
 #Patchx: %{name}-pydebuginfo.patch
@@ -127,7 +143,6 @@ pakietach RPM.
 %setup -qcT
 cp -p %{SOURCE0} .
 cp -p %{SOURCE1} .
-cp -p %{SOURCE5} .
 
 %if "%{pld_release}" == "ac"
 %{__sed} -i -e '/libtoolize --copy --force --install/s/ --install//' macros.pld
@@ -153,7 +168,8 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d
 
 cp -p macros.pld $RPM_BUILD_ROOT%{_usrlibrpm}/macros.build
-cp -p macros.kernel $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/kernel
+
+cat %{SOURCE5} %{SOURCE6} >$RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/kernel
 
 install -p service_generator.sh $RPM_BUILD_ROOT%{_usrlibrpm}
 install -p %{SOURCE3} $RPM_BUILD_ROOT%{_usrlibrpm}/find-lang.sh
@@ -172,16 +188,45 @@ cp -p %{SOURCE32} $RPM_BUILD_ROOT%{_usrlibrpm}/php.prov
 cp -p %{SOURCE33} $RPM_BUILD_ROOT%{_usrlibrpm}/php.req
 cp -p %{SOURCE34} $RPM_BUILD_ROOT%{_usrlibrpm}/php.req.php
 
+cp -p %{SOURCE40} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/browser-plugins
+cp -p %{SOURCE41} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/cacti
+cp -p %{SOURCE42} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/emacs
+cp -p %{SOURCE43} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/ghc
+cp -p %{SOURCE44} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/nagios
+cp -p %{SOURCE45} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/openldap
+cp -p %{SOURCE46} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/perl
+cp -p %{SOURCE47} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/python
+cp -p %{SOURCE48} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/systemd
+cp -p %{SOURCE49} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/tcl
+cp -p %{SOURCE50} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/upstart
+cp -p %{SOURCE51} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/webapp
+cp -p %{SOURCE52} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/xmms
+cp -p %{SOURCE53} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/xorg
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
 %{_usrlibrpm}/macros.build
+%{_usrlibrpm}/macros.d/browser-plugins
+%{_usrlibrpm}/macros.d/cacti
+%{_usrlibrpm}/macros.d/emacs
+%{_usrlibrpm}/macros.d/ghc
 %{_usrlibrpm}/macros.d/java
 %{_usrlibrpm}/macros.d/kernel
+%{_usrlibrpm}/macros.d/nagios
+%{_usrlibrpm}/macros.d/openldap
+%{_usrlibrpm}/macros.d/perl
 %{_usrlibrpm}/macros.d/php
+%{_usrlibrpm}/macros.d/python
 %{_usrlibrpm}/macros.d/ruby
+%{_usrlibrpm}/macros.d/systemd
+%{_usrlibrpm}/macros.d/tcl
+%{_usrlibrpm}/macros.d/upstart
+%{_usrlibrpm}/macros.d/webapp
+%{_usrlibrpm}/macros.d/xmms
+%{_usrlibrpm}/macros.d/xorg
 %attr(755,root,root) %{_usrlibrpm}/service_generator.sh
 %attr(755,root,root) %{_usrlibrpm}/find-lang.sh
 %attr(755,root,root) %{_usrlibrpm}/dokuwiki-find-lang.sh

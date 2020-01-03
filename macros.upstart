@@ -1,0 +1,37 @@
+# pre/post script for -upstart subpackages
+#
+# Author: Jacek Konieczny <jajcus@jajcus.net>
+# Author: Elan Ruusamäe <glen@pld-linux.org>
+#
+# Usage:
+#	%upstart_post service_name
+#	%upstart_postun service_name
+#
+# Sample:
+# %post upstart
+# %upstart_post %{name}
+#
+# %postun upstart
+# %upstart_postun %{name}
+#
+# Requirements:
+# BuildRequires:	rpmbuild(macros) >= 1.690
+# Requires:			rc-scripts >= 0.4.3
+
+# migrate from init script to upstart job
+%upstart_post() \
+	if [ -x /sbin/initctl ] && [ -f /var/lock/subsys/%1 ]; then \
+		/sbin/service --no-upstart %1 stop \
+		/sbin/service %1 start \
+	fi \
+%{nil}
+
+# restart the job after upgrade or migrate to init script on removal
+# cannot be stopped with 'service' as /etc/init/$name.conf may be missing
+# at this point
+%upstart_postun() \
+	if [ -x /sbin/initctl ] && /sbin/initctl status %1 2>/dev/null | grep -q 'running' ; then \
+		/sbin/initctl stop %1 >/dev/null 2>&1 \
+		[ -f /etc/rc.d/init.d/%1 -o -f /etc/init/%1.conf ] && { echo -n "Re-"; /sbin/service %1 start; }; \
+	fi \
+%{nil}

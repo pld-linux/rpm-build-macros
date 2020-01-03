@@ -5,13 +5,6 @@
 
 %__modinfo		/sbin/modinfo
 
-# Path to scripts to autogenerate gstreamer package dependencies,
-#
-# Note: Used iff _use_internal_dependency_generator is non-zero. The
-# helpers are also used by %{_rpmhome}/rpmdeps {--provides|--requires}.
-%__kernel_provides	%{_rpmhome}/kmod-deps.sh --provides --modinfo %__modinfo
-#__kernel_requires	%{_rpmhome}/kmod-deps.sh --requires --modinfo %__modinfo
-
 # Alternative kernel type/version
 %_alt_kernel	%{nil}%{?alt_kernel:-%{?alt_kernel}}
 %_build_kernels	%{nil}%{?build_kernels:%{?build_kernels}}%{!?build_kernels:%{?alt_kernel}}

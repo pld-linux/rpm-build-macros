@@ -1,0 +1,41 @@
+# Hook to register nagios object based plugins in Nagios NRPE daemon config.
+#
+# Author: Elan Ruusamäe <glen@pld-linux.org>
+#
+# Usage:
+#  -a NAME  -- add command named NAME
+#  -d NAME  -- remove command named NAME
+#  -f FILE  -- specify plugin configuration FILE to extract command definition from
+#
+# Sample:
+# %triggerin -- nagios-nrpe
+# %nagios_nrpe -a %{plugin} -f %{_sysconfdir}/%{plugin}.cfg
+#
+# %triggerun -- nagios-nrpe
+# %nagios_nrpe -d %{plugin} -f %{_sysconfdir}/%{plugin}.cfg
+#
+# Requirements:
+# Requires:			grep
+# Requires:			sed >= 4.0
+# BuildRequires:	rpmbuild(macros) >= 1.685
+%nagios_nrpe(a:d:c:f:) {\
+	if %{__grep} -q '^include_dir=/etc/nagios/nrpe.d' /etc/nagios/nrpe.cfg && [ -d /etc/nagios/nrpe.d ]; then \
+		file=/etc/nagios/nrpe.d/%{-a*}%{-d*}.cfg; \
+	else \
+		file=/etc/nagios/nrpe.cfg; \
+	fi; \
+	m=$(test -f $file && md5sum < $file); \
+	%{-a:# on -a and config exists \
+	if [ -f /etc/nagios/nrpe.cfg ]; then \
+		if [ ! -f $file ] || ! %{__grep} -q '^command\[%{-a*}\]' $file; then \
+			%{__sed} -ne 's/^[ \t]*command_line[ \t]\+\(.\+\)/command[%{-a*}]=\1/p' %{-f*} >> $file; \
+		fi; \
+	fi;} \
+	%{-d:# on package remove, -d and config exists \
+	if [ "$1" = "0" -a -f $file ]; then \
+		%{__sed} -i -e '/^[ \t]*command\[%{-d*}\]/d' $file; \
+	fi;} \
+	if [ "$m" != "$(md5sum < $file)" ]; then \
+		%service -q nrpe restart; \
+	fi; \
+}%{nil}

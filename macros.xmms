@@ -1,0 +1,11 @@
+# XMMS specific macros
+%xmms_prefix			%{expand:%%global xmms_prefix %(xmms-config --prefix 2>/dev/null || echo ERROR)}%xmms_prefix
+%xmms_exec_prefix		%{expand:%%global xmms_exec_prefix %(xmms-config --exec-prefix 2>/dev/null || echo ERROR)}%xmms_exec_prefix
+%xmms_version			%{expand:%%global xmms_version %(xmms-config --version 2>/dev/null || echo ERROR)}%xmms_version
+%xmms_datadir			%{expand:%%global xmms_datadir %(xmms-config --data-dir 2>/dev/null || echo ERROR)}%xmms_datadir
+%xmms_plugindir			%{expand:%%global xmms_plugindir %(xmms-config --plugin-dir 2>/dev/null || echo ERROR)}%xmms_plugindir
+%xmms_visualization_plugindir	%{expand:%%global xmms_visualization_plugindir %(xmms-config --visualization-plugin-dir 2>/dev/null || echo ERROR)}%xmms_visualization_plugindir
+%xmms_input_plugindir		%{expand:%%global xmms_input_plugindir %(xmms-config --input-plugin-dir 2>/dev/null || echo ERROR)}%xmms_input_plugindir
+%xmms_output_plugindir		%{expand:%%global xmms_output_plugindir %(xmms-config --output-plugin-dir 2>/dev/null || echo ERROR)}%xmms_output_plugindir
+%xmms_effect_plugindir		%{expand:%%global xmms_effect_plugindir %(xmms-config --effect-plugin-dir 2>/dev/null || echo ERROR)}%xmms_effect_plugindir
+%xmms_general_plugindir		%{expand:%%global xmms_general_plugindir %(xmms-config --general-plugin-dir 2>/dev/null || echo ERROR)}%xmms_general_plugindir

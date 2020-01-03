@@ -1,0 +1,185 @@
+# Python specific macro definitions.
+
+%__python		/usr/bin/python
+
+# python main version
+%py_ver			%{expand:%%global py_ver %(%{__python} -c "import sys; print sys.version[:3]" 2>/dev/null || echo ERROR)}%py_ver
+
+# directories
+%py_prefix		%{expand:%%global py_prefix %(%{__python} -c "import sys; print sys.prefix" 2>/dev/null || echo ERROR)}%py_prefix
+%py_libdir		%{py_prefix}/%{_lib}/python%{py_ver}
+%py_scriptdir		%{py_prefix}/share/python%{py_ver}
+%py_incdir		/usr/include/python%{py_ver}
+%py_sitedir		%{py_libdir}/site-packages
+%py_sitescriptdir	%{py_scriptdir}/site-packages
+%py_dyndir		%{py_libdir}/lib-dynload
+
+# pure python modules compilation
+%py_comp		python -c "import compileall; import sys; compileall.compile_dir(sys.argv[1], ddir=sys.argv[1][len('$RPM_BUILD_ROOT'):])"
+
+%py_ocomp		python -O -c "import compileall; import sys; compileall.compile_dir(sys.argv[1], ddir=sys.argv[1][len('$RPM_BUILD_ROOT'):])"
+
+# Software written in Python language require Python with main version
+%pyrequires_eq() Requires:	%1
+
+# Python 3.x
+# python main version
+%__python3		/usr/bin/python3
+%py3_ver		%{expand:%%global py3_ver %(%{__python3} -c "import sys; print(sys.version[:3])" 2>/dev/null || echo ERROR)}%py3_ver
+
+# directories
+%py3_prefix		%{expand:%%global py3_prefix %(%{__python3} -c "import sys; print(sys.prefix)" 2>/dev/null || echo ERROR)}%py3_prefix
+%py3_incdir		%{expand:%%global py3_incdir %(%{__python3} -c "import sysconfig; print(sysconfig.get_path('include'))" 2>/dev/null || echo ERROR)}%py3_incdir
+%py3_libdir		%{py3_prefix}/%{_lib}/python%{py3_ver}
+%py3_sitedir		%{py3_libdir}/site-packages
+%py3_sitescriptdir	%{py3_prefix}/share/python%{py3_ver}/site-packages
+%py3_dyndir		%{py3_libdir}/lib-dynload
+
+# pure python modules compilation
+%py3_comp		%{__python3} -c "import compileall; import sys; compileall.compile_dir(sys.argv[1], ddir=sys.argv[1][len('$RPM_BUILD_ROOT'):])"
+
+%py3_ocomp		%{__python3} -O -c "import compileall; import sys; compileall.compile_dir(sys.argv[1], ddir=sys.argv[1][len('$RPM_BUILD_ROOT'):])"
+
+%py_build { \
+	LDFLAGS="${LDFLAGS:-%rpmldflags}"; export LDFLAGS; \
+	CFLAGS="${CFLAGS:-%rpmcppflags %rpmcflags}"; export CFLAGS; \
+	CXXFLAGS="${CXXFLAGS:-%rpmcppflags %rpmcxxflags}"; export CXXFLAGS; \
+	%{?__cc:CC="%{__cc}"; export CC;} \
+	%{?__cxx:CXX="%{__cxx}"; export CXX;} \
+	%{__python} setup.py \
+	build --build-base=build-2 \
+}
+
+# "shrink" filter to keep this macro without newlines,
+# so it could be used as make arguments
+%py_install_opts() %{shrink: \
+	--prefix=%{_prefix} \
+	--install-purelib=%{py_sitescriptdir} \
+	--install-platlib=%{py_sitedir} \
+	--optimize=2 \
+}
+
+%py_install { \
+	LDFLAGS="${LDFLAGS:-%rpmldflags}"; export LDFLAGS; \
+	CFLAGS="${CFLAGS:-%rpmcppflags %rpmcflags}"; export CFLAGS; \
+	CXXFLAGS="${CXXFLAGS:-%rpmcppflags %rpmcxxflags}"; export CXXFLAGS; \
+	%{?__cc:CC="%{__cc}"; export CC;} \
+	%{?__cxx:CXX="%{__cxx}"; export CXX;} \
+	%{__python} setup.py \
+	build --build-base=build-2 \
+	install --skip-build \
+	%{py_install_opts} \
+	--root=$RPM_BUILD_ROOT \
+}
+
+%py3_build { \
+	LDFLAGS="${LDFLAGS:-%rpmldflags}"; export LDFLAGS; \
+	CFLAGS="${CFLAGS:-%rpmcppflags %rpmcflags}"; export CFLAGS; \
+	CXXFLAGS="${CXXFLAGS:-%rpmcppflags %rpmcxxflags}"; export CXXFLAGS; \
+	%{?__cc:CC="%{__cc}"; export CC;} \
+	%{?__cxx:CXX="%{__cxx}"; export CXX;} \
+	%{__python3} setup.py build --build-base=build-3 \
+}
+
+# "shrink" filter to keep this macro without newlines,
+# so it could be used as make arguments
+%py3_install_opts() %{shrink: \
+	--prefix=%{_prefix} \
+	--install-purelib=%{py3_sitescriptdir} \
+	--install-platlib=%{py3_sitedir} \
+	--optimize=2 \
+}
+
+%py3_install { \
+	LDFLAGS="${LDFLAGS:-%rpmldflags}"; export LDFLAGS; \
+	CFLAGS="${CFLAGS:-%rpmcppflags %rpmcflags}"; export CFLAGS; \
+	CXXFLAGS="${CXXFLAGS:-%rpmcppflags %rpmcxxflags}"; export CXXFLAGS; \
+	%{?__cc:CC="%{__cc}"; export CC;} \
+	%{?__cxx:CXX="%{__cxx}"; export CXX;} \
+	%{__python3} setup.py \
+	build --build-base=build-3 \
+	install --skip-build \
+	%{py3_install_opts} \
+	--root=$RPM_BUILD_ROOT \
+}
+
+# Hardlink binary identical .pyc and .pyo files
+%__spec_install_post_py_hardlink {\
+%{!?no_install_post_py_hardlink: __spec_install_post_py_hardlink() { \
+%{!?debug:set +x;} \
+local a b c=0 t=0 pyc=%{tmpdir}/%{name}-%{version}-%{release}__rpm_pyc; \
+if [ -d "$RPM_BUILD_ROOT" ]; then \
+	find "$RPM_BUILD_ROOT" -name '*.pyc' > $pyc; \
+	while read a; do \
+		b="${a%.pyc}.pyo"; \
+		if cmp -s "$a" "$b"; then \
+			ln -f "$a" "$b"; \
+			c=$((c + 1)); \
+		fi; \
+		t=$((t + 1)); \
+	done < $pyc; \
+	[ $t -gt 0 ] && printf "Hardlink Python files: %d/%d files hardlinked\n" $c $t; \
+	rm -f $pyc; \
+fi; \
+}; __spec_install_post_py_hardlink } }
+
+# Remove Python 2.x sources,
+# PLD Linux policy is to package only compiled .py[co] for Python 2.x libraries.
+# Author: Elan Ruusamäe <glen@pld-linux.org>
+#
+# Usage:
+# %py_postclean /usr/share/extra -x keepme.py,keeptoo.py
+# Options:
+# -x - comma separated of file basenames to preserve (rpmbuild(macros) >= 1.658)
+# ARGS - extra directories to clean for .py sources
+#
+# BuildRequires:	rpmbuild(macros) >= 1.189
+#
+%py_postclean(x:) \
+for d in %{py_sitescriptdir} %{py_sitedir} %*; do \
+	[ ! -d "$RPM_BUILD_ROOT$d" ] || find "$RPM_BUILD_ROOT$d" -name '*.py' -print0 %{-x:| grep -ZzvE '/(%(echo '%{-x*}' | tr ',' '|'))$'} | xargs -0r -l512 rm;\
+done \
+%{nil}
+
+# Check syntax for Python files
+#
+# Author: Elan Ruusamäe <glen@pld-linux.org>
+# Author: Arkadiusz Miśkiewicz <arekm@pld-linux.org>
+#
+# Usage:
+#   %py_lint src
+#
+# Requirements:
+# BuildRequires:	python
+# BuildRequires:	rpmbuild(macros) >= 1.602
+
+%py_lint() \
+__py_lint() { \
+%{!?debug:set +x;} \
+find "$@" -type f -name '*.py' | python -c ' \
+import sys \
+import compiler \
+\
+found = err = 0\
+for f in sys.stdin: \
+	fd = open(f.rstrip()) \
+	c = fd.read() \
+	fd.close() \
+	found = found + 1 \
+	try: \
+		compiler.parse(c) \
+	except SyntaxError, e: \
+		print "py_lint: %s: %s" % (f.rstrip(), e) \
+		err = err + 1\
+\
+if not found:\
+	print >> sys.stderr, "\\npy_lint: ERROR: No files processed.\\n" \
+	sys.exit(1) \
+elif err: \
+	print >> sys.stderr, "\\npy_lint: ERROR: Syntax errors in %d files.\\n" % err \
+	sys.exit(1) \
+else: \
+	print >> sys.stderr,  "py_lint: %d files scanned, found no syntax errors." % found \
+' \
+}; __py_lint %* \
+%{nil}

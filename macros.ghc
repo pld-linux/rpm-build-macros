@@ -1,0 +1,13 @@
+# Haskell Macros
+# BuildRequires:	rpmbuild(macros) >= 1.608
+%ghcdir		ghc-%(/usr/bin/ghc --numeric-version 2>/dev/null || echo ERROR)
+
+# update /usr/lib*/ghc-*/package.conf.d/package.cache
+# Requires: ghc
+# BuildRequires:	rpmbuild(macros) >= 1.607
+#
+%ghc_pkg_recache() {{ \
+	umask 022; \
+	[ ! -x /usr/bin/ghc-pkg ] || /usr/bin/ghc-pkg recache; \
+};} \
+%{nil}

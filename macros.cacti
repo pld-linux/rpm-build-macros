@@ -1,0 +1,23 @@
+# Import or update Cacti template.
+#
+# Author: Elan Ruusamäe <glen@pld-linux.org>
+#
+# Usage:
+# %cacti_import_template XMLFILE
+#  XMLFILE -- XML template to import
+#
+# Sample:
+# %post
+# %cacti_import_template %{resourcedir}/cacti_host_template_varnish.xml
+#
+# Requires:		cacti >= 0.8.7e-8
+# BuildRequires:	rpmbuild(macros) >= 1.630
+# Note: 1.1 (cacti-0.8.7h) adds requirement for --with-template-rras or --with-user-rras option
+
+%cacti_import_template() {\
+v=$(%{__sed} -rne 's/.+Add Graphs Script ([0-9\.]+).+/\1/p' /usr/share/cacti/cli/import_template.php); \
+if [ "$v" != "1.0" ]; then \
+	rra="--with-template-rras"; \
+fi; \
+/usr/share/cacti/cli/import_template.php --filename=%1 $rra || :; \
+}%{nil}

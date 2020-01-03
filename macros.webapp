@@ -1,0 +1,37 @@
+# webapp macros
+# Author: Elan Ruusamäe <glen@pld-linux.org>
+#
+# The config is installed/removed inside trigger, this means that you can any
+# time install apache1/apache/lighttpd package and the configuration file is
+# updated. if you don't need the config for various reason for specific
+# webserver, just remove the symlink from config directory using webapp
+# program. the trigger will not recreate the symlink on upgrades. In other
+# words the config is linked to webserver config directory on first install of
+# PACKAGE or WEBSERVER.
+#
+# Add package's webserver config to webserver webapps dir.
+# Usage:
+#   %webapp_register [-f] WEBSERVER WEBAPP
+#
+%webapp_register(f) \
+%{?debug:set -x; echo "webapp_register: %{name}-%{version}-%{release} 1:[$1]; 2:[$2]"} \
+if [ -n "%{-f:1}" ] || [ "$1" = "1" ] && [ "$2" = "1" ]; then\
+	/usr/sbin/webapp register %1 %2\
+fi\
+# reload webserver if the config symlink is there and skip reload if webserver is upgraded\
+if [ -L /etc/%1/webapps.d/%(echo "%2" | tr '/' '-').conf ] && [ "$2" -lt "2" ]; then\
+	%{expand:%service -q %%1 reload}\
+fi\
+%{nil}
+
+# Remove package's config from webserver webapps dir.
+# Usage:
+#   %webapp_register [-f] WEBSERVER WEBAPP
+%webapp_unregister(f) \
+%{?debug:set -x; echo "webapp_unregister: %{name}-%{version}-%{release}: 1:[$1]; 2:[$2]"} \
+# remove link if either of the packages are gone \
+if [ -n "%{-f:1}" ] || [ "$1" = "0" ] || [ "$2" = "0" ] && [ -L /etc/%1/webapps.d/%(echo "%2" | tr '/' '-').conf ]; then \
+	/usr/sbin/webapp unregister %1 %2\
+	%{expand:%service -q %%1 reload}\
+fi \
+%{nil}
