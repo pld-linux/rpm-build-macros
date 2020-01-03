@@ -1,6 +1,6 @@
 # Python specific macro definitions.
 
-%__python		/usr/bin/python
+%__python		/usr/bin/python2
 
 # python main version
 %py_ver			%{expand:%%global py_ver %(%{__python} -c "import sys; print sys.version[:3]" 2>/dev/null || echo ERROR)}%py_ver
