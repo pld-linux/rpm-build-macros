@@ -1,3 +1,6 @@
+#
+# TODO: rename to rpm-pld-setup/config and split build stuff from main package
+#
 %define		rpm_macros_rev	1.744
 %define		find_lang_rev	1.40
 Summary:	PLD Linux RPM build macros
@@ -13,6 +16,7 @@ Source3:	find-lang.sh
 Source4:	dokuwiki-find-lang.sh
 Source5:	macros.kernel
 Source6:	attr.kernel
+Source7:	rpmrc
 
 Source10:	attr.ruby
 Source11:	macros.ruby
@@ -165,9 +169,10 @@ fi
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d
+install -d $RPM_BUILD_ROOT%{_usrlibrpm}/{macros.d,pld}
 
 cp -p macros.pld $RPM_BUILD_ROOT%{_usrlibrpm}/macros.build
+cp -p %{SOURCE7} $RPM_BUILD_ROOT%{_usrlibrpm}/pld/rpmrc
 
 cat %{SOURCE5} %{SOURCE6} >$RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/kernel
 
@@ -227,6 +232,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_usrlibrpm}/macros.d/webapp
 %{_usrlibrpm}/macros.d/xmms
 %{_usrlibrpm}/macros.d/xorg
+#%{_usrlibrpm}/pld/rpmrc
 %attr(755,root,root) %{_usrlibrpm}/service_generator.sh
 %attr(755,root,root) %{_usrlibrpm}/find-lang.sh
 %attr(755,root,root) %{_usrlibrpm}/dokuwiki-find-lang.sh
