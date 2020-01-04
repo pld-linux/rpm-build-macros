@@ -1,2 +1,3 @@
 %__kernel_provides	%{_rpmconfigdir}/kmod-deps.sh --provides --modinfo %__modinfo
 #__kernel_requires	%{_rpmconfigdir}/kmod-deps.sh --requires --modinfo %__modinfo
+%__kernel_path		^.*/lib/modules/.*\.ko(\.gz|\.xz)?$
