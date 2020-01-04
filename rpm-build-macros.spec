@@ -89,7 +89,7 @@ Requires:	%{name} = %{version}-%{release}
 Requires:	ruby
 Requires:	ruby-modules
 Requires:	ruby-rubygems
-Provides:	rpm-rubyprov
+Provides:	rpm-rubyprov = 4.15
 Obsoletes:	rpm-rubyprov
 
 %description rubyprov
@@ -110,7 +110,7 @@ Requires:	file
 Requires:	findutils >= 1:4.2.26
 Requires:	mktemp
 Requires:	unzip
-Provides:	rpm-javaprov
+Provides:	rpm-javaprov = 4.15
 Obsoletes:	rpm-javaprov
 
 %description javaprov
@@ -128,8 +128,8 @@ Group:		Applications/File
 Requires:	%{name} = %{version}-%{release}
 Requires:	sed >= 4.0
 Suggests:	php-pear-PHP_CompatInfo
-Provides:	rpm-php-pearprov
-Obsoletes:	php-pearprov
+Provides:	rpm-php-pearprov = 4.15
+Obsoletes:	rpm-php-pearprov
 
 %description php-pearprov
 Additional utilities for checking PHP PEAR provides/requires in RPM
