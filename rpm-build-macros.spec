@@ -51,7 +51,7 @@ Source52:	macros.xmms
 Source53:	macros.xorg
 
 Source60:	rpm-mimetypedeps
-Source61:	macros.mimetypedeps
+Source61:	macros.mimetype
 
 Patch0:		disable-systemd.patch
 #Patchx: %{name}-pydebuginfo.patch
@@ -246,7 +246,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_usrlibrpm}/dokuwiki-find-lang.sh
 %attr(755,root,root) %{_usrlibrpm}/compress-doc
 %attr(755,root,root) %{_usrlibrpm}/find-spec-bcond
-%attr(755,root,root) %{_rpmlibdir}/mimetypedeps.sh
+%attr(755,root,root) %{_usrlibrpm}/mimetypedeps.sh
 
 %files rubyprov
 %defattr(644,root,root,755)
