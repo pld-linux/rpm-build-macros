@@ -70,7 +70,8 @@
 %_initddir		/etc/rc.d/init.d
 
 # Executed at after copying %doc to DOCDIR, with $DOCDIR set
-%__compress_doc		%{_rpmconfigdir}/compress-doc%{?_noautocompressdoc: --noautocompressdoc='%{_noautocompressdoc}'}
+# TODO: teach rpm.org that compressed %doc is the same thing as uncompressed
+#__compress_doc		%{_rpmconfigdir}/compress-doc%{?_noautocompressdoc: --noautocompressdoc='%{_noautocompressdoc}'}
 
 %__os_install_post \
 %{__spec_install_post_strip}\
