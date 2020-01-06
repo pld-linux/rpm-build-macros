@@ -30,7 +30,7 @@
 %ruby_ver_requires_eq		%{nil}
 %ruby_mod_ver_requires_eq	%{nil}
 
-%__gem_helper %{_usrlibrpm}/gem_helper.rb
+%__gem_helper %{_rpmconfigdir}/gem_helper.rb
 
 %gem_build(f:j:) \
 	%__gem_helper build \\\
