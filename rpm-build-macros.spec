@@ -16,7 +16,6 @@ Source3:	find-lang.sh
 Source4:	dokuwiki-find-lang.sh
 Source5:	macros.kernel
 Source6:	attr.kernel
-Source7:	rpmrc
 Source8:	rpm-compress-doc
 Source9:	rpm-find-spec-bcond
 
@@ -177,7 +176,6 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_usrlibrpm}/{macros.d,pld}
 
 cp -p macros.pld $RPM_BUILD_ROOT%{_usrlibrpm}/macros.build
-cp -p %{SOURCE7} $RPM_BUILD_ROOT%{_usrlibrpm}/pld/rpmrc
 cp -p %{SOURCE8} $RPM_BUILD_ROOT%{_usrlibrpm}/compress-doc
 cp -p %{SOURCE9} $RPM_BUILD_ROOT%{_usrlibrpm}/find-spec-bcond
 
@@ -243,7 +241,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_usrlibrpm}/macros.d/webapp
 %{_usrlibrpm}/macros.d/xmms
 %{_usrlibrpm}/macros.d/xorg
-#%{_usrlibrpm}/pld/rpmrc
 %attr(755,root,root) %{_usrlibrpm}/service_generator.sh
 %attr(755,root,root) %{_usrlibrpm}/find-lang.sh
 %attr(755,root,root) %{_usrlibrpm}/dokuwiki-find-lang.sh
