@@ -1,11 +1,8 @@
-#
-# TODO: rename to rpm-pld-setup/config and split build stuff from main package
-#
 %define		rpm_macros_rev	1.744
 %define		find_lang_rev	1.40
-Summary:	PLD Linux RPM build macros
-Summary(pl.UTF-8):	Makra do budowania pakietów RPM dla Linuksa PLD
-Name:		rpm-build-macros
+Summary:	PLD Linux RPM macros
+Summary(pl.UTF-8):	Makra RPM dla Linuksa PLD
+Name:		rpm-pld-macros
 Version:	%{rpm_macros_rev}
 Release:	2
 License:	GPL
@@ -20,18 +17,18 @@ Source7:	rpmrc
 Source8:	rpm-compress-doc
 Source9:	rpm-find-spec-bcond
 
-Source10:	attr.ruby
-Source11:	macros.ruby
+Source10:	macros.ruby
+Source11:	attr.ruby
 Source12:	rubygems.rb
 Source13:	gem_helper.rb
 
-Source20:	attr.java
-Source21:	macros.java
+Source20:	macros.java
+Source21:	attr.java
 Source22:	rpm-java-requires
 Source23:	eclipse-feature.xslt
 
-Source30:	attr.php
-Source31:	macros.php
+Source30:	macros.php
+Source31:	attr.php
 Source32:	rpm-php-provides
 Source33:	rpm-php-requires
 Source34:	rpm-php-requires.php
@@ -55,29 +52,11 @@ Source60:	rpm-mimetypedeps
 Source61:	macros.mimetypedeps
 
 Patch0:		disable-systemd.patch
-#Patchx: %{name}-pydebuginfo.patch
 BuildRequires:	rpm >= 4.4.9-56
 BuildRequires:	sed >= 4.0
-Requires:	findutils >= 1:4.2.26
-Provides:	rpmbuild(find_lang) = %{find_lang_rev}
-Provides:	rpmbuild(macros) = %{rpm_macros_rev}
 Obsoletes:	rpm-macros
 # rm: option `--interactive' doesn't allow an argument
 Conflicts:	coreutils < 6.9
-Conflicts:	gettext-devel < 0.11
-# tmpdir/_tmppath macros problems; optcppflags missing
-Conflicts:	rpm < 4.4.9-72
-# macros.d/*
-Conflicts:	rpm-build < 5.4.15-52
-# php-config --sysconfdir
-Conflicts:	php-devel < 4:5.2.0-3
-Conflicts:	php4-devel < 3:4.4.4-10
-# sysconfig module with proper 'purelib' path
-Conflicts:	python3 < 1:3.2.1-3
-%if "%{pld_release}" != "ac"
-# libtool --install
-Conflicts:	libtool < 2:2.2
-%endif
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -85,9 +64,38 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_usrlibrpm %{_prefix}/lib/rpm
 
 %description
-This package contains rpm build macros for PLD Linux.
+This package contains rpm macros for PLD Linux.
 
 %description -l pl.UTF-8
+Ten pakiet zawiera makra rpm-a dla Linuksa PLD.
+
+%package build
+Summary:	PLD Linux RPM build macros
+Summary(pl.UTF-8):	Makra do budowania pakietów RPM dla Linuksa PLD
+Requires:	%{name} = %{version}-%{release}
+Requires:	findutils >= 1:4.2.26
+Provides:	rpmbuild(find_lang) = %{find_lang_rev}
+Provides:	rpmbuild(macros) = %{rpm_macros_rev}
+Obsoletes:	rpm-build-macros
+Conflicts:	gettext-devel < 0.11
+# macros.d/*
+Conflicts:	rpm-build < 5.4.15-52
+# php-config --sysconfdir
+Conflicts:	php-devel < 4:5.2.0-3
+Conflicts:	php4-devel < 3:4.4.4-10
+# sysconfig module with proper 'purelib' path
+Conflicts:	python3 < 1:3.2.1-3
+# tmpdir/_tmppath macros problems; optcppflags missing
+Conflicts:	rpm < 4.4.9-72
+%if "%{pld_release}" != "ac"
+# libtool --install
+Conflicts:	libtool < 2:2.2
+%endif
+
+%description build
+This package contains rpm build macros for PLD Linux.
+
+%description build -l pl.UTF-8
 Ten pakiet zawiera makra rpm-a do budowania pakietów dla Linuksa PLD.
 
 %package rubyprov
@@ -174,28 +182,33 @@ fi
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_usrlibrpm}/{macros.d,pld}
+install -d $RPM_BUILD_ROOT%{_usrlibrpm}/{fileattrs,macros.d,pld}
 
-cp -p macros.pld $RPM_BUILD_ROOT%{_usrlibrpm}/macros.build
+cp -p macros.pld $RPM_BUILD_ROOT%{_usrlibrpm}/pld/macros
 cp -p %{SOURCE7} $RPM_BUILD_ROOT%{_usrlibrpm}/pld/rpmrc
+
 cp -p %{SOURCE8} $RPM_BUILD_ROOT%{_usrlibrpm}/compress-doc
 cp -p %{SOURCE9} $RPM_BUILD_ROOT%{_usrlibrpm}/find-spec-bcond
 
-cat %{SOURCE5} %{SOURCE6} >$RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/kernel
+cp -p %{SOURCE5} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/kernel
+cp -p %{SOURCE6} $RPM_BUILD_ROOT%{_usrlibrpm}/fileattrs/kernel.attr
 
-install -p service_generator.sh $RPM_BUILD_ROOT%{_usrlibrpm}
-install -p %{SOURCE3} $RPM_BUILD_ROOT%{_usrlibrpm}/find-lang.sh
-install -p %{SOURCE4} $RPM_BUILD_ROOT%{_usrlibrpm}/dokuwiki-find-lang.sh
+cp -p service_generator.sh $RPM_BUILD_ROOT%{_usrlibrpm}
+cp -p %{SOURCE3} $RPM_BUILD_ROOT%{_usrlibrpm}/find-lang.sh
+cp -p %{SOURCE4} $RPM_BUILD_ROOT%{_usrlibrpm}/dokuwiki-find-lang.sh
 
-cat %{SOURCE11} %{SOURCE10} >$RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/ruby
-install -p %{SOURCE12} $RPM_BUILD_ROOT%{_usrlibrpm}/rubygems.rb
-install -p %{SOURCE13} $RPM_BUILD_ROOT%{_usrlibrpm}/gem_helper.rb
+cp -p %{SOURCE10} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/ruby
+cp -p %{SOURCE11} $RPM_BUILD_ROOT%{_usrlibrpm}/fileattrs/ruby.attr
+cp -p %{SOURCE12} $RPM_BUILD_ROOT%{_usrlibrpm}/rubygems.rb
+cp -p %{SOURCE13} $RPM_BUILD_ROOT%{_usrlibrpm}/gem_helper.rb
 
-cat %{SOURCE21} %{SOURCE20} >$RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/java
-install %{SOURCE22} $RPM_BUILD_ROOT%{_usrlibrpm}/java-find-requires
-install %{SOURCE23} $RPM_BUILD_ROOT%{_usrlibrpm}/eclipse-feature.xslt
+cp -p %{SOURCE20} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/java
+cp -p %{SOURCE21} $RPM_BUILD_ROOT%{_usrlibrpm}/fileattrs/java.attr
+cp -p %{SOURCE22} $RPM_BUILD_ROOT%{_usrlibrpm}/java-find-requires
+cp -p %{SOURCE23} $RPM_BUILD_ROOT%{_usrlibrpm}/eclipse-feature.xslt
 
-cat %{SOURCE31} %{SOURCE30} >$RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/php
+cp -p %{SOURCE30} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/php
+cp -p %{SOURCE31} $RPM_BUILD_ROOT%{_usrlibrpm}/fileattrs/php.attr
 cp -p %{SOURCE32} $RPM_BUILD_ROOT%{_usrlibrpm}/php.prov
 cp -p %{SOURCE33} $RPM_BUILD_ROOT%{_usrlibrpm}/php.req
 cp -p %{SOURCE34} $RPM_BUILD_ROOT%{_usrlibrpm}/php.req.php
@@ -223,7 +236,16 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%{_usrlibrpm}/macros.build
+%{_usrlibrpm}/pld/macros
+%{_usrlibrpm}/pld/rpmrc
+
+%files build
+%defattr(644,root,root,755)
+%{_usrlibrpm}/fileattrs/java.attr
+%{_usrlibrpm}/fileattrs/kernel.attr
+%{_usrlibrpm}/fileattrs/php.attr
+%{_usrlibrpm}/fileattrs/ruby.attr
+
 %{_usrlibrpm}/macros.d/browser-plugins
 %{_usrlibrpm}/macros.d/cacti
 %{_usrlibrpm}/macros.d/emacs
@@ -243,13 +265,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_usrlibrpm}/macros.d/webapp
 %{_usrlibrpm}/macros.d/xmms
 %{_usrlibrpm}/macros.d/xorg
-#%{_usrlibrpm}/pld/rpmrc
-%attr(755,root,root) %{_usrlibrpm}/service_generator.sh
-%attr(755,root,root) %{_usrlibrpm}/find-lang.sh
-%attr(755,root,root) %{_usrlibrpm}/dokuwiki-find-lang.sh
-%attr(755,root,root) %{_usrlibrpm}/compress-doc
-%attr(755,root,root) %{_usrlibrpm}/find-spec-bcond
+
 %attr(755,root,root) %{_rpmlibdir}/mimetypedeps.sh
+%attr(755,root,root) %{_usrlibrpm}/compress-doc
+%attr(755,root,root) %{_usrlibrpm}/dokuwiki-find-lang.sh
+%attr(755,root,root) %{_usrlibrpm}/find-lang.sh
+%attr(755,root,root) %{_usrlibrpm}/find-spec-bcond
+%attr(755,root,root) %{_usrlibrpm}/service_generator.sh
 
 %files rubyprov
 %defattr(644,root,root,755)
