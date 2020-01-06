@@ -47,9 +47,10 @@ Source50:	macros.upstart
 Source51:	macros.webapp
 Source52:	macros.xmms
 Source53:	macros.xorg
+Source54:	macros.selinux
 
-Source60:	rpm-mimetypedeps
-Source61:	macros.mimetypedeps
+Source60:	macros.gstreamer
+Source61:	attr.gstreamer
 
 Patch0:		disable-systemd.patch
 BuildRequires:	rpm >= 4.4.9-56
@@ -227,9 +228,10 @@ cp -p %{SOURCE50} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/upstart
 cp -p %{SOURCE51} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/webapp
 cp -p %{SOURCE52} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/xmms
 cp -p %{SOURCE53} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/xorg
+cp -p %{SOURCE54} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/selinux
 
-cp -p %{SOURCE60} $RPM_BUILD_ROOT%{_usrlibrpm}/mimetypedeps.sh
-cp -p %{SOURCE61} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/mimetype
+cp -p %{SOURCE60} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/gstreamer
+cp -p %{SOURCE61} $RPM_BUILD_ROOT%{_usrlibrpm}/fileattrs/gstreamer.attr
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -242,6 +244,7 @@ rm -rf $RPM_BUILD_ROOT
 %files build
 %defattr(644,root,root,755)
 %{_usrlibrpm}/fileattrs/java.attr
+%{_usrlibrpm}/fileattrs/gstreamer.attr
 %{_usrlibrpm}/fileattrs/kernel.attr
 %{_usrlibrpm}/fileattrs/php.attr
 %{_usrlibrpm}/fileattrs/ruby.attr
@@ -250,15 +253,16 @@ rm -rf $RPM_BUILD_ROOT
 %{_usrlibrpm}/macros.d/cacti
 %{_usrlibrpm}/macros.d/emacs
 %{_usrlibrpm}/macros.d/ghc
+%{_usrlibrpm}/macros.d/gstreamer
 %{_usrlibrpm}/macros.d/java
 %{_usrlibrpm}/macros.d/kernel
-%{_usrlibrpm}/macros.d/mimetype
 %{_usrlibrpm}/macros.d/nagios
 %{_usrlibrpm}/macros.d/openldap
 %{_usrlibrpm}/macros.d/perl
 %{_usrlibrpm}/macros.d/php
 %{_usrlibrpm}/macros.d/python
 %{_usrlibrpm}/macros.d/ruby
+%{_usrlibrpm}/macros.d/selinux
 %{_usrlibrpm}/macros.d/systemd
 %{_usrlibrpm}/macros.d/tcl
 %{_usrlibrpm}/macros.d/upstart
@@ -266,7 +270,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_usrlibrpm}/macros.d/xmms
 %{_usrlibrpm}/macros.d/xorg
 
-%attr(755,root,root) %{_rpmlibdir}/mimetypedeps.sh
 %attr(755,root,root) %{_usrlibrpm}/compress-doc
 %attr(755,root,root) %{_usrlibrpm}/dokuwiki-find-lang.sh
 %attr(755,root,root) %{_usrlibrpm}/find-lang.sh

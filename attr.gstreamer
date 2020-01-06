@@ -1,0 +1,2 @@
+%__gstreamer_provides	%{_rpmconfigdir}/gstreamer.sh --provides --gst-inspect %__gst_inspect
+#__gstreamer_requires	%{_rpmconfigdir}/gstreamer.sh --requires
