@@ -1,0 +1,7 @@
+#------------------------------------------------------------------------
+# mimetype(...) configuration.
+#
+# Path to script to autogenerate mimetype(foo) provides, based on MimeType
+# key from desktop files.
+#
+%__mimetype_provides %{_usrlibrpm}/mimetypedeps.sh --provides

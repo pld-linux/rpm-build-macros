@@ -17,6 +17,8 @@ Source4:	dokuwiki-find-lang.sh
 Source5:	macros.kernel
 Source6:	attr.kernel
 Source7:	rpmrc
+Source8:	rpm-compress-doc
+Source9:	rpm-find-spec-bcond
 
 Source10:	attr.ruby
 Source11:	macros.ruby
@@ -48,6 +50,9 @@ Source50:	macros.upstart
 Source51:	macros.webapp
 Source52:	macros.xmms
 Source53:	macros.xorg
+
+Source60:	rpm-mimetypedeps
+Source61:	macros.mimetypedeps
 
 Patch0:		disable-systemd.patch
 #Patchx: %{name}-pydebuginfo.patch
@@ -173,6 +178,8 @@ install -d $RPM_BUILD_ROOT%{_usrlibrpm}/{macros.d,pld}
 
 cp -p macros.pld $RPM_BUILD_ROOT%{_usrlibrpm}/macros.build
 cp -p %{SOURCE7} $RPM_BUILD_ROOT%{_usrlibrpm}/pld/rpmrc
+cp -p %{SOURCE8} $RPM_BUILD_ROOT%{_usrlibrpm}/compress-doc
+cp -p %{SOURCE9} $RPM_BUILD_ROOT%{_usrlibrpm}/find-spec-bcond
 
 cat %{SOURCE5} %{SOURCE6} >$RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/kernel
 
@@ -208,6 +215,9 @@ cp -p %{SOURCE51} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/webapp
 cp -p %{SOURCE52} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/xmms
 cp -p %{SOURCE53} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/xorg
 
+cp -p %{SOURCE60} $RPM_BUILD_ROOT%{_usrlibrpm}/mimetypedeps.sh
+cp -p %{SOURCE61} $RPM_BUILD_ROOT%{_usrlibrpm}/macros.d/mimetype
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -220,6 +230,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_usrlibrpm}/macros.d/ghc
 %{_usrlibrpm}/macros.d/java
 %{_usrlibrpm}/macros.d/kernel
+%{_usrlibrpm}/macros.d/mimetype
 %{_usrlibrpm}/macros.d/nagios
 %{_usrlibrpm}/macros.d/openldap
 %{_usrlibrpm}/macros.d/perl
@@ -236,6 +247,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_usrlibrpm}/service_generator.sh
 %attr(755,root,root) %{_usrlibrpm}/find-lang.sh
 %attr(755,root,root) %{_usrlibrpm}/dokuwiki-find-lang.sh
+%attr(755,root,root) %{_usrlibrpm}/compress-doc
+%attr(755,root,root) %{_usrlibrpm}/find-spec-bcond
+%attr(755,root,root) %{_rpmlibdir}/mimetypedeps.sh
 
 %files rubyprov
 %defattr(644,root,root,755)
