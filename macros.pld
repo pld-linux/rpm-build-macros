@@ -3,11 +3,205 @@
 # PLD Linux rpm macros.
 # <http://www.pld-linux.org/>
 
+%distribution	PLD Linux
+%vendor		pld
+%bugurl		http://bugs.pld-linux.org/
+%disturl	http://www.pld-linux.org/
+%pld_release	th
+%disttag	%{pld_release}
+
 # can be used by builder script to check for version
 %rpm_build_macros	{Revision}
 
 %epoch		0
-%x8664		x86_64 amd64 ia32e
+
+#==============================================================================
+# ---- configure macros.  note that most of these are inherited
+#      from the defaults.
+#
+%_sharedstatedir	/var/lib
+%_localstatedir		/var
+%_initrddir		%{_sysconfdir}/rc.d/init.d
+
+%_defaultdocdir		%{_usr}/share/doc
+
+%_fmoddir		%{_libdir}/gfortran/modules
+
+# Location of autoconf macros
+%_aclocaldir	%{expand:%%global _aclocaldir %(aclocal --print-ac-dir 2>/dev/null || echo ERROR)}%_aclocaldir
+
+# Location of omf files
+%_omf_dest_dir	%{expand:%%global _omf_dest_dir %(scrollkeeper-config --omfdir || echo ERROR)}%_omf_dest_dir
+
+# Location of pkgconfig files
+%_pkgconfigdir	/usr/%{_lib}/pkgconfig
+# noarch pkgconfig files
+%_npkgconfigdir	/usr/share/pkgconfig
+
+# Location of desktop files
+%_desktopdir	/usr/share/applications
+%_applnkdir	ERROR:_applnkdir_is_obsolete_use_desktopdir_instead
+
+# Location of pixmaps for applnk/desktop files
+%_pixmapsdir	/usr/share/pixmaps
+
+# Location of themable icons for applnk/desktop files
+%_iconsdir	/usr/share/icons
+
+# Location of fonts directories
+%_fontsdir	/usr/share/fonts
+
+# Location of Gtk and associated libraries documentation
+%_gtkdocdir	%{_defaultdocdir}/gtk-doc/html
+
+# Location of KDE documentation
+%_kdedocdir	%{_defaultdocdir}/kde/HTML
+
+# unsermake script
+%__unsermake /usr/share/unsermake/unsermake
+
+# Current date
+%date		%(LC_ALL=C date +"%a %b %d %Y")
+
+# Example files, programs, scripts...
+%_examplesdir	/usr/src/examples
+
+# SysV-style initscripts dir
+%_initddir		/etc/rc.d/init.d
+
+# Executed at after copying %doc to DOCDIR, with $DOCDIR set
+%__compress_doc		%{_rpmconfigdir}/compress-doc%{?_noautocompressdoc: --noautocompressdoc='%{_noautocompressdoc}'}
+
+%__os_install_post \
+%{__spec_install_post_strip}\
+%{__spec_install_post_chrpath}\
+%{__spec_install_post_compress_modules}\
+%{__spec_install_post_check_so}\
+%{__spec_install_post_check_tmpfiles}\
+%{__spec_install_post_check_shebangs}\
+%{__spec_install_post_compress_docs}\
+%{__spec_install_post_py_hardlink}\
+%{__spec_install_post_perl_clean}\
+%{__arch_install_post}\
+%{nil}
+
+%__spec_install_post\
+%{expand:%%define __sip_%{?_enable_debug_packages} 1}%{?__sip_1:%{?__debug_package:%{__debug_install_post}}}%{expand:%%undefine __sip_%{?_enable_debug_packages}}\
+%{__arch_install_post}\
+%{__os_install_post}\
+%{nil}
+
+#---------------------------------------------------------------------
+#	Template for debug information sub-package.
+%_enable_debug_packages		1
+
+%debug_package \
+%ifnarch noarch\
+%global __debug_package 1\
+%package debuginfo\
+Summary: Debug information for package %{name}\
+Summary(pl.UTF-8): Informacje dla debuggera dla pakietu %{name}\
+Group: Development/Debug\
+Requires: filesystem-debuginfo >= 3.0-16\
+AutoReqProv: 0\
+%description debuginfo\
+This package provides debug information for package %{name}.\
+Debug information is useful when developing applications that use this\
+package or when debugging this package.\
+%description debuginfo -l pl.UTF-8\
+Ten pakiet dostarcza informacje dla debuggera dla pakietu %{name}.\
+Informacje te są przydatne przy rozwijaniu aplikacji używających tego\
+pakietu oraz przy odpluskwianiu samego pakietu.\
+%files debuginfo -f debugfiles.list\
+%defattr(-,root,root)\
+%endif\
+%{nil}
+
+#---------------------------------------------------------------------
+# Overwrite RPM macros with PLD specific one here.
+
+%__find			/usr/bin/find
+%__lua			%{_bindir}/lua
+%__rc			%{_bindir}/rc
+%__xar			%{_bindir}/xar
+
+%_tmppath		%(echo "${TMPDIR:-/var/tmp}")
+%tmpdir			%{_tmppath}
+
+%_topdir		%(echo $HOME)/rpm
+
+%buildroot		%{_tmppath}/%{name}-%{version}-root-%(id -u -n)
+
+%_source_payload	w9.gzdio
+%_binary_payload	w6.xzdio
+
+%_rpmfc_magic_path	/usr/share/file/magic
+
+# provides don't obsolete
+%_upgrade_tag		name
+
+# Disable automatic dependencies on symlinks for now (debuginfo packages pull too many deps)
+%_check_symlink_deps    0 
+ 
+# Do not generate executable() dependencies for scriptlets,
+# as it may give false positives, for example:
+# [ ! -x /bin/prog ] || /bin/prog
+# will generate R:/bin/prog and we don't want that as /bin/prog is optional in this case
+# 0 - Use external generator
+# 1 - Use internal generator if available
+# 2 - Use __scriptlet_requires to process scriptlet dependencies
+%_use_internal_dependency_generator	1
+
+%_duplicate_files_terminate_build	1
+%_files_listed_twice_terminate_build	1
+%_unpackaged_files_terminate_build	0
+%_unpackaged_subdirs_terminate_build	0
+
+#
+# Export package NEVRA (stamped with install tid) info for HRMIB on this path.
+#
+# XXX	Note: escaped %% for use in headerSprintf()
+%_hrmib_path	/var/cache/hrmib/%{___NVRA}
+
+#-----------------------------------------------------------------
+# CFLAGS and LDFLAGS used to build
+
+%debuginfocflags	%{expand:%%define __dic_%{?_enable_debug_packages} 1}%{?__dic_1: -gdwarf-4 -fno-debug-types-section -fvar-tracking-assignments -g2}%{expand:%%undefine __dic_%{?_enable_debug_packages}}
+# -feliminate-dwarf2-dups disabled until PR ld/3290 is fixed.
+
+%debugcflags	-O0 -g -Wall
+%debugcppflags	%{nil}
+%debugldflags	%{nil}
+
+%optldflags	-Wl,--as-needed -Wl,--no-copy-dt-needed-entries -Wl,-z,relro -Wl,-z,combreloc
+%optcppflags	%{nil}
+
+# common compilation flags
+%_fortify_cflags	-Wp,-D_FORTIFY_SOURCE=2
+
+# cf http://wiki.mandriva.com/en/Development/Packaging/Problems#format_not_a_string_literal_and_no_format_arguments
+%Werror_cflags		-Wformat -Werror=format-security
+
+# Use -Werror=trampolines to prevent GCC from generating code that require executable stack
+%_ssp_cflags		-fstack-protector-strong --param=ssp-buffer-size=4 -Werror=trampolines
+%__common_cflags	-O2 -fwrapv -pipe %{Werror_cflags} %{debuginfocflags} %{?_fortify_cflags} %{!?nospecflags:%{?specflags}}
+%__common_cflags_with_ssp	%{__common_cflags} %{?_ssp_cflags}
+
+# arch macros
+%ix86  i386 i486 i586 i686 pentium3 pentium4 athlon geode
+%x8664 x86_64 amd64 ia32e
+%ppc   ppc ppc7400 ppc7450
+
+# avoid fdatasync syscall flood during database operations.
+%__nofsync	nofsync
+
+#---------------------------------------------------------------------
+#	Expanded at end of %prep
+#
+%__chown_Rhf	%{__chown} -Rhf
+%__chgrp_Rhf	%{__chgrp} -Rhf
+%_fixowner	[ `%{__id_u}` = '0' ] && %{__chown_Rhf} root
+%_fixgroup	[ `%{__id_u}` = '0' ] && %{__chgrp_Rhf} root
 
 # compiler version
 %cc_version	%{expand:%%global cc_version %(%{__cc} -dumpversion 2>/dev/null || echo 0.0)}%cc_version
@@ -16,9 +210,11 @@
 %__rm		/bin/rm --interactive=never
 
 # Build system path macros.
-%__autoconf	autoconf %{?debug:-Wall}
-%__automake	automake -a -c -f --foreign
+%__autoconf		autoconf %{?debug:-Wall}
+%__automake		automake -a -c -f --foreign
 %__autopoint	autopoint --force
+%__aclocal		aclocal
+%__autoheader	autoheader
 
 # add parallel build flags: -jN
 # jobs macro is available since 1.657
@@ -261,7 +457,7 @@
 %{?__cxx:CXX="${CXX:-%{__cxx}}"} \\\
 CPPFLAGS="${CPPFLAGS:-%{rpmcppflags}}" \\\
 %{__cmake} \\\
-	-DCMAKE_VERBOSE_MAKEFILE=ON \\\
+	-DCMAKE_VERBOSE_MAKEFILE=BOOL:ON \\\
 	-DCMAKE_BUILD_TYPE=%{!?debug:PLD}%{?debug:Debug} \\\
 	-DCMAKE_INSTALL_BINDIR:PATH=%{_bindir} \\\
 	-DCMAKE_INSTALL_SBINDIR:PATH=%{_sbindir} \\\
@@ -443,48 +639,6 @@ LC_ALL=C.UTF-8 %{__meson} \
 %endif\
 %%prep\
 %{nil}
-
-# Location of autoconf macros
-%_aclocaldir	%{expand:%%global _aclocaldir %(aclocal --print-ac-dir 2>/dev/null || echo ERROR)}%_aclocaldir
-
-# Location of omf files
-%_omf_dest_dir	%{expand:%%global _omf_dest_dir %(scrollkeeper-config --omfdir || echo ERROR)}%_omf_dest_dir
-
-# Location of pkgconfig files
-%_pkgconfigdir	/usr/%{_lib}/pkgconfig
-# noarch pkgconfig files
-%_npkgconfigdir	/usr/share/pkgconfig
-
-# Location of desktop files
-%_desktopdir	/usr/share/applications
-%_applnkdir	ERROR:_applnkdir_is_obsolete_use_desktopdir_instead
-
-# Location of pixmaps for applnk/desktop files
-%_pixmapsdir	/usr/share/pixmaps
-
-# Location of themable icons for applnk/desktop files
-%_iconsdir	/usr/share/icons
-
-# Location of fonts directories
-%_fontsdir	/usr/share/fonts
-
-# Location of Gtk and associated libraries documentation
-%_gtkdocdir	%{_defaultdocdir}/gtk-doc/html
-
-# Location of KDE documentation
-%_kdedocdir	%{_defaultdocdir}/kde/HTML
-
-# unsermake script
-%__unsermake /usr/share/unsermake/unsermake
-
-# Current date
-%date		%(LC_ALL=C date +"%a %b %d %Y")
-
-# Example files, programs, scripts...
-%_examplesdir	/usr/src/examples
-
-# SysV-style initscripts dir
-%_initddir		/etc/rc.d/init.d
 
 # If non-empty "debug" macro defined, add "dbg" suffix to release number
 %_rpmfilename		%%{NAME}-%%{VERSION}-%%{RELEASE}%{?debug:dbg}.%%{ARCH}.rpm
@@ -1409,5 +1563,3 @@ end\
 umask 022; \
 /usr/bin/vim -c ':helptags /usr/share/vim/doc' -c ':q' 2>/dev/null \
 %{nil}
-
-# EOF
