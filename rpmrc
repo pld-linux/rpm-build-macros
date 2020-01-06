@@ -22,39 +22,39 @@ optflags: armv8hl %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit
 optflags: armv8hnl %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} %{?!_disable_neon:-mfpu=neon-vfpv4} -march=armv8-a -mfloat-abi=hard %{!?nospecflags:%{?specflags_arm} %{?specflags_arm8hnl}}
 optflags: armv8hcnl %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} %{?!_disable_neon:-mfpu=neon-vfpv4} -march=armv8-a+crypto -mfloat-abi=hard %{!?nospecflags:%{?specflags_arm} %{?specflags_arm8hcnl}}
 
-ooptflags: athlon %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer}%{!?__common_cflags_with_ssp:-O2 -g -m32} %{?!_disable_lto:-flto} -march=athlon -fasynchronous-unwind-tables %{!?nospecflags:%{?specflags_ia32} %{?specflags_athlon}}
-ooptflags: geode %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer}%{!?__common_cflags_with_ssp:-O2 -g -m32} %{?!_disable_lto:-flto} -march=geode -fasynchronous-unwind-tables %{!?nospecflags:%{?specflags_ia32} %{?specflags_geode}}
-ooptflags: i386 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer}%{!?__common_cflags_with_ssp:-O2 -g -m32} %{?!_disable_lto:-flto} -march=i386 -mtune=generic -fasynchronous-unwind-tables %{!?nospecflags:%{?specflags_ia32:} %{?specflags_i386}}
-ooptflags: i486 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer}%{!?__common_cflags_with_ssp:-O2 -g -m32} %{?!_disable_lto:-flto} -march=i486 -fasynchronous-unwind-tables %{!?nospecflags:%{?specflags_ia32} %{?specflags_i486}}
-ooptflags: i586 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer -mtune=generic}%{!?__common_cflags_with_ssp:-O2 -g -m32} %{?!_disable_lto:-flto} -march=i586 -fasynchronous-unwind-tables %{!?nospecflags:%{?specflags_ia32} %{?specflags_i586}}
-ooptflags: i686 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer}%{!?__common_cflags_with_ssp:-O2 -g -m32 -mtune=generic} %{?!_disable_lto:-flto} -march=i686 -fasynchronous-unwind-tables -mtune=pentium4 %{!?nospecflags:%{?specflags_ia32} %{?specflags_i686}}
-ooptflags: pentium3 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer}%{!?__common_cflags_with_ssp:-O2 -g -m32} %{?!_disable_lto:-flto} -march=pentium3 -fasynchronous-unwind-tables %{!?nospecflags:%{?specflags_ia32} %{?specflags_pentium3}}
-ooptflags: pentium4 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer}%{!?__common_cflags_with_ssp:-O2 -g -m32} %{?!_disable_lto:-flto} -march=pentium4 -fasynchronous-unwind-tables %{!?nospecflags:%{?specflags_ia32} %{?specflags_pentium4}}
+optflags: athlon %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer}%{!?__common_cflags_with_ssp:-O2 -g -m32} %{?!_disable_lto:-flto} -march=athlon -fasynchronous-unwind-tables %{!?nospecflags:%{?specflags_ia32} %{?specflags_athlon}}
+optflags: geode %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer}%{!?__common_cflags_with_ssp:-O2 -g -m32} %{?!_disable_lto:-flto} -march=geode -fasynchronous-unwind-tables %{!?nospecflags:%{?specflags_ia32} %{?specflags_geode}}
+optflags: i386 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer}%{!?__common_cflags_with_ssp:-O2 -g -m32} %{?!_disable_lto:-flto} -march=i386 -mtune=generic -fasynchronous-unwind-tables %{!?nospecflags:%{?specflags_ia32:} %{?specflags_i386}}
+optflags: i486 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer}%{!?__common_cflags_with_ssp:-O2 -g -m32} %{?!_disable_lto:-flto} -march=i486 -fasynchronous-unwind-tables %{!?nospecflags:%{?specflags_ia32} %{?specflags_i486}}
+optflags: i586 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer -mtune=generic}%{!?__common_cflags_with_ssp:-O2 -g -m32} %{?!_disable_lto:-flto} -march=i586 -fasynchronous-unwind-tables %{!?nospecflags:%{?specflags_ia32} %{?specflags_i586}}
+optflags: i686 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer}%{!?__common_cflags_with_ssp:-O2 -g -m32 -mtune=generic} %{?!_disable_lto:-flto} -march=i686 -fasynchronous-unwind-tables -mtune=pentium4 %{!?nospecflags:%{?specflags_ia32} %{?specflags_i686}}
+optflags: pentium3 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer}%{!?__common_cflags_with_ssp:-O2 -g -m32} %{?!_disable_lto:-flto} -march=pentium3 -fasynchronous-unwind-tables %{!?nospecflags:%{?specflags_ia32} %{?specflags_pentium3}}
+optflags: pentium4 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer}%{!?__common_cflags_with_ssp:-O2 -g -m32} %{?!_disable_lto:-flto} -march=pentium4 -fasynchronous-unwind-tables %{!?nospecflags:%{?specflags_ia32} %{?specflags_pentium4}}
 
-ooptflags: ia64 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} %{!?nospecflags:%{?specflags_ia64}}
+optflags: ia64 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} %{!?nospecflags:%{?specflags_ia64}}
 
-ooptflags: mips %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} -march=mips3 %{!?nospecflags:%{?specflags_mips}}
-ooptflags: mipsel %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} -march=mips3 -mtune=loongson2f %{!?nospecflags:%{?specflags_mipsel}}
+optflags: mips %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} -march=mips3 %{!?nospecflags:%{?specflags_mips}}
+optflags: mipsel %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fomit-frame-pointer}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} -march=mips3 -mtune=loongson2f %{!?nospecflags:%{?specflags_mipsel}}
 
-ooptflags: ppc64 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} -m64 -mminimal-toc %{!?nospecflags:%{?specflags_ppc64}}} 
-ooptflags: ppc64iseries %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} -m64 -mminimal-toc %{!?nospecflags:%{?specflags_ppc64}}} 
-ooptflags: ppc64pseries %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} -m64 -mminimal-toc %{!?nospecflags:%{?specflags_ppc64}}} 
-ooptflags: ppc %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} -m32 -fsigned-char %{!?nospecflags:%{?specflags_ppc}}} 
-ooptflags: ppciseries %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} -m32 %{!?nospecflags:%{?specflags_ppc}}} 
-ooptflags: ppcpseries %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} -m32 %{!?nospecflags:%{?specflags_ppc}}} 
+optflags: ppc64 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} -m64 -mminimal-toc %{!?nospecflags:%{?specflags_ppc64}}} 
+optflags: ppc64iseries %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} -m64 -mminimal-toc %{!?nospecflags:%{?specflags_ppc64}}} 
+optflags: ppc64pseries %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} -m64 -mminimal-toc %{!?nospecflags:%{?specflags_ppc64}}} 
+optflags: ppc %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} -m32 -fsigned-char %{!?nospecflags:%{?specflags_ppc}}} 
+optflags: ppciseries %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} -m32 %{!?nospecflags:%{?specflags_ppc}}} 
+optflags: ppcpseries %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} -m32 %{!?nospecflags:%{?specflags_ppc}}} 
 
-ooptflags: s390 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} -m31 %{!?nospecflags:%{?specflags_s390}}
-ooptflags: s390x %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} -m64 %{!?nospecflags:%{?specflags_s390x}}
+optflags: s390 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} -m31 %{!?nospecflags:%{?specflags_s390}}
+optflags: s390x %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g} %{?!_disable_lto:-flto} -m64 %{!?nospecflags:%{?specflags_s390x}}
 
-ooptflags: sparc %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g} -m32 -mcpu=v7 -mtune=ultrasparc %{!?nospecflags:%{?specflags_sparc}}
-ooptflags: sparcv9 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g} -m32 -mcpu=ultrasparc %{!?nospecflags:%{?specflags_sparc}}
-ooptflags: sparc64 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g} -m64 -mcpu=ultrasparc %{!?nospecflags:%{?specflags_sparc64}}
+optflags: sparc %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g} -m32 -mcpu=v7 -mtune=ultrasparc %{!?nospecflags:%{?specflags_sparc}}
+optflags: sparcv9 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g} -m32 -mcpu=ultrasparc %{!?nospecflags:%{?specflags_sparc}}
+optflags: sparc64 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g} -m64 -mcpu=ultrasparc %{!?nospecflags:%{?specflags_sparc64}}
 
-ooptflags: x32 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g -mx32} %{?!_disable_lto:-flto} -mtune=generic -march=x86-64 %{!?nospecflags:%{?specflags_x32}}
+optflags: x32 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g -mx32} %{?!_disable_lto:-flto} -mtune=generic -march=x86-64 %{!?nospecflags:%{?specflags_x32}}
 
-ooptflags: amd64 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g -m64} %{?!_disable_lto:-flto} -march=x86-64 -mtune=generic %{!?nospecflags:%{?specflags_x86_64}}
-ooptflags: ia32e %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g -m64} %{?!_disable_lto:-flto} -march=x86-64 -mtune=generic %{!?nospecflags:%{?specflags_x86_64}}
-ooptflags: x86_64 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g -m64} %{?!_disable_lto:-flto} -march=x86-64 -mtune=generic %{!?nospecflags:%{?specflags_x86_64}}
+optflags: amd64 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g -m64} %{?!_disable_lto:-flto} -march=x86-64 -mtune=generic %{!?nospecflags:%{?specflags_x86_64}}
+optflags: ia32e %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g -m64} %{?!_disable_lto:-flto} -march=x86-64 -mtune=generic %{!?nospecflags:%{?specflags_x86_64}}
+optflags: x86_64 %{?__common_cflags_with_ssp:%{__common_cflags_with_ssp} -fPIC}%{!?__common_cflags_with_ssp:-O2 -g -m64} %{?!_disable_lto:-flto} -march=x86-64 -mtune=generic %{!?nospecflags:%{?specflags_x86_64}}
 
 #############################################################
 # For a given uname().machine, the default build arch
