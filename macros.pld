@@ -126,13 +126,6 @@ pakietu oraz przy odpluskwianiu samego pakietu.\
 %__rc			%{_bindir}/rc
 %__xar			%{_bindir}/xar
 
-%_tmppath		%(echo "${TMPDIR:-/var/tmp}")
-%tmpdir			%{_tmppath}
-
-%_topdir		%(echo $HOME)/rpm
-
-%buildroot		%{_tmppath}/%{name}-%{version}-root-%(id -u -n)
-
 %_source_payload	w9.gzdio
 %_binary_payload	w6.xzdio
 
@@ -276,6 +269,12 @@ pakietu oraz przy odpluskwianiu samego pakietu.\
 		echo $HOME/rpm/packages
 	fi; \
 )}%_topdir
+
+%_tmppath		%(echo "${TMPDIR:-/var/tmp}")
+%tmpdir			%{_tmppath}
+
+%_buildrootdir	%{_tmppath}
+%buildroot		%{_buildrootdir}/%{name}-%{version}-%{_arch}-root-%(id -u -n)
 
 # if %{_topdir}/SPECS exists, it's old style structure
 %_specdir		%{expand:%%global _specdir %([ ! -d %{_topdir}/SPECS ] && echo %{_topdir}/%{name} || echo %{_topdir}/SPECS)}%_specdir
@@ -1390,10 +1389,10 @@ fi;
 	start=$(expr $base + %1);
 	end=$(expr $base + %{?2}%{!?2:%{1}});
 	# we need to call seq twice as it doesn't allow two formats
-	seq -f 'Patch%g:' $start $end > %{tmpdir}/__ps1;
-	seq -f '%{-f*}' %1 %{?2}%{!?2:%{1}} > %{tmpdir}/__ps2;
-	paste %{tmpdir}/__ps{1,2};
-	rm -f %{tmpdir}/__ps{1,2};
+	seq -f 'Patch%g:' $start $end > %{_tmppath}/__ps1;
+	seq -f '%{-f*}' %1 %{?2}%{!?2:%{1}} > %{_tmppath}/__ps2;
+	paste %{_tmppath}/__ps{1,2};
+	rm -f %{_tmppath}/__ps{1,2};
 }
 ) \
 %{nil}
