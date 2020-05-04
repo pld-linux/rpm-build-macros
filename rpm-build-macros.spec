@@ -1,5 +1,5 @@
 #
-# TODO: rename to rpm-pld-setup/config and split build stuff from main package
+# NOTE: this package has been renamed to rpm-pld-macros
 #
 %define		rpm_macros_rev	1.744
 %define		find_lang_rev	1.40
